@@ -1,0 +1,294 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Prérequis, liens utiles &mdash; documentation MiniWeb 0</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Recherche" href="../search.html"/>
+    <link rel="top" title="documentation MiniWeb 0" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> MiniWeb
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="sujet1.html">1. <strong>TD numéro 1 : Communication via des sockets</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td2/sujet2.html">2. <strong>TD numéro 2 : Threads en Java, Concurrence</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td3/sujet3.html">3. <strong>TD numéro 3 : Quelques  exemples de programation concurrente</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td4/sujet4.html">4. <strong>TD numéro 4 : Interbloquage, Graphe de tache, acyclicité</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td5/sujet5.html">5. <strong>TD numéro 5: Un Exemple de programme distribué sans arbitre : La table de Hachage distribuée.</strong></a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="corrige1.html"><strong>Corrigé du TD numéro 1 : Communication via des sockets</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td2/corrige2.html">1. <strong>Corrigé du TD numéro 2 :  Java et les Threads</strong></a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MiniWeb</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Prérequis, liens utiles</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/td1/objectif.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="prerequis-liens-utiles">
+<h1>Prérequis, liens utiles<a class="headerlink" href="#prerequis-liens-utiles" title="Lien permanent vers ce titre">¶</a></h1>
+<ul>
+<li><p class="first">En cas de problème Instaler la JDK, à priori c&#8217;est déjà fait surtout si vous avez instalé Eclipse.  Ou la trouve  ici</p>
+</li>
+<li><p class="first">Instaler  telnet : Sous linux ou MacOSX ce petit programme est instalé par défaut.  Sous windows entrer dans une invite de commande admin</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">dism</span> <span class="o">/</span><span class="n">online</span> <span class="o">/</span><span class="n">Enable</span><span class="o">-</span><span class="n">Feature</span> <span class="o">/</span><span class="n">FeatureName</span><span class="p">:</span><span class="n">TelnetClient</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<blockquote>
+<div>Voir aussi <a class="reference external" href="https://www.rootusers.com/how-to-enable-the-telnet-client-in-windows-10">récupérer telnet</a>   pour d&#8217;autre méthodes.  Telnet permet d&#8217;ouvrir manuellement des connections réseau (TCP) et donc de tester un serveur ou un protocole. Il est ainsi possible d&#8217;effectuer des requêtes HTTP élémentaires en utilisant telnet ou encore d´envoyer un email (vous trouverez de nombreux exemple sur internet, comme celui-ci <a class="reference external" href="https://practical365.com/exchange-server/how-to-send-email-via-telnet/">envoyer un mail avec telnet</a>.</div></blockquote>
+<ul class="simple">
+<li>Vérifier les chemins (en particulier sous windows) ,  diverses méthodes sont données  <a class="reference external" href="http://stackoverflow.com/questions/1672281/environment-variables-for-java-installation">Ici</a></li>
+</ul>
+<dl class="docutils">
+<dt><strong>Contact :</strong></dt>
+<dd>Stéphane Perennes  <a class="reference external" href="mailto:stephane&#46;perennes&#37;&#52;&#48;cnrs&#46;fr">stephane<span>&#46;</span>perennes<span>&#64;</span>cnrs<span>&#46;</span>fr</a></dd>
+<dt><strong>Documentations :</strong></dt>
+<dd>Le site d&#8217;Oracle fournit des  <a class="reference external" href="http://docs.oracle.com/javase/tutorial/tutorialLearningPaths.html">Tutoriaux</a> ainsi qu&#8217;une documentation officielle.  Les classes sont documentées <a class="reference external" href="http://docs.oracle.com/javase/8/docs/api/index.html">Ici</a> Par ailleurs les environements de devellopement intégrés fournissent une documentation immédiate.</dd>
+</dl>
+</div>
+<div class="section" id="contexte-et-objectif">
+<h1>Contexte et Objectif:<a class="headerlink" href="#contexte-et-objectif" title="Lien permanent vers ce titre">¶</a></h1>
+<div class="section" id="importance-de-l-echange-de-messages-reseau">
+<h2><strong>Importance de l&#8217;échange de messages réseau</strong><a class="headerlink" href="#importance-de-l-echange-de-messages-reseau" title="Lien permanent vers ce titre">¶</a></h2>
+<p>L&#8217;élément de base de la programmation distribuée est la communication entre processus.
+Une des méthodes les plus générales et élémentaire pour faire communiquer deux processus consiste à simplement passer des messages sur le réseau. Notez bien que le réseau est souvent utilisé afin d&#8217;échanger des messages entre des processus situés sur la même machine physique. L&#8217;objectif de cette fiche est d&#8217;apprendre à faire communiquer des processus différents via des échanges de messages sur le <em>réseau</em>.</p>
+<p>Des milliers de protocoles sont basés sur de simples échanges de messages, souvent même en mode texte et en clair, certains sont même lisible par un humain. Par exemple :</p>
+<ul class="simple">
+<li>le protocole HTTP utilisé pour distribuer des pages web est principalement basé sur deux messages <em>GET</em> et <em>POST</em>.</li>
+<li>le courrier electronique.</li>
+<li>Certains player multimédia sont controlé via de échanges de message (VLC, mpd)</li>
+<li>Il est courant de fournir une <em>interface réseau</em> permettant de télécommander et de contrôler un programme ou un service.</li>
+</ul>
+</div>
+<div class="section" id="les-autres-methodes-de-communication">
+<h2><strong>Les autres méthodes de communication</strong><a class="headerlink" href="#les-autres-methodes-de-communication" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Par ailleurs c’est souvent par dessus ces
+méthodes de communication que sont construites des couches plus hautes, plus abstraites
+et plus complexes (appels de procédure distants, appels de méthodes rpc, rmi).</p>
+<p>Il existe d’autres méthodes permettant de communiquer, en particulier
+dans le cas de processus s’exécutant sur une même machine, ceux ci
+partageant le système d’exploitation, la mémoire et le système, il leur
+est possible de communiquer de bien d’autres manières (thread, signaux
+unix, mémoire partagée, messages via le système de fichier, messages via des objets partagés).</p>
+<p>Ceci dit l&#8217;utilisation de la couche réseau a l&#8217;avantage d&#8217;être universelle, deux processus distants hétérogènes (implémentés dans des langages différents, s&#8217;éxécutant sur des systèmes différents etc ..) peuvent toujours communiquer du moment qu&#8217;ils ont accès à la couche réseau.</p>
+</div>
+<div class="section" id="un-reseau-oriente-paquet-operation-bloquantes-timeout">
+<h2><strong>UN réseau &#8220;orienté paquet&#8221;, Opération bloquantes, timeout</strong><a class="headerlink" href="#un-reseau-oriente-paquet-operation-bloquantes-timeout" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Les protocoles réseau courants sont <em>orientés paquet</em> et non pas <em>session
+ou connexion</em>. Ainsi quand on écoute un flux d’entrée il n’existe à
+priori aucun moyen de savoir si l’autre intervenant dans la
+communication est encore actif. Sa réponse peut être simplement tardive,
+mais il peut aussi être en panne (plantage), etc... La couche TCP/IP ne
+garantit que deux choses : les paquets arrivés sont valides, et les
+paquets arrivent dans le bon ordre.</p>
+<p>En Java, par défaut un bon nombre de méthodes procurées par les objets réseau (accueil de client, lecture de message entrant) sont <em>Bloquantes</em>.
+Par exemple, par défaut, la lecture d&#8217;un message entrant est bloquante,  ceci signifie que le flux d&#8217;exécution va s&#8217;interrompre jusqu&#8217;à ce qu&#8217;un message soit arrivé. Notez que les emissions de message sont non bloquantes, car envoyer un message consiste à le placer sur le réseau sans savoir si et quand il sera recu.</p>
+<p>Les opérations bloquantes peuvent conduire à des pannes (i.e. atttentes infinie). Afin d&#8217;éviter cela on peut positionner en option un <em>Timeout</em> (délai maximum). Le cas typique est celui de deux processus échangeant des messages selon un protocole, si l&#8217;un deux vient à cesser de répondre le second peut  être bloqué (si il attend une réponse). Le positionement d&#8217;un timeout permet donc à celui-ci de detecter le depassement du délai maximum et de gérer lanon réponse (plus exactement la non réponse à temps) du premier.</p>
+<p>En Java les timeouts sont gérés via un mecanisme d&#8217;exception et de <em>try/catch</em>. Une attente top longue déclenche une exception particulière.</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Stéphane Perennes.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

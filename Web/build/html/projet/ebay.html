@@ -1,0 +1,307 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>1. Sujet de Projet : Gestionnaire d’enchère &mdash; documentation MiniWeb 0</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Recherche" href="../search.html"/>
+    <link rel="top" title="documentation MiniWeb 0" href="../index.html"/>
+        <link rel="prev" title="2.1. Exercice 1, Serveur multi-thread" href="../td3/repartiteur.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> MiniWeb
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../td1/sujet1.html">1. <strong>TD numéro 1 : Communication via des sockets</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td2/sujet2.html">2. <strong>TD numéro 2 : Threads en Java, Concurrence</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td3/sujet3.html">3. <strong>TD numéro 3 : Quelques  exemples de programation concurrente</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td4/sujet4.html">4. <strong>TD numéro 4 : Interbloquage, Graphe de tache, acyclicité</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td5/sujet5.html">5. <strong>TD numéro 5: Un Exemple de programme distribué sans arbitre : La table de Hachage distribuée.</strong></a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../td1/corrige1.html"><strong>Corrigé du TD numéro 1 : Communication via des sockets</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td2/corrige2.html">1. <strong>Corrigé du TD numéro 2 :  Java et les Threads</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td3/corrige3.html">2. <strong>Corrigé du TD numéro 3 :  Examples de prog concurrente</strong></a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">1. <strong>Sujet de Projet : Gestionnaire  d&#8217;enchère</strong></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#serveur-centralise-simplife-6-20">1.1. <strong>Serveur Centralisé Simplifé(6/20)</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#securisation-3-20">1.2. <strong>Sécurisation (3/20)</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mini-enviroment-de-test-et-devellopement-4-2-20">1.3. <strong>Mini enviroment de Test et devellopement (4+2/20)</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#comptoir-public-des-transactions-7-2-20">1.4. <strong>Comptoir Public des Transactions (7+2/20)</strong></a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MiniWeb</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>1. <strong>Sujet de Projet : Gestionnaire  d&#8217;enchère</strong></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/projet/ebay.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="sujet-de-projet-gestionnaire-d-enchere">
+<h1>1. <strong>Sujet de Projet : Gestionnaire  d&#8217;enchère</strong><a class="headerlink" href="#sujet-de-projet-gestionnaire-d-enchere" title="Lien permanent vers ce titre">¶</a></h1>
+<p><strong>Notation</strong>:</p>
+<p>La soutenance constitura <span class="math">\(1/3\)</span>: de la note et le projet les <span class="math">\(2/3\)</span> . Le barème octroie 24 points sur 20.</p>
+<p><strong>Objectif :</strong></p>
+<p>L&#8217;objectif est de mettre au point un logiciel permettant de fournir service centralisé de  mise en vente ou aux enchères d&#8217;objets, À titre d&#8217;exemple un des  fournisseur dominant de ce type de service est <em>ebay</em>.  Par ailleurs on utilisera une <em>chaine de blocs</em> afin de tenir à jour un <em>comptoir</em> des transactions.</p>
+<div class="section" id="serveur-centralise-simplife-6-20">
+<h2>1.1. <strong>Serveur Centralisé Simplifé(6/20)</strong><a class="headerlink" href="#serveur-centralise-simplife-6-20" title="Lien permanent vers ce titre">¶</a></h2>
+<ul class="simple">
+<li>Le serveur sera connecté  à  (interfacé avec) une base de donnée de votre choix, on seront stockées les ventes et,ou   enchères courantes.</li>
+<li>On fournira un protocole client/serveur de base utilisant des échanges de messages (potentiellement sérialisés). Ce protocole sera documenté. La sérialisation utilisera soit <em>json</em> ou tout format sériel courant. L&#8217;utilisation de <em>rmi</em> propres à Java est acceptable mais un protocole plus inversel sera préféré.</li>
+<li>Le protocole pourra aussi s&#8217;executer au dessus du protocole http ou https, comme donc un Service Web.</li>
+<li>Les fonctionnalités de Bases seront :
+- Mise (et retrait) aux enchères d&#8217;un objet.
+- Placer une enchère, effectuer un achat immédiat.
+- Rechercher un objet.
+- La gestion automatique des enchères.</li>
+<li>Les objets en vente pourront être de simples identifiants associés à une brève description (i.e. chaine de caractères); Mais il serait utile de concevoir le système afin que d&#8217;autres champs puissent être ajoutés facilement (photo(s), vidéo(s), mots clef, liens etc ..)</li>
+<li>Le serveur devra être capable de gérer en parallèle un grand nombre de clients et la consistence des transactions et des données sera assurée.</li>
+</ul>
+</div>
+<div class="section" id="securisation-3-20">
+<h2>1.2. <strong>Sécurisation (3/20)</strong><a class="headerlink" href="#securisation-3-20" title="Lien permanent vers ce titre">¶</a></h2>
+<ul class="simple">
+<li>On utilisera les principes de cryptographie standard (mecasnisme de la paire de clefs  publique/privée; fonction de hachage &#8220;irréversible&#8221; afin d&#8217;authentifier les utilisateurs mais aussi de signer electroniquement les communications. Le but est ici d&#8217;assurer <span class="math">\(B\)</span> que si <span class="math">\(A\)</span> lui dit  <span class="math">\(XX\)</span>  c&#8217;est bel est bien <span class="math">\(A\)</span> et il a bel et bien dit <span class="math">\(XX\)</span>.</li>
+<li>Vous utiliserez les méthodes de cryptographie comme des &#8220;boites noires&#8221;.</li>
+<li>On pourra de plus crypter les communications (optionnel).</li>
+</ul>
+</div>
+<div class="section" id="mini-enviroment-de-test-et-devellopement-4-2-20">
+<h2>1.3. <strong>Mini enviroment de Test et devellopement (4+2/20)</strong><a class="headerlink" href="#mini-enviroment-de-test-et-devellopement-4-2-20" title="Lien permanent vers ce titre">¶</a></h2>
+<p>On fournira un procédé (des classes, un environement)  permettant facilement de simuler des tests impliquant de  nombreuses opérations et de nombreux clients. Ainsi on permettra la simulation  du scénario suivant :</p>
+<ul class="simple">
+<li><span class="math">\(N\)</span> pairs  effectuent concurrement une d&#8217;actions qui sont décrites dans un fichier (spécifique au pair). Un scénario est donc décrit par <span class="math">\(N\)</span> fichiers + un <em>État initial</em>.</li>
+<li>Les actions seront : attendre (approximativement) <span class="math">\(T\)</span> millisecondes, placer une enchère, placer un objet en vente.</li>
+<li>Chaque pair sera simulé en <em>local</em> par un Thread.</li>
+</ul>
+<p><strong>Optionnel (+2)</strong></p>
+<p>Vous pourrez eventuellement ajouter au mini simulateur un <em>superviseur</em> permettant de geler le système et d&#8217;observer son état précisément.</p>
+</div>
+<div class="section" id="comptoir-public-des-transactions-7-2-20">
+<h2>1.4. <strong>Comptoir Public des Transactions (7+2/20)</strong><a class="headerlink" href="#comptoir-public-des-transactions-7-2-20" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Le but est d&#8217;implémenter un système  block chain jouet.</p>
+<ul class="simple">
+<li>Lorsque une enchère est décidée et l&#8217;objet vendu les deux parties (le vendeur et l´acheteur) signeront sous un certains delai le contrat de vente définitif. En pratique ce delai peut être important &#8211; si on suppose que l&#8217;acheteur signe lors de la livraison (Cash on Delivery). Une non signature dans le délai prescrit signifie alors simplement que la transaction est annulée.</li>
+<li>Les documents signés seront &#8220;empilés&#8221; dans une chaine de blocks certifiées (une block chain). Quand un bloc <span class="math">\(X\)</span> contiendra au moins <span class="math">\(B\)</span> contrat ( <span class="math">\(B\)</span> est un paramètre du système) les clients/pairs  connectés chercheront à déterminer un prefixe du bloc <span class="math">\(P\)</span>  tel que <span class="math">\(SHA256(PX)\)</span> commence par 20 zéros (ce qui demande de calculer de l&#8217;ordre de <span class="math">\(2^20\)</span> fonction de hachage, <span class="math">\(20\)</span> est ici un exemple, vous pouvez tester avec 10 ou 5).</li>
+<li>Le pair qui trouve un prefixe <span class="math">\(P\)</span> correct (il en existe de multiples) est recompensé à terme par de l&#8217;argent numérique, mais seulement si  le bloc <span class="math">\(X\)</span> est <em>valide</em>. Les pairs sont donc interessés à vérifier que le bloc est valide.</li>
+<li>On pourra donc ajouter un procédé permettant à un pair de vérfier qu&#8217;un bloc est valide, c est à dire que l&#8217;argent depensé par un pair est bien en possesion de celui-ci et que la syntaxe du bloc est corrected.</li>
+<li>Les nouveau entrants pourront (tele) charger la chaine de blocks, on supposera que cette étape ne pose pas de problème (.i.e personne ne triche).</li>
+<li>Afin de simuler des flux d&#8217;argent entrant on pourra rajouter un contrat spécial signé par une banque (externe au système) attribuant à un pair une certaine quantité d&#8217;argent.</li>
+</ul>
+<p><strong>Optionnel (+3)</strong></p>
+<p>On expliquera en quelques pages le protocole block chain et les raisons qui incitent les pairs à ne pas tricher et à valider le progression de la chaine. Autrement dit on expliquera</p>
+<ul class="simple">
+<li>ce que sont les pointeurs sécurisés et comment il permettent d&#8217;établir des chaines de blocks non modifiables.</li>
+<li>le concept de <em>preuve par le travail</em> et comment cette preuve est implémentée par l</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../td3/repartiteur.html" class="btn btn-neutral" title="2.1. Exercice 1, Serveur multi-thread" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Stéphane Perennes.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

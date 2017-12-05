@@ -1,0 +1,13 @@
+
+
+Un Client plus élaboré
+=============================================================
+
+
+
+Au final cela donne la classe suivante :
+
+.. literalinclude:: Client.java
+   :language: java
+
+

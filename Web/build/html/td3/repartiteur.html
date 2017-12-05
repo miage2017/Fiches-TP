@@ -1,0 +1,1189 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>2.1. Exercice 1, Serveur multi-thread &mdash; documentation MiniWeb 0</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Recherche" href="../search.html"/>
+    <link rel="top" title="documentation MiniWeb 0" href="../index.html"/>
+        <link rel="up" title="2. Corrigé du TD numéro 3 : Examples de prog concurrente" href="corrige3.html"/>
+        <link rel="prev" title="2. Corrigé du TD numéro 3 : Examples de prog concurrente" href="corrige3.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> MiniWeb
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../td1/sujet1.html">1. <strong>TD numéro 1 : Communication via des sockets</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td2/sujet2.html">2. <strong>TD numéro 2 : Threads en Java, Concurrence</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="sujet3.html">3. <strong>TD numéro 3 : Quelques  exemples de programation concurrente</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td4/sujet4.html">4. <strong>TD numéro 4 : Interbloquage, Graphe de tache, acyclicité</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td5/sujet5.html">5. <strong>TD numéro 5: Un Exemple de programme distribué sans arbitre : La table de Hachage distribuée.</strong></a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../td1/corrige1.html"><strong>Corrigé du TD numéro 1 : Communication via des sockets</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td2/corrige2.html">1. <strong>Corrigé du TD numéro 2 :  Java et les Threads</strong></a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="corrige3.html">2. <strong>Corrigé du TD numéro 3 :  Examples de prog concurrente</strong></a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">2.1. Exercice 1, Serveur multi-thread</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#le-thread-principal-accueillant-les-clients">2.1.1. Le Thread principal accueillant les clients.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#le-thread-servant-1-client">2.1.2. Le Thread servant 1 client</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#exemple-final-de-code">2.1.3. Exemple final de code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#generation-de-threads-client">2.1.4. Génération de Threads client</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#exercice-2-arret-du-serveur-via-une-interruption">2.2. Exercice 2 Arrêt du serveur via une interruption</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#du-cote-client">2.2.1. Du coté client :</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#du-cote-serveur">2.2.2. Du coté serveur :</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#exemple-d-utilisation-d-un-champ-volatile">2.2.3. Exemple d&#8217;utilisation d&#8217;un champ volatile:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#le-schema-producteur-consommateur">2.3. le schéma producteur consommateur</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#la-classe-producteur">2.3.1. La classe Producteur</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#la-classe-consommateur">2.3.2. La classe Consommateur</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#le-code-global">2.3.3. Le code global</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#le-tri-bitonique-ou-tri-par-fusion">2.4. Le Tri Bitonique ou Tri par fusion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#la-methode-msort">2.4.1. La méthode msort()</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#la-definition-du-thread-de-tri">2.4.2. La définition du Thread de tri</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#la-methode-de-fusion-de-2-tableau-tries">2.4.3. La méthode de fusion de 2 tableau triés</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#effectuer-des-tests-avec-1-2-4-cpus">2.4.4. Effectuer des Tests avec 1,2,4 cpus</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MiniWeb</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="corrige3.html">2. <strong>Corrigé du TD numéro 3 :  Examples de prog concurrente</strong></a> &raquo;</li>
+        
+      <li>2.1. Exercice 1, Serveur multi-thread</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/td3/repartiteur.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="exercice-1-serveur-multi-thread">
+<h1>2.1. Exercice 1, Serveur multi-thread<a class="headerlink" href="#exercice-1-serveur-multi-thread" title="Lien permanent vers ce titre">¶</a></h1>
+<div class="section" id="le-thread-principal-accueillant-les-clients">
+<h2>2.1.1. Le Thread principal accueillant les clients.<a class="headerlink" href="#le-thread-principal-accueillant-les-clients" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Après la phase d&#8217;initialisation qui reste inchangée, le comportement du serveur se  décrit comme suit:</p>
+<ul class="simple">
+<li>Tant que vrai:<ol class="arabic">
+<li>Accepter un client et récupérer la socket associée <span class="math">\(S\)</span>.</li>
+<li>Creer un nouveau Thread  <span class="math">\(T\)</span>  de type ServiceClient associé à la socket <span class="math">\(S\)</span>.</li>
+<li>Démarrer <span class="math">\(T\)</span></li>
+</ol>
+</li>
+</ul>
+<p>En Java ceci s&#8217;exprime comme ci dessous :</p>
+<ul>
+<li><p class="first">la ligne 5 est toujours bloquante et permet de récupérer la socket (le catch try est omis par soucis de clarté)</p>
+</li>
+<li><p class="first">la ligne 9 crée l&#8217;objet exécutable (la socket est passée au cŕeateur de l&#8217;objet, on passe  aussi un nom sans grande importance), crée le thread et le démarre.</p>
+<p><strong>Attention Encore</strong>: Si vous utilisez la méthode <em>run()</em> votre programme semblera fonctionner mais les clients seront servis à la queue-leu-leu, en effet en ce cas vous appelez la méthode qui sert un client mais sans créer de thread. Le programme est alors équivalent à celui du serveur séquentiel du TD1. Seule la méthode <em>start()</em> lance le thread et ensuite appelle <em>run()</em>.</p>
+</li>
+</ul>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="k">while</span><span class="o">(</span><span class="kc">true</span><span class="o">)</span>
+ <span class="o">{</span>
+  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;[Serveur]:  waiting for connexion&quot;</span><span class="o">)</span> <span class="o">;</span>
+<span class="hll">  <span class="n">ma_connection</span> <span class="o">=</span> <span class="n">gestionnaire_de_connexion</span><span class="o">.</span><span class="na">accept</span><span class="o">();</span>
+</span>  <span class="n">String</span> <span class="n">c_ip</span> <span class="o">=</span> <span class="n">ma_connection</span><span class="o">.</span><span class="na">getInetAddress</span><span class="o">().</span><span class="na">toString</span><span class="o">()</span> <span class="o">;</span>
+  <span class="kt">int</span> <span class="n">c_port</span><span class="o">=</span> <span class="n">ma_connection</span><span class="o">.</span><span class="na">getPort</span><span class="o">();</span>
+  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;[Serveur] : Arrivée du client IP %s sur le port %d\n&quot;</span><span class="o">,</span> <span class="n">c_ip</span><span class="o">,</span> <span class="n">c_port</span><span class="o">);</span>
+  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;[Serveur ]: Creation du thread T_%d\n&quot;</span> <span class="o">,</span> <span class="n">c_port</span><span class="o">);</span>
+<span class="hll">  <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span> <span class="k">new</span> <span class="n">ServiceClient</span><span class="o">(</span><span class="n">ma_connection</span> <span class="o">,</span> <span class="s">&quot;T_&quot;</span> <span class="o">+</span><span class="n">c_port</span> <span class="o">)).</span><span class="na">start</span><span class="o">();</span>
+</span>  <span class="o">}</span>
+</pre></div>
+</div>
+<p>A titre de rappel l&#8217;initialisation peut se résumer à la création du <span class="math">\(ServerSocket\)</span>, avec les sempiternelles lignes try/catch.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span>
+<span class="o">{</span>
+<span class="n">Socket</span> <span class="n">ma_connection</span><span class="o">=</span><span class="kc">null</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">port</span> <span class="o">=</span> <span class="mi">12000</span><span class="o">;</span>
+<span class="n">ServerSocket</span>  <span class="n">gestionnaire_de_connexion</span><span class="o">;</span>
+<span class="k">try</span><span class="o">{</span>
+    <span class="n">gestionnaire_de_connexion</span>  <span class="o">=</span> <span class="k">new</span> <span class="n">ServerSocket</span><span class="o">(</span><span class="n">port</span><span class="o">);</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;[Serveur] : Serveur Jouet lancé sur &quot;</span> <span class="o">+</span> <span class="o">(</span><span class="n">port</span><span class="o">)</span>  <span class="o">);</span>
+    <span class="o">}</span>
+    <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Cannot create to the server, port %d may be busy\n&quot;</span><span class="o">,</span> <span class="n">port</span><span class="o">);</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">exit</span><span class="o">(-</span><span class="mi">1</span><span class="o">);</span>    <span class="o">}</span>
+
+
+<span class="k">while</span><span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+<span class="c1">// Boucle infinie acceptant les clients</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="le-thread-servant-1-client">
+<h2>2.1.2. Le Thread servant 1 client<a class="headerlink" href="#le-thread-servant-1-client" title="Lien permanent vers ce titre">¶</a></h2>
+<p>L&#8217;objet exécutable ServiceClient se résume à sa méthode <em>run</em> qui sert un client.
+La classe ne possède que deux champs, le nom du thread et la référence à la socket traitées.
+Le constructeur permet de passer la référence à la socket connectée au client.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span> <span class="kd">public</span> <span class="kd">class</span> <span class="nc">ServiceClient</span>  <span class="kd">implements</span> <span class="n">Runnable</span><span class="o">{</span>
+ <span class="kd">private</span> <span class="kd">static</span> <span class="n">String</span> <span class="n">Finish</span><span class="o">=</span><span class="s">&quot;end&quot;</span><span class="o">;</span>
+ <span class="kd">private</span>  <span class="n">Socket</span> <span class="n">ma_connection</span><span class="o">;</span>
+ <span class="kd">private</span>  <span class="n">String</span> <span class="n">id</span><span class="o">;</span>
+
+ <span class="kd">public</span> <span class="nf">ServiceClient</span><span class="o">(</span><span class="n">Socket</span> <span class="n">la_connection</span><span class="o">,</span> <span class="n">String</span> <span class="n">mid</span><span class="o">)</span>
+ <span class="o">{</span>
+ <span class="n">ma_connection</span><span class="o">=</span> <span class="n">la_connection</span><span class="o">;</span>
+ <span class="n">id</span><span class="o">=</span><span class="n">mid</span><span class="o">;</span>
+ <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Thread T__%s créé pour traiter la connection\n&quot;</span><span class="o">,</span><span class="n">id</span><span class="o">);</span>
+ <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Pour la méthde <span class="math">\(run\)</span> On peut utiliser n&#8217;importe quelle méthode sequentielle servant un client, ie une méthode du TP1. Par exemple on peut utiliser le code ci-dessous où le service est ultra sommaire.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">run</span><span class="o">(){</span>
+<span class="n">InputStreamReader</span> <span class="n">isr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">ma_connection</span><span class="o">.</span><span class="na">getInputStream</span><span class="o">(),</span> <span class="s">&quot;UTF-8&quot;</span><span class="o">);</span>
+<span class="n">flux_entrant</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="n">isr</span><span class="o">)</span> <span class="o">;</span>
+<span class="n">ma_sortie</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintWriter</span><span class="o">(</span><span class="n">ma_connection</span><span class="o">.</span><span class="na">getOutputStream</span><span class="o">()</span> <span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+
+<span class="n">String</span>  <span class="n">message_lu</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">();</span>
+<span class="kt">int</span> <span class="n">line_num</span> <span class="o">=</span><span class="mi">0</span> <span class="o">;</span>
+<span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">)</span>
+<span class="o">{</span>
+<span class="n">message_lu</span> <span class="o">=</span> <span class="n">flux_entrant</span><span class="o">.</span><span class="na">readLine</span><span class="o">();}</span>
+<span class="n">line_num</span><span class="o">++;</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span> <span class="s">&quot;%s [line_%d]--&gt; [%s]]\n&quot;</span><span class="o">,</span> <span class="n">id</span><span class="o">,</span><span class="n">line_num</span><span class="o">,</span> <span class="n">message_lu</span><span class="o">);</span>
+<span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="exemple-final-de-code">
+<h2>2.1.3. Exemple final de code<a class="headerlink" href="#exemple-final-de-code" title="Lien permanent vers ce titre">¶</a></h2>
+<blockquote>
+<div>Au final on peut utiliser les deux classes suivantes, par soucis de concision on a laissé remonter les exceptions. Bien entendu le corps de la  méthode <span class="math">\(run()\)</span> de la classe ServiceClient peut être remplacé par votre code.</div></blockquote>
+<p><strong>Pour le répartiteur:</strong>
+Notez que juste que l&#8217;on étend la classe SocketServer et qu&#8217;en ligne 21 on crée un objet exécutable, on le place dans un thread et on demarre ce thread.</p>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">java.net.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.*</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Repartiteur</span> <span class="kd">extends</span> <span class="n">ServerSocket</span> <span class="o">{</span>
+	<span class="kd">private</span> <span class="kd">final</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">port</span> <span class="o">=</span> <span class="mi">12000</span><span class="o">;</span> <span class="cm">/* Port d&#39;écoute */</span>
+
+	<span class="kd">public</span> <span class="nf">Repartiteur</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+		<span class="kd">super</span><span class="o">(</span><span class="n">port</span><span class="o">);</span>
+		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;[Serveur] : Serveur Jouet lancé sur &quot;</span> <span class="o">+</span> <span class="o">(</span><span class="n">port</span><span class="o">));</span>
+	<span class="o">}</span>
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">execute</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+		<span class="n">Socket</span> <span class="n">maConnection</span><span class="o">;</span>
+		<span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+			<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;[Serveur]:  waiting for connexion&quot;</span><span class="o">);</span>
+			<span class="n">maConnection</span> <span class="o">=</span> <span class="n">accept</span><span class="o">();</span>
+			<span class="n">String</span> <span class="n">c_ip</span> <span class="o">=</span> <span class="n">maConnection</span><span class="o">.</span><span class="na">getInetAddress</span><span class="o">().</span><span class="na">toString</span><span class="o">();</span>
+			<span class="kt">int</span> <span class="n">c_port</span> <span class="o">=</span> <span class="n">maConnection</span><span class="o">.</span><span class="na">getPort</span><span class="o">();</span>
+			<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;[Serveur] : Arr. Client IP %s sur %d\n&quot;</span><span class="o">,</span> <span class="n">c_ip</span><span class="o">,</span> <span class="n">c_port</span><span class="o">);</span>
+			<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;[Serveur ]: Creation du thread T_%d\n&quot;</span><span class="o">,</span> <span class="n">c_port</span><span class="o">);</span>
+
+<span class="hll">			<span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="k">new</span> <span class="n">ServiceClient</span><span class="o">(</span><span class="n">maConnection</span><span class="o">,</span> <span class="s">&quot;T_&quot;</span> <span class="o">+</span> <span class="n">c_port</span><span class="o">)).</span><span class="na">start</span><span class="o">();</span>
+</span>		<span class="o">}</span>
+	<span class="o">}</span>
+	<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+		<span class="n">Repartiteur</span> <span class="n">connectionManager</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Repartiteur</span><span class="o">();</span>
+		<span class="n">connectionManager</span><span class="o">.</span><span class="na">execute</span><span class="o">();</span>
+	<span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+<p><strong>Pour le Thread servant un client :</strong></p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">java.net.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.TimeoutException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.*</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ServiceClient</span>  <span class="kd">implements</span> <span class="n">Runnable</span><span class="o">{</span> 
+	<span class="c1">//String to finish the communication  ici c est ctrl-d 	</span>
+	<span class="c1">//private static final  	String Finish=&quot;end&quot;;</span>
+
+	<span class="kd">private</span> <span class="n">String</span> <span class="n">Finish</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="o">+(</span><span class="kt">char</span><span class="o">)</span> <span class="mi">4</span><span class="o">;</span>
+    <span class="kd">private</span>  <span class="n">Socket</span> <span class="n">ma_connection</span><span class="o">;</span>      
+    <span class="kd">private</span>  <span class="n">String</span> <span class="n">id</span><span class="o">;</span>
+
+  <span class="kd">private</span>  <span class="kt">void</span> <span class="nf">terminer</span><span class="o">(){</span>
+	<span class="k">try</span><span class="o">{</span>
+	    <span class="k">if</span> <span class="o">(</span><span class="n">ma_connection</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span>      
+		<span class="o">{</span><span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Terminaison pour %s\n&quot;</span><span class="o">,</span> <span class="n">id</span><span class="o">);</span> <span class="n">ma_connection</span><span class="o">.</span><span class="na">close</span><span class="o">();}</span> 
+		    	<span class="o">}</span>
+	<span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+	    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Terminaison pour %s\n&quot;</span><span class="o">,</span> <span class="n">id</span><span class="o">);</span>
+	    <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+	<span class="o">}</span>
+	<span class="k">return</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="nf">ServiceClient</span><span class="o">(</span><span class="n">Socket</span> <span class="n">la_connection</span><span class="o">,</span> <span class="n">String</span> <span class="n">mid</span><span class="o">)</span>
+    <span class="o">{</span>
+	<span class="n">ma_connection</span><span class="o">=</span> <span class="n">la_connection</span><span class="o">;</span>
+	<span class="n">id</span><span class="o">=</span><span class="n">mid</span><span class="o">;</span>
+	<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Thread T__%s créé pour traiter la connection\n&quot;</span><span class="o">,</span><span class="n">id</span><span class="o">);</span>  
+    <span class="o">}</span>
+    
+    <span class="kd">public</span>  <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
+		<span class="c1">// Phase d initialisation </span>
+    	<span class="n">BufferedReader</span> <span class="n">flux_entrant</span><span class="o">=</span><span class="kc">null</span><span class="o">;</span>
+    	<span class="n">PrintWriter</span> <span class="n">ma_sortie</span> <span class="o">=</span><span class="kc">null</span><span class="o">;</span>
+    	<span class="k">try</span><span class="o">{</span> 
+	    <span class="n">InputStreamReader</span> <span class="n">isr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">ma_connection</span><span class="o">.</span><span class="na">getInputStream</span><span class="o">(),</span> <span class="s">&quot;UTF-8&quot;</span><span class="o">);</span>
+	    <span class="n">flux_entrant</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="n">isr</span><span class="o">)</span> <span class="o">;</span> <span class="c1">// file d&#39;entrée </span>
+	    <span class="c1">// flux de sortie en mode autoflush</span>
+	    <span class="n">ma_sortie</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintWriter</span><span class="o">(</span><span class="n">ma_connection</span><span class="o">.</span><span class="na">getOutputStream</span><span class="o">()</span> <span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+	    <span class="n">String</span> <span class="n">c_ip</span> <span class="o">=</span> <span class="n">ma_connection</span><span class="o">.</span><span class="na">getInetAddress</span><span class="o">().</span><span class="na">toString</span><span class="o">()</span> <span class="o">;</span>
+	    <span class="kt">int</span> <span class="n">c_port</span><span class="o">=</span> <span class="n">ma_connection</span><span class="o">.</span><span class="na">getPort</span><span class="o">();</span>    
+	    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;[%s] client admis IP %s  sur le port %d\n&quot;</span><span class="o">,</span> <span class="n">id</span><span class="o">,</span><span class="n">c_ip</span><span class="o">,</span> <span class="n">c_port</span><span class="o">);</span>
+	    <span class="n">ma_sortie</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;[%s] : Hello %s  sur le port %d, \n&quot;</span> <span class="o">,</span>  <span class="n">id</span><span class="o">,</span> <span class="n">c_ip</span><span class="o">,</span> <span class="n">c_port</span> <span class="o">);</span>  
+    	<span class="o">}</span> 
+    	<span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e1</span><span class="o">)</span> <span class="o">{</span>
+		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Erreur d initialisation&quot;</span><span class="o">)</span> <span class="o">;</span><span class="n">e1</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();}</span> 	
+	
+	    <span class="n">String</span>  <span class="n">message_lu</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">();</span>
+	    <span class="kt">int</span> <span class="n">line_num</span> <span class="o">=</span><span class="mi">0</span> <span class="o">;</span>
+	    <span class="c1">// Fin de l initialisation</span>
+	    
+	    <span class="c1">// Boucle principale //</span>
+	    <span class="k">while</span> <span class="o">(</span> <span class="kc">true</span>  <span class="o">)</span> 
+ 	    <span class="o">{</span>
+	    	<span class="k">try</span> <span class="o">{</span>
+				<span class="n">message_lu</span> <span class="o">=</span> <span class="n">flux_entrant</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+			<span class="o">}</span> 
+	    	<span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">ioe</span><span class="o">)</span> <span class="o">{</span> <span class="o">;}</span> 
+	    	<span class="k">if</span> <span class="o">(</span><span class="n">message_lu</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
+		    	<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span> <span class="s">&quot;Client deconnecté, je termine\n&quot;</span> <span class="o">)</span>  <span class="o">;</span>
+			    <span class="n">terminer</span><span class="o">();</span>
+			    <span class="k">return</span><span class="o">;</span> <span class="o">}</span>
+		    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span> <span class="s">&quot;%s [line_%d]--&gt; [%s]]\n&quot;</span><span class="o">,</span> <span class="n">id</span><span class="o">,</span><span class="n">line_num</span><span class="o">,</span> <span class="n">message_lu</span><span class="o">);</span>
+	    	<span class="k">if</span> <span class="o">(</span><span class="n">message_lu</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="n">Finish</span><span class="o">)</span> <span class="o">){</span>
+	    		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span> <span class="o">(</span><span class="s">&quot;[%s] :  [%s] recu, Transmission finie\n&quot;</span><span class="o">,</span><span class="n">id</span><span class="o">,</span><span class="n">message_lu</span><span class="o">);</span>
+	    		<span class="n">ma_sortie</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Fermeture de la connexion&quot;</span><span class="o">);</span>
+	    		<span class="n">terminer</span><span class="o">();</span>
+	    		<span class="k">return</span><span class="o">;</span>		
+		    <span class="o">}</span>
+	    <span class="n">line_num</span><span class="o">++;</span>
+	    <span class="o">}</span>
+ 	   
+    <span class="o">}}</span>
+	    
+	    
+    	
+</pre></div>
+</div>
+</div>
+<div class="section" id="generation-de-threads-client">
+<h2>2.1.4. Génération de Threads client<a class="headerlink" href="#generation-de-threads-client" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Pour le corrigé chaque client va juste compter de 0 à 9 et envoyer les messages 0,1,...,9 puis le message de terminaison <span class="math">\(FINISH\)</span> au serveur. Par ailleurs on a ajouté un petit délai aléatoire entre deux messages afin que les clients soient interlacés (sinon sinon le premier se termine avant même que le second ai commencé).</p>
+<p><strong>Classe associée à un client</strong></p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">java.net.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.*</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Thread_Client</span> <span class="kd">implements</span> <span class="n">Runnable</span> <span class="o">{</span>
+	<span class="kd">private</span> <span class="kt">int</span> <span class="n">serveurPort</span> <span class="o">=</span> <span class="mi">12000</span><span class="o">;</span>
+	<span class="kd">private</span> <span class="n">String</span> <span class="n">serveurIp</span> <span class="o">=</span> <span class="s">&quot;127.0.0.1&quot;</span><span class="o">;</span>
+	<span class="kd">private</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">FINISH</span> <span class="o">=</span> <span class="s">&quot;&quot;</span> <span class="o">+</span> <span class="o">(</span><span class="kt">char</span><span class="o">)</span> <span class="mi">4</span><span class="o">;</span>
+	<span class="kd">private</span> <span class="n">String</span> <span class="n">id</span><span class="o">;</span>
+	<span class="kd">private</span> <span class="n">BufferedReader</span> <span class="n">Tampon_Lecture</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+	<span class="kd">private</span> <span class="n">PrintWriter</span> <span class="n">ma_sortie</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+
+	<span class="kd">public</span> <span class="nf">Thread_Client</span><span class="o">(</span> <span class="n">String</span> <span class="n">monId</span><span class="o">)</span> <span class="o">{</span><span class="n">id</span><span class="o">=</span><span class="n">monId</span><span class="o">;</span> <span class="o">}</span> 
+	<span class="kd">public</span> <span class="nf">Thread_Client</span><span class="o">(</span><span class="n">String</span> <span class="n">hote</span><span class="o">,</span> <span class="kt">int</span> <span class="n">port</span><span class="o">,</span> <span class="n">String</span> <span class="n">mon_id</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">serveurIp</span> <span class="o">=</span> <span class="n">hote</span><span class="o">;</span>	<span class="k">this</span><span class="o">.</span><span class="na">serveurPort</span> <span class="o">=</span> <span class="n">port</span><span class="o">;</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">mon_id</span><span class="o">;</span>
+	<span class="o">}</span>
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+		<span class="n">Socket</span> <span class="n">la_connection</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+		<span class="k">try</span> <span class="o">{</span>
+			<span class="n">la_connection</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Socket</span><span class="o">(</span><span class="n">serveurIp</span><span class="o">,</span> <span class="n">serveurPort</span><span class="o">);</span>
+			<span class="n">Tampon_Lecture</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span>
+					<span class="n">la_connection</span><span class="o">.</span><span class="na">getInputStream</span><span class="o">()));</span>
+			<span class="n">ma_sortie</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintWriter</span><span class="o">(</span><span class="n">la_connection</span><span class="o">.</span><span class="na">getOutputStream</span><span class="o">(),</span> <span class="kc">true</span><span class="o">);</span>
+		<span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+				<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">e</span><span class="o">);</span><span class="n">System</span><span class="o">.</span><span class="na">exit</span><span class="o">(-</span><span class="mi">1</span><span class="o">);</span>
+		<span class="o">}</span>
+		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;%s: Contact Reussi avec %s:%d\n&quot;</span><span class="o">,</span> <span class="n">id</span><span class="o">,</span> <span class="n">serveurIp</span><span class="o">,</span>
+				<span class="n">serveurPort</span><span class="o">);</span>
+		<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+			<span class="n">ma_sortie</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;%s: message %d\n&quot;</span><span class="o">,</span> <span class="n">id</span><span class="o">,</span> <span class="n">i</span><span class="o">);</span>	
+			<span class="k">try</span> <span class="o">{</span>
+				<span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span> <span class="o">(</span><span class="kt">int</span><span class="o">)(</span> <span class="mi">3000</span><span class="o">*</span><span class="n">Math</span><span class="o">.</span><span class="na">random</span><span class="o">()));</span>
+			<span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+				<span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+			<span class="o">}</span> 
+		<span class="o">}</span>
+		
+		<span class="n">ma_sortie</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;%s\n&quot;</span><span class="o">,</span><span class="n">FINISH</span><span class="o">);</span>
+		
+		<span class="k">if</span> <span class="o">(</span><span class="n">la_connection</span> <span class="o">!=</span><span class="kc">null</span><span class="o">)</span>
+			<span class="k">try</span> <span class="o">{</span>
+				<span class="n">la_connection</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+			<span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+				<span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+			<span class="o">}</span>
+		
+		<span class="o">}</span>
+	<span class="o">}</span>
+</pre></div>
+</div>
+<p>Le thread principal se contente de créer 10 Threads de la classe Thread_Client et de les démarrer.</p>
+<p><strong>Classe principale</strong></p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Gen_Clients</span> <span class="o">{</span>
+
+	<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+			<span class="n">String</span> <span class="n">mon_id</span> <span class="o">=</span> <span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Client_%d&quot;</span><span class="o">,</span> <span class="n">i</span><span class="o">);</span>
+			<span class="n">Thread_Client</span> <span class="n">currrent_client</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread_Client</span><span class="o">(</span><span class="n">mon_id</span><span class="o">);</span>
+			<span class="n">Thread</span> <span class="n">myThread</span><span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">currrent_client</span><span class="o">);</span>
+			<span class="n">myThread</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+		<span class="o">}</span>
+
+	<span class="o">}</span>
+		
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="exercice-2-arret-du-serveur-via-une-interruption">
+<h1>2.2. Exercice 2 Arrêt du serveur via une interruption<a class="headerlink" href="#exercice-2-arret-du-serveur-via-une-interruption" title="Lien permanent vers ce titre">¶</a></h1>
+<div class="section" id="du-cote-client">
+<h2>2.2.1. Du coté client :<a class="headerlink" href="#du-cote-client" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Si on veut arreter un des thread de service il faut empecher que celui-ci bloque lors de l&#8217;attente de message du client servi, ce qui arrive lors de l&#8217;utilisation de la méthode <span class="math">\(readline()\)</span>. On va donc placer un Timeout sur la méthode <span class="math">\(readline()\)</span> ou plus excactement sur la socket que le service de client utilise.</p>
+<p>On positionne le timeout sur la socket comme suit :</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">Socket</span> <span class="n">ma_connection</span><span class="o">;</span>
+<span class="n">ma_connection</span><span class="o">.</span><span class="na">setSoTimeout</span><span class="o">(</span><span class="mi">10</span><span class="o">);</span>
+</pre></div>
+</div>
+<p>Dès lors l&#8217;appel de la méthode <span class="math">\(readline\)</span> génère une exception quand le delai maximum est dépassé. On la gère avec une paires <span class="math">\(catch/try\)</span></p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="k">try</span> <span class="o">{</span>
+        <span class="n">message_lu</span> <span class="o">=</span> <span class="n">flux_entrant</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="k">catch</span> <span class="o">(</span><span class="n">SocketTimeoutException</span> <span class="n">to</span><span class="o">)</span>  <span class="o">{</span><span class="k">continue</span><span class="o">;}</span>
+<span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">ioe</span><span class="o">)</span> <span class="o">{</span> <span class="n">sys</span><span class="o">.</span><span class="na">exit</span><span class="o">(-</span><span class="mi">1</span><span class="o">);}</span>
+</pre></div>
+</div>
+<p>Ici en cas d&#8217;erreur d&#8217;entrée sortie on termine le programme, mais en cas de délai dépassé (SocketTimeoutException) on continue le programme.</p>
+<p>Pour rendre le thread ServiceClient interruptible on le modifie très légèrement en remplacant sa boucle principale par la suivante où les modification suivantes ont été apportées:</p>
+<ul class="simple">
+<li>ligne 1 on positionne le timeout à 10 millisecondes.</li>
+<li>On a ajouté Le bloc formé par les lignes [4,9] pour terminer le thread en cas d&#8217;interruption.</li>
+<li>en ligne 13 on gère l&#8217;exception due au timeout, on continue car le timeout est ici attendu</li>
+</ul>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="hll">      <span class="n">ma_connection</span><span class="o">.</span><span class="na">setSoTimeout</span><span class="o">(</span><span class="mi">10</span><span class="o">);</span>
+</span>      <span class="k">while</span> <span class="o">(</span>  <span class="kc">true</span>  <span class="o">)</span>
+         <span class="o">{</span>
+<span class="hll">             <span class="k">if</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">interrupted</span><span class="o">())</span>
+</span><span class="hll">                     <span class="o">{</span>
+</span><span class="hll">                     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span> <span class="s">&quot;Service interompu par le serveur, je m&#39;arrete&quot;</span> <span class="o">)</span>  <span class="o">;</span>
+</span><span class="hll">                     <span class="n">terminer</span><span class="o">();</span>
+</span><span class="hll">                     <span class="k">return</span><span class="o">;</span>
+</span><span class="hll">                     <span class="o">}</span>
+</span>             <span class="k">try</span> <span class="o">{</span>
+                             <span class="n">message_lu</span> <span class="o">=</span> <span class="n">flux_entrant</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+                     <span class="o">}</span>
+<span class="hll">             <span class="k">catch</span> <span class="o">(</span><span class="n">SocketTimeoutException</span> <span class="n">to</span><span class="o">)</span>  <span class="o">{</span><span class="k">continue</span><span class="o">;}</span>
+</span>             <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">ioe</span><span class="o">)</span> <span class="o">{</span> <span class="o">;}</span>
+             <span class="k">if</span> <span class="o">(</span><span class="n">message_lu</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
+                     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span> <span class="s">&quot;Client deconnecté, je termine\n&quot;</span> <span class="o">)</span>  <span class="o">;</span>
+                         <span class="n">terminer</span><span class="o">();</span>
+                         <span class="k">return</span><span class="o">;</span> <span class="o">}</span>
+                 <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span> <span class="s">&quot;%s [line_%d]--&gt; [%s]]\n&quot;</span><span class="o">,</span> <span class="n">id</span><span class="o">,</span><span class="n">line_num</span><span class="o">,</span> <span class="n">message_lu</span><span class="o">);</span>
+             <span class="k">if</span> <span class="o">(</span><span class="n">message_lu</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="n">Finish</span><span class="o">)</span> <span class="o">){</span>
+                     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span> <span class="o">(</span><span class="s">&quot;[%s] :  [%s] recu, Transmission finie\n&quot;</span><span class="o">,</span><span class="n">id</span><span class="o">,</span><span class="n">message_lu</span><span class="o">);</span>
+                     <span class="n">ma_sortie</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Fermeture de la connexion&quot;</span><span class="o">);</span>
+                     <span class="n">terminer</span><span class="o">();</span>
+                     <span class="k">return</span><span class="o">;</span>
+                 <span class="o">}</span>
+         <span class="n">line_num</span><span class="o">++;</span>
+         <span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>Le reste du code est inchangé et ce trouve ici
+<a class="reference download internal" href="../_downloads/ServiceClientI.java" download=""><code class="xref download docutils literal"><span class="pre">Classe</span> <span class="pre">ServiceClientI</span></code></a></p>
+</div>
+<div class="section" id="du-cote-serveur">
+<h2>2.2.2. Du coté serveur :<a class="headerlink" href="#du-cote-serveur" title="Lien permanent vers ce titre">¶</a></h2>
+<p>C est ici bien plus simple car il suffit de conserver les références aux Thread créés dans une liste, un tableau ou un contenant et des les interrompre. Le code est presque inchangé. On a juste:</p>
+<ul class="simple">
+<li>Ajouté une liste (ligne 15)</li>
+<li>Changé la condition de la boucle (ligne 17)</li>
+<li>Stocké les clients (ligne 26)</li>
+</ul>
+<p>Enfin via les lignes 30-31 on demande à tous les threads de service de s&#8217;arreter.</p>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">java.net.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.*</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">RepartiteurI</span> <span class="kd">extends</span> <span class="n">ServerSocket</span> <span class="o">{</span>
+	<span class="kd">private</span> <span class="kd">final</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">port</span> <span class="o">=</span> <span class="mi">12000</span><span class="o">;</span> <span class="cm">/* Port d&#39;écoute */</span>
+
+	<span class="kd">public</span> <span class="nf">RepartiteurI</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+		<span class="kd">super</span><span class="o">(</span><span class="n">port</span><span class="o">);</span>
+		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;[Serveur] : Serveur Jouet lancé sur &quot;</span> <span class="o">+</span> <span class="o">(</span><span class="n">port</span><span class="o">));</span>
+	<span class="o">}</span>
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">execute</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+		<span class="n">Socket</span> <span class="n">maConnection</span><span class="o">;</span>
+<span class="hll">		<span class="n">List</span><span class="o">&lt;</span><span class="n">Thread</span><span class="o">&gt;</span> <span class="n">myThreads</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Thread</span><span class="o">&gt;();</span>
+</span>		<span class="kt">int</span> <span class="n">numClient</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+<span class="hll">		<span class="k">while</span> <span class="o">(</span><span class="n">numClient</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="o">){</span>
+</span>			<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;[Serveur]: waiting for connexion number &quot;</span><span class="o">+</span> <span class="n">numClient</span><span class="o">);</span>
+			<span class="n">maConnection</span> <span class="o">=</span> <span class="n">accept</span><span class="o">();</span>
+			<span class="n">numClient</span><span class="o">+=</span><span class="mi">1</span><span class="o">;</span>
+			<span class="n">String</span> <span class="n">c_ip</span> <span class="o">=</span> <span class="n">maConnection</span><span class="o">.</span><span class="na">getInetAddress</span><span class="o">().</span><span class="na">toString</span><span class="o">();</span>
+			<span class="kt">int</span> <span class="n">c_port</span> <span class="o">=</span> <span class="n">maConnection</span><span class="o">.</span><span class="na">getPort</span><span class="o">();</span>
+			<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;[Serveur] : Arr. Client IP %s sur %d\n&quot;</span><span class="o">,</span> <span class="n">c_ip</span><span class="o">,</span> <span class="n">c_port</span><span class="o">);</span>
+			<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;[Serveur ]: Creation du thread T_%d\n&quot;</span><span class="o">,</span> <span class="n">c_port</span><span class="o">);</span>
+			<span class="n">Thread</span> <span class="n">cThread</span><span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="k">new</span> <span class="n">ServiceClientI</span><span class="o">(</span><span class="n">maConnection</span><span class="o">,</span> <span class="s">&quot;T_&quot;</span> <span class="o">+</span> <span class="n">c_port</span><span class="o">));</span>
+<span class="hll">			<span class="n">myThreads</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">cThread</span><span class="o">);</span>
+</span>			<span class="n">cThread</span><span class="o">.</span><span class="na">start</span><span class="o">();</span> 
+		<span class="o">}</span>
+		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Closing all Connections\n&quot;</span><span class="o">);</span> 
+<span class="hll">		<span class="k">for</span> <span class="o">(</span><span class="n">Thread</span> <span class="n">item</span><span class="o">:</span> <span class="n">myThreads</span><span class="o">)</span>
+</span><span class="hll">			<span class="n">item</span><span class="o">.</span><span class="na">interrupt</span><span class="o">();</span>
+</span>		<span class="n">close</span><span class="o">();</span>
+	<span class="o">}</span>
+
+	<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+		<span class="n">RepartiteurI</span> <span class="n">connectionManager</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RepartiteurI</span><span class="o">();</span>
+		<span class="n">connectionManager</span><span class="o">.</span><span class="na">execute</span><span class="o">();</span>
+	<span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="exemple-d-utilisation-d-un-champ-volatile">
+<h2>2.2.3. Exemple d&#8217;utilisation d&#8217;un champ volatile:<a class="headerlink" href="#exemple-d-utilisation-d-un-champ-volatile" title="Lien permanent vers ce titre">¶</a></h2>
+<p>On peut par exemple tester une petite classe <span class="math">\(fragileCounter\)</span> qui définit un compteur qui s&#8217;arrete quand la methode <span class="math">\(setterminer\)</span> est appelée. Ici la méthode <span class="math">\(main()\)</span> crée un compteur et lui demande de s&#8217;arreter après quelque secondes. Dans ce cas jouet l&#8217;intérêt semble minime, mais dans une application réelle on trouve potentiellement de nombreux threads travaillant sur des copies du compteur qui ne sont pas nécessairement synchronisée. La déclaration <em>volatil</em> assure que toutes les occurences du champs associé, le booléen  <span class="math">\(terminer\)</span>,  sont immédiatement mises à jours dans tout les threads.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span>  <span class="kd">class</span> <span class="nc">fragileCounter</span> <span class="kd">implements</span> <span class="n">Runnable</span> <span class="o">{</span>
+		<span class="kd">private</span> <span class="kd">volatile</span> <span class="n">Boolean</span> <span class="n">terminer</span><span class="o">=</span><span class="kc">false</span><span class="o">;</span> 
+		<span class="kd">public</span>  <span class="kt">void</span> <span class="nf">seterminer</span><span class="o">()</span> <span class="o">{</span> <span class="n">terminer</span> <span class="o">=</span><span class="kc">true</span><span class="o">;}</span> 
+		
+		<span class="kd">public</span> <span class="nf">fragileCounter</span><span class="o">(){};</span> 
+		<span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+			<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="o">!</span><span class="n">terminer</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span>
+				<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+			<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Ordre de terminer recu, terminer=&quot;</span> <span class="o">+</span> <span class="n">terminer</span><span class="o">);</span>
+		<span class="o">}</span>
+
+
+    	<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+		<span class="n">fragileCounter</span> <span class="n">myCounter</span><span class="o">=</span> <span class="k">new</span> <span class="n">fragileCounter</span><span class="o">();</span> 
+		<span class="n">Thread</span> <span class="n">mT</span><span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">myCounter</span><span class="o">);</span>
+		<span class="n">mT</span><span class="o">.</span><span class="na">start</span><span class="o">();</span> 
+		<span class="k">try</span> <span class="o">{</span>
+			<span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1000</span><span class="o">);</span>
+		<span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+			<span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+		<span class="o">}</span>
+		<span class="n">myCounter</span><span class="o">.</span><span class="na">seterminer</span><span class="o">();</span> 
+	<span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="le-schema-producteur-consommateur">
+<h1>2.3. le schéma producteur consommateur<a class="headerlink" href="#le-schema-producteur-consommateur" title="Lien permanent vers ce titre">¶</a></h1>
+<div class="section" id="la-classe-producteur">
+<h2>2.3.1. La classe Producteur<a class="headerlink" href="#la-classe-producteur" title="Lien permanent vers ce titre">¶</a></h2>
+<p>La classe producteur est un objet exécutable que l&#8217;on construit à partir de</p>
+<ul class="simple">
+<li>la référence à la file des jobs (qui ici est <span class="math">\(nosJobs\)</span>)</li>
+<li>d&#8217;un numéro identifiant le producteur (utile pour afficher ce qui se passe)</li>
+<li>de la taille max de la file des jobs  (une autre solution serait de l&#8217;intégrer à l&#8217;objet représentant cette file).</li>
+</ul>
+<p>Ce qui donne:</p>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13</pre></div></td><td class="code"><div class="highlight"><pre><span></span>     <span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+
+     <span class="kd">class</span> <span class="nc">Producteur</span> <span class="kd">implements</span> <span class="n">Runnable</span>
+     <span class="o">{</span>
+             <span class="kd">private</span> <span class="kd">final</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">nosJobs</span><span class="o">;</span>
+             <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">maxJobs</span><span class="o">=</span><span class="mi">4</span><span class="o">;</span>
+             <span class="kd">private</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">iD</span><span class="o">;</span>
+             <span class="kd">public</span> <span class="nf">Producteur</span><span class="o">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">nosJobs</span><span class="o">,</span> <span class="n">String</span> <span class="n">iD</span><span class="o">)</span>
+             <span class="o">{</span>
+  <span class="k">this</span><span class="o">.</span><span class="na">nosJobs</span> <span class="o">=</span> <span class="n">nosJobs</span><span class="o">;</span>
+  <span class="k">this</span><span class="o">.</span><span class="na">iD</span><span class="o">=</span><span class="n">iD</span><span class="o">;</span>
+             <span class="o">}</span>
+     <span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>Le corps de le l&#8217;objet est la méthode <span class="math">\(run()\)</span> qui produit à l&#8217;infini des jobs, entre chaque production on ajoute un délai aléatoire. La paire try/catch est due aux lourdeurs de Java.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span>   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span>
+   <span class="o">{</span>
+      <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+      <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+         <span class="k">try</span>
+	     <span class="o">{</span>  
+	    <span class="n">i</span><span class="o">++;</span>
+            <span class="n">prod</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+            <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">((</span><span class="kt">long</span><span class="o">)</span>  <span class="o">(</span><span class="mi">2000</span><span class="o">*</span> <span class="n">Math</span><span class="o">.</span><span class="na">random</span><span class="o">()));</span>
+
+         <span class="o">}</span> 
+         <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">ex</span><span class="o">)</span>
+         <span class="o">{</span>
+            <span class="n">ex</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+         <span class="o">}</span>
+      <span class="o">}</span>
+   <span class="o">}</span>
+ 
+</pre></div>
+</div>
+<hr class="docutils" />
+<p>C&#8217;est la méthode <span class="math">\(prod()\)</span> qui assure que la file <span class="math">\(nosJobs\)</span> est bien gérée.
+La conception est la suivante :</p>
+<ul class="simple">
+<li>Le bloc est protégé car on commence par s&#8217;emparer du drapeau associé à la file d&#8217;attente nosJobs (ligne 3). Ceci assure qu&#8217;un seul thread modifie la file des jobs en attente.</li>
+<li>Ensuite tant que la file est pleine on attend (ligne 5 et 8), ce qui permet de relacher le drapeau <span class="math">\(nosJobs\)</span> et donc autorise d&#8217;autre threads à modifier la file d&#8217;attente pendant que la production est mise en attente.</li>
+<li>Quand enfin on peut effectuer une production (on dispose du verrou et la file n&#8217;est pas pleine) on effectue une production, on ajoute un job à la file <span class="math">\(nosJobs\)</span>, on affiche quelques information sur la sortie standard, dont l&#8217;état global de la file.</li>
+<li>Une fois la production terminée on reveille les Thread en attente sur le drapeau <span class="math">\(nosJobs\)</span> en utilisant un <span class="math">\(notify\)</span> (ligne 20)</li>
+</ul>
+<p><em>Remarque:</em></p>
+<ul class="simple">
+<li>Une erreur courante consiste à utiliser un <em>if</em> au lieu d&#8217;un <em>while</em>, or il est tout à fait possible d&#8217;être reveillé et que la file soit à nouveau pleine. Par exemple ici un autre producteur peut nous reveiller (ie file pleine -&gt; on s&#8217;endort, un consommateur consomme et reveille un autre producteur qui à son tour nous reveille après avoir produit).</li>
+<li>En général il est préférable de toujours retester une condition après une attente (ie un wait).</li>
+</ul>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22</pre></div></td><td class="code"><div class="highlight"><pre><span></span>   <span class="kd">private</span> <span class="kt">void</span> <span class="nf">prod</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span>
+   <span class="o">{</span>
+<span class="hll">      <span class="kd">synchronized</span> <span class="o">(</span><span class="n">nosJobs</span><span class="o">)</span>
+</span>      <span class="o">{</span>
+<span class="hll">         <span class="k">while</span> <span class="o">(</span><span class="n">nosJobs</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">==</span> <span class="n">maxJobs</span><span class="o">)</span>
+</span>         <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;File pleine %s is waiting\n&quot;</span><span class="o">,</span><span class="n">iD</span><span class="o">);</span>
+<span class="hll">            <span class="n">nosJobs</span><span class="o">.</span><span class="na">wait</span><span class="o">();</span>
+</span>         <span class="o">}</span>
+           
+         <span class="n">String</span> <span class="n">njob</span><span class="o">=</span> <span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;T_%d_of_%s&quot;</span><span class="o">,</span><span class="n">i</span><span class="o">,</span><span class="n">iD</span><span class="o">);</span> 
+         <span class="n">nosJobs</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">njob</span><span class="o">);</span> 
+         <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;%s Produit %s\n&quot;</span><span class="o">,</span> <span class="n">iD</span><span class="o">,</span> <span class="n">njob</span><span class="o">);</span>
+         
+         <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;File :&quot;</span><span class="o">);</span>
+         <span class="k">for</span> <span class="o">(</span><span class="n">String</span> <span class="n">it</span><span class="o">:</span> <span class="n">nosJobs</span><span class="o">)</span>
+        	 <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot; %s &quot;</span><span class="o">,</span><span class="n">it</span><span class="o">);</span>
+         <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;&quot;</span><span class="o">);</span>
+         
+<span class="hll">         <span class="n">nosJobs</span><span class="o">.</span><span class="na">notify</span><span class="o">();</span>
+</span>      <span class="o">}</span>
+   <span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="la-classe-consommateur">
+<h2>2.3.2. La classe Consommateur<a class="headerlink" href="#la-classe-consommateur" title="Lien permanent vers ce titre">¶</a></h2>
+<p>La classe consommateur est presque identique à la classe Producteur, on pourrait d&#8217;ailleurs utiliser une seule classe avec utilisant un paramètre de construction (1 pour le producteur, -1 pour un consommateur). Sa methode <em>run</em> appelle la méthode <span class="math">\(conso\)</span> qui ressemble trait pour trait à la méthode <span class="math">\(prod\)</span>.</p>
+<p>Hormis les messages d&#8217;affichage (qui ont juste un role pédagogique) seules les lignes 4 et 11 diffèrent vraiment :</p>
+<ul class="simple">
+<li>le test controle si la file est vide.</li>
+<li>l&#8217;action consister à supprimer un job, ici le plus ancien (politique fifo).</li>
+</ul>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kd">private</span> <span class="kt">void</span> <span class="nf">cons</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span><span class="o">{</span>
+      <span class="kd">synchronized</span> <span class="o">(</span><span class="n">nosJobs</span><span class="o">)</span>
+      <span class="o">{</span>
+<span class="hll">         <span class="k">while</span> <span class="o">(</span><span class="n">nosJobs</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>
+</span>         <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;File vide, %s  is waiting\n&quot;</span><span class="o">,</span>  <span class="n">iD</span><span class="o">);</span>
+            <span class="n">nosJobs</span><span class="o">.</span><span class="na">wait</span><span class="o">();</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;%s is awake now \n&quot;</span><span class="o">,</span>  <span class="n">iD</span><span class="o">);</span>
+
+         <span class="o">}</span>
+<span class="hll">         <span class="n">String</span> <span class="n">jobDone</span> <span class="o">=</span> <span class="n">nosJobs</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+</span>         <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;%s prend le Job %s\n&quot;</span> <span class="o">,</span><span class="n">iD</span><span class="o">,</span> <span class="n">jobDone</span>  <span class="o">);</span>
+         <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;File :&quot;</span><span class="o">);</span>
+         <span class="k">for</span> <span class="o">(</span><span class="n">String</span> <span class="n">it</span><span class="o">:</span> <span class="n">nosJobs</span><span class="o">)</span>
+        	 <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot; %s &quot;</span><span class="o">,</span><span class="n">it</span><span class="o">);</span>
+         <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;&quot;</span><span class="o">);</span>
+	 <span class="n">nosJobs</span><span class="o">.</span><span class="na">notify</span><span class="o">();</span>
+      <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="le-code-global">
+<h2>2.3.3. Le code global<a class="headerlink" href="#le-code-global" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Pour simuler le système il suffit :</p>
+<ul class="simple">
+<li>de créer la  file des job qui est partagée par les Threads, ici nommée <span class="math">\(theJobs\)</span>.</li>
+<li>de faire une boucle qui crée un certain nombre (ici 5) de producteurs et consommateurs et les demarre.</li>
+</ul>
+<p><em>Remarque</em> :</p>
+<ul class="simple">
+<li>Ici la taille max de la file est définie dans la classe consommateur, ce qui n&#8217;est pas très logique, il serait plus logique que ce soit un attribut de la file qui proposerait une methode <span class="math">\(isfull()\)</span>.</li>
+<li>Les paramètres (nombre de participants, taille de la file) sont tous codés en dur, vous pouvez vous amuser à les passer en paramètre.</li>
+</ul>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">PC</span> <span class="o">{</span>
+	<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+	    <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">theJobs</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;();</span> 
+	    <span class="n">Thread</span> <span class="n">theTask</span> <span class="o">;</span>
+	    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">5</span><span class="o">;</span> <span class="n">i</span><span class="o">++){</span>
+		<span class="n">Consommateur</span> <span class="n">consume</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Consommateur</span><span class="o">(</span><span class="n">theJobs</span><span class="o">,</span> <span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;C_%d&quot;</span><span class="o">,</span><span class="n">i</span><span class="o">));</span>
+		<span class="n">theTask</span><span class="o">=</span><span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">consume</span><span class="o">);</span> 
+		<span class="n">theTask</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+		<span class="n">Producteur</span> <span class="n">produce</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Producteur</span><span class="o">(</span><span class="n">theJobs</span><span class="o">,</span> <span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;P_%d&quot;</span><span class="o">,</span><span class="n">i</span><span class="o">));</span>
+		<span class="n">theTask</span> <span class="o">=</span><span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">produce</span><span class="o">);</span> 
+		<span class="n">theTask</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>		
+	    <span class="o">}</span>
+	<span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="le-tri-bitonique-ou-tri-par-fusion">
+<h1>2.4. Le Tri Bitonique ou Tri par fusion<a class="headerlink" href="#le-tri-bitonique-ou-tri-par-fusion" title="Lien permanent vers ce titre">¶</a></h1>
+<p>Les méthodes pour trier ou générer les tableaux vont être définies dans la classe <span class="math">\(MySort\)</span>, qui est la classe principale.</p>
+<p>Le principe est de couper le tableau en 2 parties de même taille (droite et gauche) et de les trier. Si au moins :math&#8221;<cite>2</cite> CPU sont disponibles on effectue ce tri en parralèle. On crée alors un thread gauche et un thread droit et chacun recoit la moitié des Cpus disponibles.</p>
+<p>Ceci donne la méthode <span class="math">\(msort\)</span> dont les paramètres sont une référence au tableau à trier et le nombre de CPUs disponibles.</p>
+<div class="section" id="la-methode-msort">
+<h2>2.4.1. La méthode msort()<a class="headerlink" href="#la-methode-msort" title="Lien permanent vers ce titre">¶</a></h2>
+<p>On peut comprendre le code comme suit:</p>
+<ul class="simple">
+<li>Si le tableau est taille <span class="math">\(1\)</span> il n&#8217;y a rien à faire (ligne 2)</li>
+<li>Sinon on coupe le tableau en 2 parties  <span class="math">\(left\)</span>  et <span class="math">\(right\)</span> (lignes 4-5)<ul>
+<li>Si il n&#8217;y a qu&#8217;un CPU (ligne 8) on effectue 2 appels recursifs (lignes 10,11), i.e on trie l&#8217;un après l autre les tableaux left et right.</li>
+<li>Si il y a au moins <span class="math">\(2\)</span> CPUs<ul>
+<li>on crée un Thread chargé de trier <span class="math">\(left\)</span> et un Thread chargé de trier <span class="math">\(right\)</span> (lignes 16-17)</li>
+<li>on les demarre (lignes 19-20)</li>
+<li>on attend qu&#8217;ils aient terminé leur taches (lignes 22-23).</li>
+</ul>
+</li>
+<li>Enfin on fusionne <span class="math">\(left\)</span> et <span class="math">\(right\)</span> (ligne 27)</li>
+</ul>
+</li>
+</ul>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MySort</span> <span class="o">{</span>
+
+<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">mSort</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">a</span><span class="o">,</span> <span class="kt">int</span> <span class="n">AvailCPU</span><span class="o">,</span> <span class="n">String</span> <span class="n">branch</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span>  <span class="o">{</span>
+<span class="hll">    <span class="k">if</span> <span class="o">(</span><span class="n">a</span><span class="o">.</span><span class="na">length</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="o">)</span> <span class="o">{</span>
+</span>	<span class="c1">// Decoupe le tableau en 2 left and right</span>
+<span class="hll">	<span class="kt">int</span><span class="o">[]</span> <span class="n">left</span>  <span class="o">=</span> <span class="n">Arrays</span><span class="o">.</span><span class="na">copyOfRange</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span> <span class="o">/</span> <span class="mi">2</span><span class="o">);</span>
+</span><span class="hll">	<span class="kt">int</span><span class="o">[]</span> <span class="n">right</span> <span class="o">=</span> <span class="n">Arrays</span><span class="o">.</span><span class="na">copyOfRange</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span> <span class="o">/</span> <span class="mi">2</span><span class="o">,</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span><span class="o">);</span>
+</span>	
+	<span class="c1">// Only one cpu we perform a recursive but sequential  sort</span>
+	<span class="k">if</span> <span class="o">(</span><span class="n">AvailCPU</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="o">)</span>
+	    <span class="o">{</span>
+<span class="hll">		<span class="n">mSort</span><span class="o">(</span><span class="n">left</span><span class="o">,</span> <span class="n">AvailCPU</span><span class="o">,</span> <span class="n">branch</span><span class="o">+</span><span class="s">&quot;0&quot;</span><span class="o">);</span>
+</span><span class="hll">		<span class="n">mSort</span><span class="o">(</span><span class="n">right</span><span class="o">,</span> <span class="n">AvailCPU</span><span class="o">,</span> <span class="n">branch</span><span class="o">+</span><span class="s">&quot;1&quot;</span><span class="o">);</span>
+</span>	    <span class="o">}</span>
+	<span class="c1">// If 2++ Cpu we create a thread to sort left and right</span>
+	<span class="k">else</span>
+	    <span class="o">{</span>
+<span class="hll">		<span class="n">Thread</span> <span class="n">lThread</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="k">new</span> <span class="n">Sorter</span><span class="o">(</span><span class="n">left</span><span class="o">,</span>  <span class="n">AvailCPU</span> <span class="o">/</span> <span class="mi">2</span><span class="o">,</span> <span class="n">branch</span><span class="o">+</span><span class="s">&quot;0&quot;</span> <span class="o">));</span>
+</span><span class="hll">		<span class="n">Thread</span> <span class="n">rThread</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="k">new</span> <span class="n">Sorter</span><span class="o">(</span><span class="n">right</span><span class="o">,</span> <span class="n">AvailCPU</span> <span class="o">/</span> <span class="mi">2</span><span class="o">,</span> <span class="n">branch</span><span class="o">+</span><span class="s">&quot;1&quot;</span> <span class="o">));</span>
+</span>		
+<span class="hll">		<span class="n">lThread</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+</span><span class="hll">		<span class="n">rThread</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+</span>		
+<span class="hll">		<span class="n">lThread</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>
+</span><span class="hll">		<span class="n">rThread</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>
+</span>	    <span class="o">}</span> 
+	<span class="c1">// fusionne les tableaux left et right</span>
+	<span class="c1">// La fusion est sequentielle </span>
+<span class="hll">	<span class="n">fusion</span><span class="o">(</span><span class="n">left</span><span class="o">,</span> <span class="n">right</span><span class="o">,</span> <span class="n">a</span><span class="o">);</span>
+</span>    <span class="o">}</span>
+<span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="la-definition-du-thread-de-tri">
+<h2>2.4.2. La définition du Thread de tri<a class="headerlink" href="#la-definition-du-thread-de-tri" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Ce Thread se contente d&#8217;appeler la méthode <span class="math">\(mSort\)</span>, ici il effectue aussi quelques affichages uniquement informatifs.</p>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="hll"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Sorter</span> <span class="kd">implements</span> <span class="n">Runnable</span> <span class="o">{</span>
+</span>    <span class="kd">private</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">a</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">AvailCPU</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">branch</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="nf">Sorter</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">a</span><span class="o">,</span> <span class="kt">int</span> <span class="n">AvailCPU</span><span class="o">,</span> <span class="n">String</span> <span class="n">branch</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">a</span> <span class="o">=</span> <span class="n">a</span><span class="o">;</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">AvailCPU</span> <span class="o">=</span> <span class="n">AvailCPU</span><span class="o">;</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">branch</span><span class="o">=</span><span class="n">branch</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span>  <span class="o">{</span>
+	<span class="k">try</span><span class="o">{</span>
+	    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Thread %s sorting an array with size %d\n&quot;</span><span class="o">,</span> <span class="n">branch</span> <span class="o">,</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span><span class="o">);</span>
+	    <span class="n">MySort</span><span class="o">.</span><span class="na">mSort</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">AvailCPU</span><span class="o">,</span> <span class="n">branch</span><span class="o">);</span>
+	    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Thread %s done\n&quot;</span><span class="o">,</span> <span class="n">branch</span><span class="o">);</span>
+
+	<span class="o">}</span>
+	<span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{;}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>Pour trier un tableau <span class="math">\(a\)</span>, il suffit alors d&#8217;appeler la méthode mSort</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">MySort</span><span class="o">.</span><span class="na">mSort</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">cpuNum</span><span class="o">,</span> <span class="s">&quot;&quot;</span><span class="o">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="la-methode-de-fusion-de-2-tableau-tries">
+<h2>2.4.3. La méthode de fusion de 2 tableau triés<a class="headerlink" href="#la-methode-de-fusion-de-2-tableau-tries" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Pour obtenir un tableau trié quand <span class="math">\(left\)</span> et <span class="math">\(right\)</span> sont déjà triés il suffit de parcourir les deux tableaux conjoitement et de récupérer le min des deux valeurs courantes.  En pratique on va donc déplacer  deux indices <span class="math">\(rightI,leftI\)</span> respectivement dans les tableaux <span class="math">\(left,right\)</span>.</p>
+<p>On peut par exemple effectuer la fusion comme suit.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">fusion</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">left</span><span class="o">,</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">right</span><span class="o">,</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">a</span><span class="o">)</span> <span class="o">{</span>
+      <span class="kt">int</span> <span class="n">leftI</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+      <span class="kt">int</span> <span class="n">rightI</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+      <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+	 <span class="k">if</span> <span class="o">(</span><span class="n">rightI</span> <span class="o">&gt;=</span> <span class="n">right</span><span class="o">.</span><span class="na">length</span> <span class="o">||</span> <span class="o">(</span><span class="n">leftI</span> <span class="o">&lt;</span> <span class="n">left</span><span class="o">.</span><span class="na">length</span> <span class="o">&amp;&amp;</span> <span class="n">left</span><span class="o">[</span><span class="n">leftI</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">right</span><span class="o">[</span><span class="n">rightI</span><span class="o">]))</span> <span class="o">{</span>
+	     <span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">left</span><span class="o">[</span><span class="n">leftI</span><span class="o">];</span>
+	     <span class="n">leftI</span><span class="o">++;</span>			<span class="o">}</span>
+	<span class="k">else</span> <span class="o">{</span>
+	    <span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">right</span><span class="o">[</span><span class="n">rightI</span><span class="o">];</span>
+	    <span class="n">rightI</span><span class="o">++;</span>
+	<span class="o">}</span>
+      <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="effectuer-des-tests-avec-1-2-4-cpus">
+<h2>2.4.4. Effectuer des Tests avec 1,2,4 cpus<a class="headerlink" href="#effectuer-des-tests-avec-1-2-4-cpus" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Pour tester la procédure il suffit de créer un tableau aléatoire et d&#8217;estimer le temps du tri.
+On peut créer un tableau aléatoire via la méthode suivante (placée dans la classe principale). Notons ici que nous pourrions aussi bien tester des tableaux ne contenant que des zéros de des uns car trier un tel tableau en utilisant <em>uniquement des comparaisons</em>  équivaut à trier un ensemble quelconque de nombres.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>   <span class="c1">// for Random</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MergeSort</span> <span class="o">{</span>
+	<span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Random</span> <span class="n">RAND</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Random</span><span class="o">(</span><span class="mi">33</span><span class="o">);</span>   <span class="c1">// random number generator</span>
+	<span class="c1">// Crée un tableau aléatoire</span>
+	<span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span><span class="o">[]</span> <span class="nf">createRandomArray</span><span class="o">(</span><span class="kt">int</span> <span class="n">length</span><span class="o">)</span> <span class="o">{</span>
+		<span class="kt">int</span><span class="o">[]</span> <span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">length</span><span class="o">];</span>
+		<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+			<span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">RAND</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="mi">10000</span><span class="o">);</span>
+		<span class="o">}</span>
+		<span class="k">return</span> <span class="n">a</span><span class="o">;</span>
+	<span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>On peut par exemple tester en utilisant la méthode <em>main()</em> rudimentaire présentée ci dessous; celle ci trie <em>maxTrial</em> fois un tableau de taille <span class="math">\(10^6\)</span> et affiche le temps approximatif d&#8217;un tri, et ce pour <em>1,2,4,8</em> cpus.  Je vous invite à l&#8217;améliorer en ajoutant des arguments ou alors en évaluant le temps du tri pour toutes les tailles de la forme <span class="math">\(2^i, i \in [1,32]\)</span>.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>   <span class="c1">// for Random</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MergeSort</span> <span class="o">{</span>
+	<span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Random</span> <span class="n">RAND</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Random</span><span class="o">(</span><span class="mi">33</span><span class="o">);</span>   <span class="c1">// random number generator</span>
+	<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Throwable</span> <span class="o">{</span>
+		<span class="kt">int</span> <span class="n">mTaille</span> <span class="o">=</span> <span class="mi">1000000</span><span class="o">;</span>   <span class="c1">// Taille de base</span>
+		<span class="kt">int</span> <span class="n">maxTrial</span><span class="o">=</span><span class="mi">5</span><span class="o">;</span>
+		<span class="kt">long</span> <span class="n">totalTime</span><span class="o">=</span><span class="mi">0</span> <span class="o">;</span>
+		<span class="kt">int</span> <span class="n">maxCPU</span><span class="o">=</span><span class="mi">8</span><span class="o">;</span>
+		<span class="k">for</span><span class="o">(</span><span class="n">cpuNum</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span> <span class="n">cpuNum</span><span class="o">&lt;=</span><span class="n">maxCPU</span><span class="o">;</span><span class="n">cpuNum</span><span class="o">*=</span><span class="mi">2</span><span class="o">)</span>
+		<span class="o">{</span>
+		  <span class="n">totalTime</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span>
+		  <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">cTry</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">cTry</span><span class="o">&lt;</span> <span class="n">maxTrial</span><span class="o">;</span> <span class="n">cTry</span><span class="o">++)</span>
+			<span class="o">{</span>
+			  <span class="kt">int</span><span class="o">[]</span> <span class="n">a</span> <span class="o">=</span> <span class="n">createRandomArray</span><span class="o">(</span><span class="n">mTaille</span><span class="o">);</span>
+			  <span class="kt">long</span> <span class="n">begin</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
+			  <span class="n">MultiThreadSort</span><span class="o">(</span><span class="n">a</span><span class="o">);</span>
+			  <span class="kt">long</span> <span class="n">end</span><span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
+			  <span class="n">totalTime</span><span class="o">+=</span> <span class="n">end</span> <span class="o">-</span><span class="n">begin</span> <span class="o">;</span>
+			<span class="o">}</span>
+	<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">&quot;%d cpus, %10d elements  =&gt;  %6d ms \n&quot;</span><span class="o">,</span> <span class="n">cpuNum</span><span class="o">,</span> <span class="n">mTaille</span><span class="o">,</span> <span class="n">totalTime</span><span class="o">/</span><span class="n">maxTrial</span><span class="o">);</span>
+		<span class="o">}</span>
+	<span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="corrige3.html" class="btn btn-neutral" title="2. Corrigé du TD numéro 3 : Examples de prog concurrente" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Stéphane Perennes.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

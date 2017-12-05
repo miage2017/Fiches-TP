@@ -1,0 +1,361 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>3. Un client Minimaliste &mdash; documentation MiniWeb 0</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Recherche" href="../search.html"/>
+    <link rel="top" title="documentation MiniWeb 0" href="../index.html"/>
+        <link rel="up" title="Corrigé du TD numéro 1 : Communication via des sockets" href="corrige1.html"/>
+        <link rel="next" title="4. Un Client plus élaboré" href="client2_co.html"/>
+        <link rel="prev" title="2. Un Serveur Séquentiel" href="serveur_imp.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> MiniWeb
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="sujet1.html">1. <strong>TD numéro 1 : Communication via des sockets</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td2/sujet2.html">2. <strong>TD numéro 2 : Threads en Java, Concurrence</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td3/sujet3.html">3. <strong>TD numéro 3 : Quelques  exemples de programation concurrente</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td4/sujet4.html">4. <strong>TD numéro 4 : Interbloquage, Graphe de tache, acyclicité</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td5/sujet5.html">5. <strong>TD numéro 5: Un Exemple de programme distribué sans arbitre : La table de Hachage distribuée.</strong></a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="corrige1.html"><strong>Corrigé du TD numéro 1 : Communication via des sockets</strong></a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="serveur_co.html">1. Un exemple de Serveur Jouet  Monoclient</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serveur_imp.html">2. Un Serveur Séquentiel</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">3. Un client Minimaliste</a></li>
+<li class="toctree-l2"><a class="reference internal" href="client2_co.html">4. Un Client plus élaboré</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../td2/corrige2.html">1. <strong>Corrigé du TD numéro 2 :  Java et les Threads</strong></a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MiniWeb</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="corrige1.html"><strong>Corrigé du TD numéro 1 : Communication via des sockets</strong></a> &raquo;</li>
+        
+      <li>3. Un client Minimaliste</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/td1/client_co.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="un-client-minimaliste">
+<h1>3. Un client Minimaliste<a class="headerlink" href="#un-client-minimaliste" title="Lien permanent vers ce titre">¶</a></h1>
+<p>Le client est semblable au serveur, nous donnons un exemple simplifié où le client
+se contente de se connecter et d&#8217;envoyer les données saisies au clavier vers le serveur.</p>
+<p>Objet client minimaliste se connectant en local sur le port 8500.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Minimal</span> <span class="o">{</span> <span class="cm">/* define the client class */</span>
+     <span class="kd">private</span> <span class="n">String</span> <span class="n">hote</span> <span class="o">=</span> <span class="s">&quot;127.0.0.1&quot;</span><span class="o">;</span>
+     <span class="kd">private</span> <span class="kt">int</span> <span class="n">port</span> <span class="o">=</span> <span class="mi">8500</span><span class="o">;</span>
+     <span class="kd">private</span> <span class="n">Scanner</span> <span class="n">console_input</span><span class="o">;</span>
+     <span class="kd">public</span> <span class="nf">Minimal</span><span class="o">()</span> <span class="o">{}</span>
+</pre></div>
+</div>
+<p>Méthode execute()  qui se connecte au serveur, lit des données sur l&#8217;entrée standard et les envoie au serveur.</p>
+<ol class="arabic simple">
+<li>La ligne 5 crée et ouvre la socket.</li>
+<li>La ligne 11 est le début d&#8217;une boucle infinie qui lit les données sur la console et les envoue au serveur.</li>
+<li>La line 12 lit une ligne sur l&#8217;entrée standard.</li>
+<li>La ligne 13 envoie cette donnée au serveur.</li>
+</ol>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kt">void</span> <span class="nf">execute</span><span class="o">()</span> <span class="o">{</span>
+             <span class="n">console_input</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+             <span class="n">Socket</span> <span class="n">laConnection</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+             <span class="k">try</span> <span class="o">{</span>
+<span class="hll">                     <span class="n">laConnection</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Socket</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">hote</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">port</span><span class="o">);</span>
+</span>                     <span class="n">PrintWriter</span> <span class="n">ma_sortie</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintWriter</span><span class="o">(</span>
+                                     <span class="n">laConnection</span><span class="o">.</span><span class="na">getOutputStream</span><span class="o">(),</span> <span class="kc">true</span><span class="o">);</span>
+                     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot; Contacting %s on %d\n&quot;</span><span class="o">,</span> <span class="n">hote</span> <span class="o">,</span><span class="n">port</span><span class="o">);</span>
+                     <span class="n">ma_sortie</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Hello je suis : spammeur&quot;</span><span class="o">);</span>
+                     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;entrer les données&quot;</span><span class="o">);</span>
+<span class="hll">                     <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="hll">                             <span class="n">String</span> <span class="n">data</span> <span class="o">=</span> <span class="n">console_input</span><span class="o">.</span><span class="na">next</span><span class="o">();</span>
+</span><span class="hll">                             <span class="n">ma_sortie</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">data</span><span class="o">);</span>
+</span>                             <span class="k">if</span> <span class="o">(</span><span class="n">data</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;end&quot;</span><span class="o">)){</span>
+                                     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;termine&quot;</span><span class="o">);</span>
+                                     <span class="n">laConnection</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+                                     <span class="n">System</span><span class="o">.</span><span class="na">exit</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+
+                     <span class="o">}</span>
+             <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                     <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Probleme de connection avec serveur fontionne : %s&quot;</span><span class="o">,</span><span class="n">e</span><span class="o">);</span>
+                     <span class="n">System</span><span class="o">.</span><span class="na">exit</span><span class="o">(-</span><span class="mi">1</span><span class="o">);</span>
+             <span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>Au final cela donne la classe suivante :</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">java.net.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Scanner</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Minimal</span> <span class="o">{</span> <span class="cm">/* define the client class */</span>
+	<span class="kd">private</span> <span class="n">String</span> <span class="n">hote</span> <span class="o">=</span> <span class="s">&quot;127.0.0.1&quot;</span><span class="o">;</span>
+	<span class="kd">private</span> <span class="kt">int</span> <span class="n">port</span> <span class="o">=</span> <span class="mi">8500</span><span class="o">;</span>
+	<span class="kd">private</span> <span class="n">Scanner</span> <span class="n">console_input</span><span class="o">;</span>
+	<span class="kd">public</span> <span class="nf">Minimal</span><span class="o">()</span> <span class="o">{}</span>
+
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">execute</span><span class="o">()</span> <span class="o">{</span>
+		<span class="n">console_input</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+		<span class="n">Socket</span> <span class="n">laConnection</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+		<span class="k">try</span> <span class="o">{</span>
+			<span class="n">laConnection</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Socket</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">hote</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">port</span><span class="o">);</span>
+			<span class="n">PrintWriter</span> <span class="n">ma_sortie</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintWriter</span><span class="o">(</span>
+					<span class="n">laConnection</span><span class="o">.</span><span class="na">getOutputStream</span><span class="o">(),</span> <span class="kc">true</span><span class="o">);</span>
+			<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot; Contacting %s on %d\n&quot;</span><span class="o">,</span> <span class="n">hote</span> <span class="o">,</span><span class="n">port</span><span class="o">);</span>
+			<span class="n">ma_sortie</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Hello je suis : spammeur&quot;</span><span class="o">);</span>
+			<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;entrer les données&quot;</span><span class="o">);</span>
+			<span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+				<span class="n">String</span> <span class="n">data</span> <span class="o">=</span> <span class="n">console_input</span><span class="o">.</span><span class="na">next</span><span class="o">();</span>
+				<span class="n">ma_sortie</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">data</span><span class="o">);</span>
+				<span class="k">if</span> <span class="o">(</span><span class="n">data</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;end&quot;</span><span class="o">)){</span>
+					<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;termine&quot;</span><span class="o">);</span>
+					<span class="n">laConnection</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+					<span class="n">System</span><span class="o">.</span><span class="na">exit</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+				<span class="o">}</span>
+			<span class="o">}</span>
+		<span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+			<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Probleme de connection avec serveur fontionne : %s&quot;</span><span class="o">,</span><span class="n">e</span><span class="o">);</span>
+			<span class="n">System</span><span class="o">.</span><span class="na">exit</span><span class="o">(-</span><span class="mi">1</span><span class="o">);</span>
+		<span class="o">}</span>
+
+	<span class="o">}</span>
+	<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+		<span class="n">Minimal</span> <span class="n">test</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Minimal</span><span class="o">();</span>
+		<span class="n">test</span><span class="o">.</span><span class="na">execute</span><span class="o">();</span>
+	<span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="client2_co.html" class="btn btn-neutral float-right" title="4. Un Client plus élaboré" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="serveur_imp.html" class="btn btn-neutral" title="2. Un Serveur Séquentiel" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Stéphane Perennes.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

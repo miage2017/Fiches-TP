@@ -1,0 +1,427 @@
+Exercice 1, Serveur multi-thread
+=====================================================
+
+
+Le Thread principal accueillant les clients.
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Après la phase d'initialisation qui reste inchangée, le comportement du serveur se  décrit comme suit:
+
+- Tant que vrai:
+
+  #. Accepter un client et récupérer la socket associée :math:`S`.
+  #. Creer un nouveau Thread  :math:`T`  de type ServiceClient associé à la socket :math:`S`.
+  #. Démarrer :math:`T`
+
+En Java ceci s'exprime comme ci dessous :
+
+- la ligne 5 est toujours bloquante et permet de récupérer la socket (le catch try est omis par soucis de clarté)
+- la ligne 9 crée l'objet exécutable (la socket est passée au cŕeateur de l'objet, on passe  aussi un nom sans grande importance), crée le thread et le démarre.
+
+  **Attention Encore**: Si vous utilisez la méthode *run()* votre programme semblera fonctionner mais les clients seront servis à la queue-leu-leu, en effet en ce cas vous appelez la méthode qui sert un client mais sans créer de thread. Le programme est alors équivalent à celui du serveur séquentiel du TD1. Seule la méthode *start()* lance le thread et ensuite appelle *run()*.
+
+
+
+.. code-block:: java
+  :emphasize-lines: 4,9
+
+  while(true)
+   {
+    System.out.println("[Serveur]:  waiting for connexion") ;
+    ma_connection = gestionnaire_de_connexion.accept();
+    String c_ip = ma_connection.getInetAddress().toString() ;
+    int c_port= ma_connection.getPort();
+    System.out.format("[Serveur] : Arrivée du client IP %s sur le port %d\n", c_ip, c_port);
+    System.out.format("[Serveur ]: Creation du thread T_%d\n" , c_port);
+    new Thread( new ServiceClient(ma_connection , "T_" +c_port )).start();
+    }
+
+A titre de rappel l'initialisation peut se résumer à la création du :math:`ServerSocket`, avec les sempiternelles lignes try/catch.
+
+.. code-block:: java
+
+  public static void main(String[] args)
+  {
+  Socket ma_connection=null;
+  int port = 12000;
+  ServerSocket  gestionnaire_de_connexion;
+  try{
+      gestionnaire_de_connexion  = new ServerSocket(port);
+      System.out.println("[Serveur] : Serveur Jouet lancé sur " + (port)  );
+      }
+      catch (IOException e) {
+      System.out.format("Cannot create to the server, port %d may be busy\n", port);
+      System.exit(-1);	  }
+
+
+  while(true) {
+  // Boucle infinie acceptant les clients
+  }
+
+
+
+Le Thread servant 1 client
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+L'objet exécutable ServiceClient se résume à sa méthode *run* qui sert un client.
+La classe ne possède que deux champs, le nom du thread et la référence à la socket traitées.
+Le constructeur permet de passer la référence à la socket connectée au client.
+
+.. code-block:: java
+
+    public class ServiceClient  implements Runnable{
+    private static String Finish="end";
+    private  Socket ma_connection;
+    private  String id;
+
+    public ServiceClient(Socket la_connection, String mid)
+    {
+    ma_connection= la_connection;
+    id=mid;
+    System.out.format("Thread T__%s créé pour traiter la connection\n",id);
+    }
+   }
+
+
+Pour la méthde :math:`run` On peut utiliser n'importe quelle méthode sequentielle servant un client, ie une méthode du TP1. Par exemple on peut utiliser le code ci-dessous où le service est ultra sommaire.
+
+.. code-block:: java
+
+  run(){
+  InputStreamReader isr = new InputStreamReader(ma_connection.getInputStream(), "UTF-8");
+  flux_entrant = new BufferedReader(isr) ;
+  ma_sortie = new PrintWriter(ma_connection.getOutputStream() , true);
+
+  String  message_lu = new String();
+  int line_num =0 ;
+  while (true)
+  {
+  message_lu = flux_entrant.readLine();}
+  line_num++;
+  System.out.format( "%s [line_%d]--> [%s]]\n", id,line_num, message_lu);
+  }
+  }
+
+Exemple final de code
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+  Au final on peut utiliser les deux classes suivantes, par soucis de concision on a laissé remonter les exceptions. Bien entendu le corps de la  méthode :math:`run()` de la classe ServiceClient peut être remplacé par votre code.
+
+**Pour le répartiteur:**
+Notez que juste que l'on étend la classe SocketServer et qu'en ligne 21 on crée un objet exécutable, on le place dans un thread et on demarre ce thread.
+
+.. literalinclude:: Java/Repartiteur.java
+   :language: java
+   :emphasize-lines: 21
+   :linenos:
+
+
+**Pour le Thread servant un client :**
+
+.. literalinclude::  Java/ServiceClient.java
+   :language: java
+
+
+Génération de Threads client
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Pour le corrigé chaque client va juste compter de 0 à 9 et envoyer les messages 0,1,...,9 puis le message de terminaison :math:`FINISH` au serveur. Par ailleurs on a ajouté un petit délai aléatoire entre deux messages afin que les clients soient interlacés (sinon sinon le premier se termine avant même que le second ai commencé).
+
+
+
+**Classe associée à un client**
+
+.. literalinclude::  Java/Thread_Client.java
+   :language: java
+
+
+Le thread principal se contente de créer 10 Threads de la classe Thread_Client et de les démarrer.
+
+**Classe principale**
+
+.. literalinclude::  Java/Gen_Clients.java
+   :language: java
+
+
+
+
+Exercice 2 Arrêt du serveur via une interruption
+===========================================================
+
+
+Du coté client :
+^^^^^^^^^^^^^^^^^^^^^^
+
+Si on veut arreter un des thread de service il faut empecher que celui-ci bloque lors de l'attente de message du client servi, ce qui arrive lors de l'utilisation de la méthode :math:`readline()`. On va donc placer un Timeout sur la méthode :math:`readline()` ou plus excactement sur la socket que le service de client utilise.
+
+On positionne le timeout sur la socket comme suit :
+
+.. code-block:: java
+
+	Socket ma_connection;
+	ma_connection.setSoTimeout(10);
+
+
+Dès lors l'appel de la méthode :math:`readline` génère une exception quand le delai maximum est dépassé. On la gère avec une paires :math:`catch/try`
+
+.. code-block:: java
+
+	try {
+		message_lu = flux_entrant.readLine();
+	    }
+	catch (SocketTimeoutException to)  {continue;}
+	catch (IOException ioe) { sys.exit(-1);}
+
+
+Ici en cas d'erreur d'entrée sortie on termine le programme, mais en cas de délai dépassé (SocketTimeoutException) on continue le programme.
+
+
+Pour rendre le thread ServiceClient interruptible on le modifie très légèrement en remplacant sa boucle principale par la suivante où les modification suivantes ont été apportées:
+
+- ligne 1 on positionne le timeout à 10 millisecondes.
+- On a ajouté Le bloc formé par les lignes [4,9] pour terminer le thread en cas d'interruption.
+- en ligne 13 on gère l'exception due au timeout, on continue car le timeout est ici attendu
+
+.. code-block:: java
+   :linenos:
+   :emphasize-lines: 1,4-9,13
+
+
+	 ma_connection.setSoTimeout(10);
+	 while (  true  )
+ 	    {
+	    	if(Thread.interrupted())
+ 	    		{
+ 	    		System.out.println( "Service interompu par le serveur, je m'arrete" )  ;
+ 	    		terminer();
+ 	    		return;
+ 	    		}
+	    	try {
+				message_lu = flux_entrant.readLine();
+			}
+	    	catch (SocketTimeoutException to)  {continue;}
+	    	catch (IOException ioe) { ;}
+	    	if (message_lu == null){
+		    	System.out.println( "Client deconnecté, je termine\n" )  ;
+			    terminer();
+			    return; }
+		    System.out.format( "%s [line_%d]--> [%s]]\n", id,line_num, message_lu);
+	    	if (message_lu.contains(Finish) ){
+	    		System.out.format ("[%s] :  [%s] recu, Transmission finie\n",id,message_lu);
+	    		ma_sortie.println("Fermeture de la connexion");
+	    		terminer();
+	    		return;
+		    }
+	    line_num++;
+	    }
+
+
+Le reste du code est inchangé et ce trouve ici
+:download:`Classe ServiceClientI<Java/ServiceClientI.java>`
+
+
+Du coté serveur :
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+C est ici bien plus simple car il suffit de conserver les références aux Thread créés dans une liste, un tableau ou un contenant et des les interrompre. Le code est presque inchangé. On a juste:
+
+- Ajouté une liste (ligne 15)
+- Changé la condition de la boucle (ligne 17)
+- Stocké les clients (ligne 26)
+
+Enfin via les lignes 30-31 on demande à tous les threads de service de s'arreter.
+
+
+
+.. literalinclude::  Java/RepartiteurI.java
+   :language: java
+   :linenos:
+   :emphasize-lines: 15,17,26,30,31
+
+
+
+Exemple d'utilisation d'un champ volatile:
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+On peut par exemple tester une petite classe :math:`fragileCounter` qui définit un compteur qui s'arrete quand la methode :math:`setterminer` est appelée. Ici la méthode :math:`main()` crée un compteur et lui demande de s'arreter après quelque secondes. Dans ce cas jouet l'intérêt semble minime, mais dans une application réelle on trouve potentiellement de nombreux threads travaillant sur des copies du compteur qui ne sont pas nécessairement synchronisée. La déclaration *volatil* assure que toutes les occurences du champs associé, le booléen  :math:`terminer`,  sont immédiatement mises à jours dans tout les threads.
+
+.. literalinclude::  Java/fragileCounter.java
+   :language: java
+
+
+
+
+le schéma producteur consommateur
+=============================================
+
+La classe Producteur
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+La classe producteur est un objet exécutable que l'on construit à partir de
+
+- la référence à la file des jobs (qui ici est :math:`nosJobs`)
+- d'un numéro identifiant le producteur (utile pour afficher ce qui se passe)
+- de la taille max de la file des jobs  (une autre solution serait de l'intégrer à l'objet représentant cette file).
+
+Ce qui donne:
+
+
+
+.. code-block:: java
+   :linenos:
+
+	import java.util.List;
+
+	class Producteur implements Runnable
+	{
+		private final List<String> nosJobs;
+		private final int maxJobs=4;
+		private final String iD;
+		public Producteur(List<String> nosJobs, String iD)
+		{
+     this.nosJobs = nosJobs;
+     this.iD=iD;
+		}
+	}
+
+
+
+Le corps de le l'objet est la méthode :math:`run()` qui produit à l'infini des jobs, entre chaque production on ajoute un délai aléatoire. La paire try/catch est due aux lourdeurs de Java.
+
+.. literalinclude::  Java/prodrun.java
+   :language: java
+
+--------
+
+C'est la méthode :math:`prod()` qui assure que la file :math:`nosJobs` est bien gérée.
+La conception est la suivante :
+
+- Le bloc est protégé car on commence par s'emparer du drapeau associé à la file d'attente nosJobs (ligne 3). Ceci assure qu'un seul thread modifie la file des jobs en attente.
+- Ensuite tant que la file est pleine on attend (ligne 5 et 8), ce qui permet de relacher le drapeau :math:`nosJobs` et donc autorise d'autre threads à modifier la file d'attente pendant que la production est mise en attente.
+- Quand enfin on peut effectuer une production (on dispose du verrou et la file n'est pas pleine) on effectue une production, on ajoute un job à la file :math:`nosJobs`, on affiche quelques information sur la sortie standard, dont l'état global de la file.
+- Une fois la production terminée on reveille les Thread en attente sur le drapeau :math:`nosJobs` en utilisant un :math:`notify` (ligne 20)
+
+
+*Remarque:*
+
+- Une erreur courante consiste à utiliser un *if* au lieu d'un *while*, or il est tout à fait possible d'être reveillé et que la file soit à nouveau pleine. Par exemple ici un autre producteur peut nous reveiller (ie file pleine -> on s'endort, un consommateur consomme et reveille un autre producteur qui à son tour nous reveille après avoir produit).
+- En général il est préférable de toujours retester une condition après une attente (ie un wait).
+
+
+
+.. literalinclude::  Java/prod.java
+   :language: java
+   :linenos:
+   :emphasize-lines: 3,5,8,20
+
+
+La classe Consommateur
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+La classe consommateur est presque identique à la classe Producteur, on pourrait d'ailleurs utiliser une seule classe avec utilisant un paramètre de construction (1 pour le producteur, -1 pour un consommateur). Sa methode *run* appelle la méthode :math:`conso` qui ressemble trait pour trait à la méthode :math:`prod`.
+
+Hormis les messages d'affichage (qui ont juste un role pédagogique) seules les lignes 4 et 11 diffèrent vraiment :
+
+- le test controle si la file est vide.
+- l'action consister à supprimer un job, ici le plus ancien (politique fifo).
+
+.. literalinclude::  Java/conso.java
+   :language: java
+   :linenos:
+   :emphasize-lines: 4,11
+
+
+Le code global
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Pour simuler le système il suffit :
+
+- de créer la  file des job qui est partagée par les Threads, ici nommée :math:`theJobs`.
+- de faire une boucle qui crée un certain nombre (ici 5) de producteurs et consommateurs et les demarre.
+
+*Remarque* :
+
+- Ici la taille max de la file est définie dans la classe consommateur, ce qui n'est pas très logique, il serait plus logique que ce soit un attribut de la file qui proposerait une methode :math:`isfull()`.
+- Les paramètres (nombre de participants, taille de la file) sont tous codés en dur, vous pouvez vous amuser à les passer en paramètre.
+
+
+.. literalinclude::  Java/PC.java
+   :language: java
+
+
+Le Tri Bitonique ou Tri par fusion
+=============================================
+
+Les méthodes pour trier ou générer les tableaux vont être définies dans la classe :math:`MySort`, qui est la classe principale.
+
+Le principe est de couper le tableau en 2 parties de même taille (droite et gauche) et de les trier. Si au moins :math"`2` CPU sont disponibles on effectue ce tri en parralèle. On crée alors un thread gauche et un thread droit et chacun recoit la moitié des Cpus disponibles.
+
+Ceci donne la méthode :math:`msort` dont les paramètres sont une référence au tableau à trier et le nombre de CPUs disponibles.
+
+La méthode msort()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+On peut comprendre le code comme suit:
+
+- Si le tableau est taille :math:`1` il n'y a rien à faire (ligne 2)
+- Sinon on coupe le tableau en 2 parties  :math:`left`  et :math:`right` (lignes 4-5)
+
+  - Si il n'y a qu'un CPU (ligne 8) on effectue 2 appels recursifs (lignes 10,11), i.e on trie l'un après l autre les tableaux left et right.
+  - Si il y a au moins :math:`2` CPUs
+
+    - on crée un Thread chargé de trier :math:`left` et un Thread chargé de trier :math:`right` (lignes 16-17)
+    - on les demarre (lignes 19-20)
+    - on attend qu'ils aient terminé leur taches (lignes 22-23).
+  - Enfin on fusionne :math:`left` et :math:`right` (ligne 27)
+
+.. literalinclude::  Java/msort.java
+   :language: java
+   :linenos:
+   :emphasize-lines: 4,6,7,12,13,18-19,21-22,24-25,29
+
+
+La définition du Thread de tri
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Ce Thread se contente d'appeler la méthode :math:`mSort`, ici il effectue aussi quelques affichages uniquement informatifs.
+
+
+.. literalinclude::  Java/Sorter.java
+   :language: java
+   :linenos:
+   :emphasize-lines: 1
+
+
+
+Pour trier un tableau :math:`a`, il suffit alors d'appeler la méthode mSort
+
+.. code-block:: java
+
+    MySort.mSort(a, cpuNum, "");
+
+
+La méthode de fusion de 2 tableau triés
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Pour obtenir un tableau trié quand :math:`left` et :math:`right` sont déjà triés il suffit de parcourir les deux tableaux conjoitement et de récupérer le min des deux valeurs courantes.  En pratique on va donc déplacer  deux indices :math:`rightI,leftI` respectivement dans les tableaux :math:`left,right`.
+
+On peut par exemple effectuer la fusion comme suit.
+
+.. literalinclude::  Java/fusion.java
+   :language: java
+
+
+Effectuer des Tests avec 1,2,4 cpus
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Pour tester la procédure il suffit de créer un tableau aléatoire et d'estimer le temps du tri.
+On peut créer un tableau aléatoire via la méthode suivante (placée dans la classe principale). Notons ici que nous pourrions aussi bien tester des tableaux ne contenant que des zéros de des uns car trier un tel tableau en utilisant *uniquement des comparaisons*  équivaut à trier un ensemble quelconque de nombres.
+
+.. literalinclude::  Java/rnd.java
+   :language: java
+
+
+On peut par exemple tester en utilisant la méthode *main()* rudimentaire présentée ci dessous; celle ci trie *maxTrial* fois un tableau de taille :math:`10^6` et affiche le temps approximatif d'un tri, et ce pour *1,2,4,8* cpus.  Je vous invite à l'améliorer en ajoutant des arguments ou alors en évaluant le temps du tri pour toutes les tailles de la forme :math:`2^i, i \in [1,32]`. 
+
+.. literalinclude::  Java/testtri.java
+   :language: java

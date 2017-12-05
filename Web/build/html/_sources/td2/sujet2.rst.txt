@@ -1,0 +1,450 @@
+**TD numéro 2 : Threads en Java, Concurrence**
+**********************************************************
+|
+
+
+-  Pour exécuter la classe Classe\_de\_Test en ligne de commande il faut
+   (en théorie) se placer à la racine de votre répertoire de travail
+   Eclipse et taper javac nom\_du\_package:Classe\_de\_Test, puis idem
+   pour java. Si votre paquet se nomme miage2016:td1 java va en effet
+   chercher toutes les classes dans .\\miage2016\\td1.
+
+
+**Rappel**  Le site d’Oracle fournit des : `tutoriaux <http://docs.oracle.com/javase/tutorial/tutorial/LearningPaths.html>`__ ainsi qu’une documentation officielle. Les classes sont documentées dans la `doc oracle <http://docs.oracle.com/javase/8/docs/api/index.html>`__.
+
+Objectifs :
+==============================
+
+-  Comprendre les problèmes posés par concurrence.
+
+-  Savoir lancer des Threads en Java.
+
+-  Comprendre les principes des solutions proposées par les systèmes de
+   gestion d’applications concurrentes (la JVM, un Système
+   d’exploitation etc).
+
+-  Savoir comment s’assurer l’exclusivité sur un objet en Java, et
+   comment synchroniser 2 Threads (cas simples).
+
+*Blabla ...zzzzzzzzzz*
+======================
+
+Pourquoi la programmation distribuée et (où?) concurrente ?
+-----------------------------------------------------------
+
+-  Dans le cas des applications réseaux elle est en quelque sorte
+   inhérente, en effet les infrastructures numériques actuelles
+   répliquent l’information et gèrent des bases de données distribuées à
+   l’échelle mondiale.
+
+-  Une solution distribuée passe à l’échelle plus facilement qu’une
+   application centralisée. On doit cependant noter que à cause des
+   économies d’échelle on observe un certain retour à la centralisation
+   (Data Center immenses), mais ces solutions sont toutes massivement
+   distribuées bien que souvent localisées sur un site géographique
+   restreint et disposant un réseau dédié et opérant des milliers de
+   processeurs.
+
+-  Une solution concurrente permet d’utiliser les nombreux coeurs des
+   processeurs modernes. Le modèle formel dit pram datant des années 80
+   envisageait des processeurs partageant une certaine quantité de
+   mémoire vive; il est aujourd’hui devenu une réalité car on trouve
+   aujourd’hui des processeurs très abordables ayant 64 coeurs, et
+   l’ordinateur de base en contient :math:`4` à :math:`8`.
+
+-  Une application distribuée est aussi en théorie plus fiable car une
+   application centralisée est vulnérable en son coeur. Cependant le
+   comportement d’un processus distribué est bien plus complexe que
+   celui d’un processus centralisé. Mettre au point une application
+   distribuée qui fonctionne correctement en absence de malice est déjà
+   difficile, mais la sécuriser est extrêmement difficile
+
+-  La programmation distribuée est aussi un paradigme qui permet de
+   concevoir plus facilement une application, car il est souvent facile
+   de l’imaginer comme un ensemble de tâches à effectuer. Par exemple un
+   serveur de fichier peut être un considéré comme un ensemble de tâches
+   (coordonnées) servant un fichier donné à un client donné. De même les
+   applications proposant une interface graphique utilisent souvent
+   “tâche interface” qui communique avec le reste de l’application. Ou
+   encore, un navigateur internet peut utiliser un thread par page, ou
+   par contenu. En quelque sorte la programmation distribuée impose ou
+   du moins conduit à programmer de façon modulaire, et c’est ce qui est
+   attendu de la part d’un développeur.
+
+**Systèmes avec ou sans arbitre ?**
+
+La JVM gère, ordonnance les threads et permet de gérer la cohérence des données, c’est aussi ce que fait le noyau d’un système
+d’exploitation. Dans les deux cas le calcul distribué s’effectue sous l’égide d’un *arbitre fiable* et que l’on suppose contrôler
+parfaitement. Le cas d’un système distribué (sur le réseau) doté d’un coordinateur central est en principe assez analogue (bien que la latence
+des opérations soit plus élevée). Par contre, nous ne considérons pas ici et maintenant les systèmes de type *pair à pair sans arbitre*, dans
+de tels systèmes procurer une fonctionnalité aussi élémentaire qu’une variable globale est délicat (quels participants vont stocker :math:`x`
+? certains pairs mentent t-il à propos de cette valeur ? sont-ils en panne? aucun participant n’est fiable...). La seule facon de procéder consiste à demander la valeur de :math:`x` à de nombreux pairs choisis au hasard et à se fier à la réponse majoritaire. La théorie démontre même dans le cas de pairs malicieux et byzantins (i.e. cherchant à rendre le système défectueux) qui exécutent le code qui leur chante on peut cependant encore émuler un système avec arbitre fiable, sous la condition qu’au moins 50% des pairs jouent parfaitement le jeu. Mais c’est très complexe et cela induit un surcoût important pour la couche de contrôle. **Donc on ne considère pas ce cas ici**
+
+La création de threads sous Java
+================================================
+
+Au minimum il nous faut savoir créer des Threads. Notons que les Threads disposent de leur champs propres mais partagent les objets extérieurs sur lesquels ils pointent, parmi ces objets ont trouve bien entendu les objets globaux. Il est donc assez facile de partager de la “mémoire” (sic des objets) tout en ayant une mémoire “locale” propre au thread. Mais ce partage à un prix, car qui dit objet partagé dit possibilité d’effectuer en même temps des opérations dessus ce qui aura souvent pour effet de faire planter.
+
+On peut avoir une idée des problèmes posés en utilisant Google Doc et en éditant à deux le même document, Si deux utilisateurs corrigent au même moment à peu près au même endroit le résultat sera en général incohérent.
+
+
+Création via les objets exécutables
+-----------------------------------------------------------
+
+En Java, la façon la plus simple pour créer un thread est la suivante :
+
+
+On définit une classe qui implémente l’interface Runnable
+
+.. code-block:: java
+
+   public Classe_de Test implements Runnable {  .....}
+
+
+
+On redéfini la méthode run() de la classe :
+
+.. code-block:: java
+
+       public void run()   {........ }
+
+
+
+Attention on ne peut pas passer de paramètres à la méthode run(), si  donc l’objet doit pointer sur des objets externes on doit le faire lors de la création, ou avec une méthode, avant de créer le thread proprement dit.
+
+ On crée l’objet exécutable :
+
+.. code-block:: java
+
+   Classe_de_Test mon_objet_executable = new Classe_de_Test();
+
+
+Enfin on crée le Thread lui même, puis on le démarre :
+
+.. code-block:: java
+
+       Thread monJob = New Thread(mon_objet_executable);
+       monJob.start();
+
+
+
+
+**Attention! :**  Ici encore, si start() exécute bel et bien run() elle effectue bien d’autres opérations (cachées). En effet elle demande au gestionnaire de Thread d’en créer un nouveau, de le référencer , de lui allouer de la mémoire, de l’ordonnancer et de l’exécuter. Ainsi par exemple l’objet global Threads contiendra dès lors de nombreuse informations afférentes au thread. **Appeler la méthode run peut sembler fonctionner, mais au Thread n est créé, run est exécutée par le fil de calcul courant, attention donc**. 
+
+**Au final cela donne :**
+
+.. literalinclude:: DumbClass.java
+   :language: java
+   :emphasize-lines: 1,8,17-18,20
+   :linenos:
+   :caption:  *Exemple atomique de thread.*
+
+
+Dans le programme précédent, 5 lignes sont importantes:
+
+
+#. La ligne 1 déclare une classe  exécutable.
+#. La ligne 6 déclare la méthode run() appelée par start().
+#. La ligne 13 crée un objet exécutable.
+#. La ligne 11 crée un thread basé sur cet objet exécutable.
+#. La ligne 13 démarre le thread.
+
+-----------------------------------------------------
+
+.. topic:: **Exercice 1**
+
+   Écrire un programme qui crée deux Threads TA et TB, l’un devra
+   compter de 1 à 1000 et l’autre décompter de 1000 à 1.
+
+
+------
+
+Création par héritage de classe Thread.
+-----------------------------------------------------------
+
+
+.. topic:: **Création directe de thread par héritage**
+
+  Il y a une autre façon de créer un Thread, on peut tout simplement hériter de la classe Thread. L’objet est alors directement un Thread et on appelle la méthode start sur l’objet lui-même sans créer de Thread car l’objet en est un.
+
+
+.. literalinclude:: DummyClass.java
+   :language: java
+   :emphasize-lines: 1,7,14,16
+   :linenos:
+   :caption:  *Création de thread par héritage*
+
+
+#. La ligne 1 déclare la Classe *DummyClass* qui hérite de la classes Thread.
+#. La ligne 6 (re)déclare la méthode run() appelée par start().
+#. La ligne 11 crée un objet exécutable.
+#. La ligne 13 démarre le thread.
+
+
+
+Quelques exemples de concurrence et de coordination en Java
+===========================================================
+
+Un exemple sans réelle concurrence, enfin ... un peu mais pas méchante ...
+-------------------------------------------------------------------------------------------------------------------
+
+
+.. topic:: **Exercice 2**
+
+    -  Lire, télécharger - ou recopier - le programme `TestOrdre0.java <http://www-sop.inria.fr/members/Stephane.Perennes/TD_Web/Web/source/td2/TestOrdre0.java>`_,    l’exécuter plusieur fois.
+    -  Que fait le programme, que fait chaque thread ?
+    -  L’affichage sur la sortie standard est il déterministe ? ou le semble t’il seulement ?
+    -  Ajouter dans la fonction run() des délais aléatoires (représentant l’activité à priori inconnue de threads plus complexes) afin d rendre le comportement encore plus chaotique.
+    -  Quel est la principale ressource utilisée concurremment par les   threads ?
+
+Attention ce programme utilise deux arguments : i.e
+
+.. code-block:: java
+
+        if (args.length != 2) {
+          System.err.format("utilsa. java %s #threads maxvalue",Test_ordre0.class.getCanonicalName());
+              System.exit(-1);
+
+.. note:: Sous Eclipse les arguments sont définis via le memu Run->Run Configuration puis sélectionner l’onglet paramètres.
+
+
+
+
+Exemple canonique d’inconsistance grave
+-------------------------------------------------------------------------------
+
+
+Lire, télécharger - ou recopier - le programme    `PetitJob.java <http://www-sop.inria.fr/members/Stephane.Perennes/TD_Web/Web/source/td2/PetitJob.java>`_,    (il utilise `ObjetEntier.java <http://www-sop.inria.fr/members/Stephane.Perennes/TD_Web/Web/source/td2/ObjetEntier.java>`_). Éxécuter Petit\_Job.
+
+.. literalinclude:: ObjetEntier.java
+    :language: java
+
+.. literalinclude:: PetitJob.java
+    :language: java
+
+
+.. topic:: **Exercice 3**	       
+   
+   -  Que fait le programme, que fait chaque thread ?
+
+   -  Quelle devrait être la valeur stockée par l’ObjetEntier nommé Compteur à la fin du calcul ?
+
+   -  Expliquer ce qui arrive, ou se trouve la concurrence ?
+
+   -  Comment pourrait-on faire pour que le calcul retourne :math:`0` et cela de façon certaine ?
+
+   - Le programme principal peut il détecter la terminaison des threads ?
+
+
+Consistance des données et problèmes d'ordonnancement
+------------------------------------------------------------------------------
+
+L’absence de fil de calcul unique et déterministe pose de nombreux
+problèmes. Un cas simple (d’ordonnancement) et de consistance est le
+suivant :
+
+-  le thread A lit :math:`x` calcule :math:`f(x)` et remplace :math:`x`
+   par :math:`f(x)`.
+
+-  le thread B lit :math:`x` calcule quand à lui :math:`g(x)` et
+   remplace :math:`x` par :math:`g(x)`.
+
+Le résultat est complètement imprévisible, à la fin du calcul on peut en
+effet trouver :math:`f(g(x))`, :math:`g(f(x))` mais tout aussi bien
+:math:`f(x)` ou :math:`g(x)`. L’exemple classique est donné dans la
+figure [fig:1].
+
+
+.. figure:: race.png
+    :width: 600px
+    :align: center
+    :height: 300px
+    :alt: alternate text
+    :figclass: align-center
+
+.. note:: Cette inconsistance est dite de **race-condition**, ici bien que les fonctions :math:`f: x\rightarrow x+1` et :math:`g : x \rightarrow x+1` commutent,  le calcul retourne n’importe quoi.
+
+
+Pour résoudre les problèmes de consistance des données, les systèmes
+distribués fournissent divers mécanismes, leur but est le même s’assurer
+l’exclusivité de l’accès à des parties (en général des données)  communes.
+
+-  (UNIX, Noyau Système): On peut déclarer des *sections critiques* (de
+   code) et utiliser des opérations atomiques. Quand une tâche effectue
+   une section critique le système assure qu’elle ne sera pas
+   interrompue; les tâches qui sont ainsi bloquées sont mises en sommeil
+   et réveillées quand la phase critique est terminée.
+
+-  (UNIX,Java) Le *sémaphore* : Celui ci permet de réserver une ressource
+   ou un objet, quand l’autorisation est délivrée (en attendant la tâche
+   sommeille) le système assure que personne d’autre n’accède à l’objet
+   ou la ressource. Quand la tâche à terminé son travail critique elle
+   informe le système qui va alors délivrer une autre autorisation et
+   potentiellement réveiller une des tâche en attente (si il y en a).
+
+-  En Java on peut verrouiller un objet un utilisant la déclaration
+   synchronized (c.f ci-dessous), là encore le système distribué de la
+   JVM va endormir les Threads (quand la ressource est occupée) et elle
+   réveillera ces Thread en attente quand la ressource sera libérée.
+
+Le sémaphore diffère un peu du verrou, en effet c’est le sémaphore qui
+techniquement sait si la ressource critique est occupée ou disponible
+alors que dans le cas d’un verrou on utilise un *jeton* et celui qui
+souhaite utiliser la ressource s’empare du jeton et le rend quand il en
+a terminé.
+
+Pour gérer les problèmes d’ordonnancement les systèmes distribués permettent aussi :
+
+-  de terminer une tâche
+
+-  d’attendre qu’une tâche soit terminée.
+
+-  de mettre en sommeil ou de réveiller une tâche.
+
+Consistance et Verrouillage, le cas de Java
+------------------------------------------------------------------
+
+**Synchronized** : Le Verouillage de méthode
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Une des directive de verrouillage en Java consiste à déclarer qu’une méthode ou un bloc de code est *synchronisé*.
+
+
+.. code-block:: java
+
+    public class Compteur_Synchro {
+        private int c = 0;
+         .......blabla...............
+
+        public synchronized void add(int j) {
+            c+=j;
+        }
+
+Ici la méthode add(int j) est déclarée synchrone, cette déclaration empêche que plus d’un thread exécute une méthode synchrone de l’objet concerné. Les méthodes non synchrones de la classe ne sont pas affectées,  et bien entendu les appels effectués sur des objets différents de la classe Compteur\_Synchro ne sont pas affectés. Si toutes les méthodes de la classes sont synchrones, l’objet est complètement verrouillé.
+
+C’est exactement le genre de verrou qu’il nous faut dans le cas du
+compteur de l’exemple `Petit\_job.java <http://www-sop.inria.fr/members/Stephane.Perennes/TD_Web/Web/source/td2/Petit_Job.java>`_,
+
+.. topic::  **Exercice 4**
+
+   -  Quelle méthode pose problème dans Petit_Job  ? La rendre synchrone.
+   -  Observer le résultat ? Pourquoi le thread principal n’affiche t’il pas :math:`0`?
+   -  Ajouter une longue boucle (:math:`10^9 ` tours) juste avant la fin du programme principal et afficher à nouveau le compteur, que concluez vous ?
+
+
+**Attention !** Si on verrouille une méthode statique on va verrouiller tous les objets de la Classe, ce qui parfois peût être utile.
+
+
+Le Verrouillage de block
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Il s’agit d’un verrou bien plus précis car il ne concerne qu’un bloc.
+Pour verrouiller un bloc on utilise un objet (ie une référence, un
+identifiant d’objet), en général il est conseillé de faire usage d’un
+champ privé de l’objet sur lequel la méthode (le thread) s’exécute car
+si le verrou est public toute tache pourra verrouiller notre bloc en
+utilisant le même verrou ailleurs. Ce verrouillage ne bloque pas les
+autres méthodes applicables à l’objet, il peut cependant bloquer l’accès
+à d’autres bloc synchronisés utilisant le même verrou.
+Attention le verrou doit être un véritable objet (pas un int ou un char)
+
+.. code-block:: java
+
+    public class Compteur_Synchro {
+        private Int Monverrou=0
+        private int c = 0;
+         .......blabla...............
+
+        public  void fairequelchose(int j) {
+                      blabla ...
+                  synchronized(Monverrou)
+                          { BLOC PROTËGË }
+        }
+
+
+**Exercice 5 (simulation rudimentaire de parking)**
+
+On veut simuler un parking de :math:`N` places.
+
+- Chaque voiture aura un identifiant (pex 1,2,3,...) et sera simulée par un thread, une voiture se comporte comme suit : elle demande à rentrer dans le parking, quand sa requête est acceptée elle rentre et attend un temps aléatoire puis elle sort.
+
+- Le controleur assure que moins de :math:`N` voitures sont dans le parking il fournit deux méthodes : *enter()* qui retourne *true* si la demande d'entrée est acceptée(et *false* sinon) ainsi que la méthode *leave()* qui permet à une voiture d'annoncer qu'elle sort. 
+
+
+- Écrire le petit simulateur, une voiture demandera à entrer tant que sa demande sera refusée. Ajouter des messages indiquant se que font les voitures. Ajouter au controleur une liste lui permettant d'afficher régulièrement la liste des voitures garées.
+
+- Quel est le principal problème de cette implémentation ?
+	
+Ordonnancement en Java
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Une instruction permet de demander à un Thread d’attendre qu’une tâche
+ai terminé son calcul. Cette simple instruction permet d’imposer des
+règles de précédence telles que *A doit se terminer avant B*  (i.e :  *B dépend de  A*).
+Si le thread  TA  (resp. TB) exécute la tâche  A  (resp.  B) on
+spécifie en Java que  A  :math:`<` B   en écrivant au début de l’exécution de  B :
+
+.. code-block:: java
+
+    TA.join()
+
+Cette instruction bloque le fil calcul du thread qui l’effectue jusqu’à
+ce que le thread :math:`TA` soit terminé, bien entendu il faut le que  thread
+invoquant cette méthode puisse accéder à :math:`TA`.
+
+**Exercice 6**
+
+Reprendre encore une fois le code de l’exemple `Petit\_job.java <http://www-sop.inria.fr/members/Stephane.Perennes/TD_Web/Web/source/td2/Petit_Job.java>`_, et demander au thread principal d’attendre que les threads t1,t2 aient terminé avant d’afficher la valeur du compteur. Le résultat est il enfin
+fiable ?
+
+**Exercice 7**
+
+Écrire un programme qui crée trois threads :math:`A,B,C` opérant sur un
+objet exécutable  **Dormeur**
+
+-  La méthode run() de Dormeur se contente d’attendre quelques secondes
+   puis avant de se terminer elle écrit un message (du type je suis XX j'ai fini).
+
+-  le thread principal crée :math:`3` threads à partir de Dormeur et les
+   démarre dans “l’ordre” :math:`A,B,C`.
+
+On veut maintenant que :math:`C<B<A` (donc :math:`A` doit terminer en dernier, et :math:`C` en premier).
+
+-  Modifier le code du constructeur de la classe Dormeur pour qu’il
+   prenne en paramètre une liste de :math:`0` ou :math:`1` threads à
+   attendre, alternativement définir une méthode set\_pred(Thread t) qui
+   permet de définir le prédecesseur d’un Dormeur.
+
+-  Construire :math:`C` pour qu’il n’attende personne (ie
+   :math:`\emptyset`).
+
+-  Construire :math:`B` pour qu’il attende :math:`C`.
+
+-  Construire :math:`A` pour qu’il attende :math:`B`.
+
+-  Lancer les :math:`3` threads et observer.
+
+-  Que ce passerait-il si on ajoutait un thread :math:`TS` avec
+   :math:`D<C` et :math:`A<D` ?
+
+
+
+ **Ce qui suit est totalement optionnel, si le coeur vous en dit donc …**
+
+**Exercice 8** Généraliser le programme précédent au cas de :math:`n` threads
+:math:`T1<T2<T3< \ldots Tn` ou :math:`n` est un argument passé au
+programme, i.e :math:`Tn` ne dépend de personne et :math:`T1` est le
+dernier à s’exécuter.
+
+**Exercice 9**
+Généraliser le programme précédent au cas où les dépendances forment un
+arbre binaire de profondeur :math:`n`, ie la tache :math:`R` ne dépend
+de personne, :math:`R0,R1` dépendent de :math:`R`, :math:`R01,R00`
+dépendent de :math:`R0` tandis que :math:`R10,R11` dépendent de
+:math:`R1` et ainsi de suite, :math:`RX1,RX0` dépendent de :math:`RX`
+
+**Exercice 10**
+
+- Trouver un moyen de faire dépendre une tâche d’une liste de tâches qui ne soit pas limitée à un élément.
+
+- Supposons que nous ayons en entrée un graphe de dependance, c’est à dire un ensemble de taches :math:`T=\{0,1,2,\ldots T-1\}` qui nous procure pour chaque tache :math:`t \in T` la liste des tâches dont elle dépend. Écrire un programme qui génére les Threads avec les conditions de synchronisation assurant que l’exécution se deroulera dans le bon ordre et que les tâches réalisables en même temps pourront l’être. Le corp des Thread sera remplacé par une fonction factice (une attente aléatoire, une boucle).

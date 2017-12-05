@@ -1,0 +1,137 @@
+**TD numéro 4 : Interbloquage, Graphe de tache, acyclicité**
+*******************************************************************************
+
+**Objectif**
+
+Le but est de comprendre les phenomênes d'interbloquage basique, et d'avoir quelques idées sur comment éviter de telles situations (malheureusement il n'existe pas de méthode générale).  Cette problèmatique sera illustrée  par le *Diner des Philosophes* qui est un grand classique.
+
+Par ailleurs nous allons aussi revenir sur le TD2 et exécuter un graphe de tâches en utilisant une librairie de graphe ou une implémentation ad-hoc et minimaliste d'une telle classe.
+
+On terminera en utilsant à nouveau la notion de graphe afin d'essayer de détecter une situation d'interbloquage, du moins dans le cas du diner philosophique.
+
+
+
+
+
+**Le diner des philosophes**
+==============================================
+
+Dans ce paradigme classique  :math:`N`  philosophes dînent autour d'une table et :math:`N` baguettes sont disposées autour de la table, entre les philosophes.
+Pour manger un philosophe à besoin de deux baguettes. Les deux philosophes encadrant une  baguette sont donc en concurrence pour obtenir celle ci.
+Le comportement d'un philosophe peut être décrit comme suit :
+
+**Répeter à l'infini**:
+
+#. Tenter de prendre les deux baguettes  droite et gauche.
+#.  Si  j'ai deux baguette, manger et reposer les baguettes.
+
+**Exercice 1**
+--------------------------
+
+- Écrire une classe exécutable Philosophe  qui simule le comportement d'un philosophe. Afin de simuler un fort asynchronisme, chaque action du philosophe entrainera un délai de quelques microsecondes. La classe permettra aussi d'accéder à l'état du philosophe : nombre de fois ou il a mangé, baguettes détenues.
+
+- Écrire une la classe Baguette (l'objet de cette classe est d assurer qu'une baguette est attribuée à un seul philosophe) implémentant des méthodes synchrones *prendre* et *poser*
+- Écrire un programme qui crée 100 philosophes et baguettes et crée un Thread par philosophe et l'éxécute.
+- Que se passe t-il avec 500 philosphes  ? avec 5?
+
+*Optionnel*
+
+Afin d'éviter qu'un philosophe passe son temps à tenter de prendre une baguette utilisée, remplacer la méthode synchrone d'aquisition des baguettes par des  verrous et une mise en attente (avec timeout) des philosophes (mécanisme wait(), notifyall()).
+
+**Remarque** : On pourra assurer la cohérence du système avec des méthodes *synchronized* ou alors des verrous. Les verrous sont des objets plus complexes de la couche distribuée standard de Java. Un des objets de type verrou est décrit ici `Verrou Réentrant <http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/locks/ReentrantLock.html>`_  Il existe des variantes de verrou, par exemple `ReadWriteLock <http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/locks/ReadWriteLock.html>`_ qui autorise des lectures concurrentes. 
+
+Un verrou est simplement posé de facon explicite, la tentative de  verrouillage est bloquante - sauf si on précise un timeout - si le verrou n'est pas disponible le thread va dormir jusqu'à ce que le verrou soit relaché. 
+
+L'interface des verrous est assez complète, par exemple elle permet de savoir quels sont les threads qui cherche à acquérir le verrou. 
+
+.. code-block:: java
+   
+   class A { 
+   private final ReentrantLock myLock = new ReentrantLock();
+   // ...
+   {
+     myLock.lock();  // Bloque tant que le verrou n'est pas disponible
+     try {
+       // ... 
+     } finally {
+       myLock.unlock() // Abandon du verrou, dans un finally pour être certain de le faire.
+     }
+   }
+ 
+
+
+	
+
+
+--------------------
+
+On veut observer l'état du système à un moment donné, pour cela on veut savoir qui possède les baguettes. Pour cela on va créer un thread d'observation Observateur qui va afficher la liste des baguettes toutes le 5 secondes,
+le thread devra bien entendu verrouiller les baguettes.
+
+**Exercice 2**
+--------------------------
+
+- Écrire la classe implémentant l'objet Observateur, et l'éxécuter dans un  thread.
+- Tester à nouveau avec 5,50,500 philosophes (on pourra diminuer les délais aléatoires) et expliquer la situation de famine qui apparait.
+
+
+---------------------------------
+
+On veut maintenant éviter que la famine (i.e l'interbloquage) apparaisse. Pour cela on va changer le comportement des philosophes.
+Par exemple un philosophe qui détient une baguette pourra la reposer si il n'arrive pas à obtenir la seconde baguette, on pourra moduler la décision du philosophe selon qu'il a mangé recemment ou non, on peut aussi imaginer que le philosophe soit sympa avec son voisin si le voisin a été sympa recemment, ou que le philosophe bloqué agisse au hasard,  enfin on peut aussi  imaginer que le philosope dispose d'argent et paie son voisin pour qu'il relache sa baguette.
+
+**Exercice 3**
+--------------------------
+
+Écrire une classe PhilosopheMalin qui implémente un comportement évitant la famine.
+
+
+**Exécution d'un Graphe de Tâche**
+==============================================
+
+
+On veut revenir sur l'exercice 9 tu TD2 mais utiliser une librairie externe qui gère les graphes.
+
+Un *graphe orienté* est un ensemble de sommets :math:`V` et un ensemble d'arcs de la forme :math:`(u,v), u \in V, v \in V`. Un graphe peut répresenter un réseau de télécommunication, des dépendances, des relations (par exemple parler du graphe de tweeter ou de facebook est à la mode). Quand l'arc :math:`(u,v)` existe on dit que :math:`u` est un *voisin entrant* de :math:`v` et :math:`(u,v)` est un *arc entrant* de :math:`v`.
+
+Le but de cette exercice est le suivant :
+
+	Étant donné un ensemble de tâches dépendantes fourni sous la forme d'un graphe orienté, créér les taches et les éxecuter en s'assurant que les dépendances sont respectées.
+
+**Exercice 4**
+----------------------
+
+- Ecrire ou récupérer une classe graphe qui dispose au moins des méthodes suivantes :
+	- une méthode parcourant les sommets
+	- une méthode parcourant les arcs entrants d'un sommet ou les voisins *entrants*.
+        - une méthode retournant les extrémités d'un arc.
+        - une méthode chargeant un graphe décrit dans un ficher comme une liste d'arcs (1 par ligne).
+
+- Écrire une classe GraphExecute qui :
+	- charge un graphe
+	- parcoure ses sommets et crée une tache par sommet.
+	- Assure que la tâche :math:`v` attend la completion de la tâche :math:`u` si :math:`(u,v)` est un arc du graphe.
+        - Lance les taches.
+
+Utiliser cette classe pour répondre directement aux exercices 5,6,7,8,9 du TD1.
+
+
+**Detection de l'interbloquage**
+==============================================
+
+On voudrait détecter des cas simples d'interbloquage, le principe est de créer un graphe de dépendance des tâches en cours d'exécution
+et de detecter un éventuel circuit dans ce graphe. Nous nous limitons au cas des philosophes ou à des cas simples analogues.  La situation est alors la suivante :
+	- Pour progresser une tâche à besoin que certaines ressources soient libérées.
+	- Une tache qui se termine libère certaines ressources.
+
+Dans le cas des philosophes il s'agit de la tâche *le philosophe i mange* et les ressources sont les baguettes. Pour nous simplifier le travail nous allons oublier les baguettes et simplement dire que la progression du philosophe :math:`i`  dépend de celle du philosophe :math:`j` si dans l'état courant du système  :math:`j` possède une baguette nécessaire à :math:`i`.
+
+Notez bien qu'ici le graphe dépendance est dynamique, par exemple lorsque que le système commence à évoluer il n'y a aucune dépendance car aucune baguette n'est alors affectée.
+
+**Exercice 5**
+----------------------
+
+- Écrire une classe Observateur qui photographie le système toutes les secondes et génére les graphe de dependance représentant les repas des philosophes.
+- Détecter une situation d'interbloquage en recherchant un circuit dans le graphe de dépendance.
+
+On fera attention afin d'avoir une vraie photo du système.

@@ -1,0 +1,38 @@
+.. Petitweb documentation master file, created by
+   sphinx-quickstart on Fri Oct 21 03:51:44 2016.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+**TD De Systèmes Distribués**
+########################################
+.. toctree::
+   :maxdepth: 1
+   :numbered:
+
+   td1/sujet1
+   td2/sujet2
+   td3/sujet3
+   td4/sujet4
+   td5/sujet5
+
+**Corrigés des TDs**
+########################################
+
+.. toctree::
+   :maxdepth: 1
+   :numbered:
+
+   td1/corrige1
+   td2/corrige2
+   td3/corrige3
+
+
+**Sujet du Projet (version préliminaire)**
+##############################################################################
+
+.. toctree::
+   :maxdepth: 1
+   :numbered:
+
+
+   projet/ebay

@@ -1,0 +1,762 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>1.1. Exercice 1. &mdash; documentation MiniWeb 0</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Recherche" href="../search.html"/>
+    <link rel="top" title="documentation MiniWeb 0" href="../index.html"/>
+        <link rel="up" title="1. Corrigé du TD numéro 2 : Java et les Threads" href="corrige2.html"/>
+        <link rel="prev" title="1. Corrigé du TD numéro 2 : Java et les Threads" href="corrige2.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> MiniWeb
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../td1/sujet1.html">1. <strong>TD numéro 1 : Communication via des sockets</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="sujet2.html">2. <strong>TD numéro 2 : Threads en Java, Concurrence</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td3/sujet3.html">3. <strong>TD numéro 3 : Quelques  exemples de programation concurrente</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td4/sujet4.html">4. <strong>TD numéro 4 : Interbloquage, Graphe de tache, acyclicité</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td5/sujet5.html">5. <strong>TD numéro 5: Un Exemple de programme distribué sans arbitre : La table de Hachage distribuée.</strong></a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../td1/corrige1.html"><strong>Corrigé du TD numéro 1 : Communication via des sockets</strong></a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="corrige2.html">1. <strong>Corrigé du TD numéro 2 :  Java et les Threads</strong></a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">1.1. <strong>Exercice 1.</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exercice-2">1.2. <strong>Exercice 2.</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exercice-3">1.3. <strong>Exercice 3.</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exercice-4">1.4. <strong>Exercice 4.</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exercice-5">1.5. <strong>Exercice 5.</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exercice-6">1.6. <strong>Exercice 6.</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exercice-7">1.7. <strong>Exercice 7.</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exercice-8">1.8. <strong>Exercice 8.</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exercice-9">1.9. <strong>Exercice 9.</strong></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#la-classe-treetask">1.9.1. <strong>La Classe TreeTask</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#la-methode-run">1.9.2. <strong>La méthode run()</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#le-constructeur-de-tache">1.9.3. <strong>Le Constructeur de Tâche</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#la-construction-recursive-des-taches">1.9.4. <strong>La Construction Récursive des Tâches</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#la-methode-main-de-la-classe">1.9.5. <strong>La Méthode main() de la Classe</strong></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MiniWeb</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="corrige2.html">1. <strong>Corrigé du TD numéro 2 :  Java et les Threads</strong></a> &raquo;</li>
+        
+      <li>1.1. <strong>Exercice 1.</strong></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/td2/cbody.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="exercice-1">
+<h1>1.1. <strong>Exercice 1.</strong><a class="headerlink" href="#exercice-1" title="Lien permanent vers ce titre">¶</a></h1>
+<p>Il suffit de créer deux objets exécutables appartenant à la même classe (ici appelée <em>CompteurBasique</em>), on va passer le sens du compteur dans le créateur de l&#8217;objet. Ensuite on crée les 2 threads puis on le démarre. On peut soit faire un test sur la valeur du paramètre <em>Direction</em> (<strong>if,else</strong>) et gérer deux cas, ou avoir une seule boucle avec des bornes dépendant de <em>Direction</em>. Enfin on peut tout simplement afficher un message différent, ici <span class="math">\((maxIter-1)*( (1-Direction)/2 )+Direction*i)\)</span> vaut <span class="math">\(i\)</span> si Direction=1 et <span class="math">\(maxiter -i\)</span> si <span class="math">\(Direction=-1\)</span>.</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text"><li>Exemple avec deux Threads*</li>
+</span><a class="headerlink" href="#id1" title="Lien permanent vers ce code">¶</a></div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="hll"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CompteurBasique</span>  <span class="kd">implements</span> <span class="n">Runnable</span><span class="o">{</span>
+</span>    <span class="n">String</span> <span class="n">nom</span><span class="o">=</span><span class="s">&quot;Toto&quot;</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">maxIter</span><span class="o">=</span> <span class="mi">1000</span> <span class="o">;</span>
+    <span class="kt">int</span> <span class="n">Direction</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="nf">CompteurBasique</span><span class="o">(</span><span class="n">String</span>  <span class="n">nom</span><span class="o">,</span> <span class="kt">int</span> <span class="n">laDirection</span><span class="o">)</span>    <span class="o">{</span>
+	<span class="k">this</span><span class="o">.</span><span class="na">nom</span><span class="o">=</span><span class="n">nom</span><span class="o">;</span>
+       <span class="k">this</span><span class="o">.</span><span class="na">Direction</span><span class="o">=</span><span class="n">laDirection</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span>
+    <span class="o">{</span>
+	    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Ici le  thread %s, je debute!\n&quot;</span><span class="o">,</span> <span class="n">nom</span><span class="o">);</span>
+	    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">maxIter</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+	    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;[%s] dit %d\n&quot;</span><span class="o">,</span><span class="n">nom</span><span class="o">,(</span><span class="n">maxIter</span><span class="o">-</span><span class="mi">1</span><span class="o">)*(</span> <span class="o">(</span><span class="mi">1</span><span class="o">-</span><span class="n">Direction</span><span class="o">)/</span><span class="mi">2</span> <span class="o">)+</span><span class="n">Direction</span><span class="o">*</span><span class="n">i</span><span class="o">);</span>
+    	<span class="o">}</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span>  <span class="kd">throws</span>  <span class="n">Exception</span> <span class="o">{</span>
+	<span class="n">CompteurBasique</span>   <span class="n">objetA</span>  <span class="o">=</span> <span class="k">new</span> <span class="n">CompteurBasique</span><span class="o">(</span><span class="s">&quot;TA&quot;</span><span class="o">,</span><span class="mi">1</span><span class="o">);</span>
+	<span class="n">Thread</span> <span class="n">TA</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">objetA</span><span class="o">);</span>
+        <span class="n">CompteurBasique</span>   <span class="n">objetB</span>  <span class="o">=</span> <span class="k">new</span> <span class="n">CompteurBasique</span><span class="o">(</span><span class="s">&quot;TB&quot;</span><span class="o">,-</span><span class="mi">1</span><span class="o">);</span>
+        <span class="n">Thread</span> <span class="n">TB</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">objetB</span><span class="o">);</span>
+	<span class="n">TA</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+	<span class="n">TB</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+	<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Thread principal terminé  !\n&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="exercice-2">
+<h1>1.2. <strong>Exercice 2.</strong><a class="headerlink" href="#exercice-2" title="Lien permanent vers ce titre">¶</a></h1>
+<p>L&#8217;affichage est de fait apparement aléatoire, l&#8217;ordonnanceur de la JVM donne la main à chacun des Threads d&#8217;une facon indéterminée que nous ne pouvons pas prévoir. Même si apparement le thread qui démarre en premier peut souvent se terminer le premier et si un thread semble conserver la main un <em>certain temps</em>. Quand on ajoute des délai cette absence de déterminisme est renforcée.  L&#8217;ordonnanceur de la machine Java essaie à la fois d&#8217;optimiser le calcul (ce qui ici implique de ne pas faire alterner les deux threads) mais aussi d&#8217;être équitable en donnant la main aux deux threads. Au final on peut seulement supposer  que tout thread qui ne dort pas aura la main de temps à autre.</p>
+<p>Les deux Threads sont en concurrence bien entendu pour le CPU (sauf éventuellement sur un ordinateur multi-coeur), la mémoire, mais aussi pour l&#8217;accès au flux de sortie qui permet d&#8217;écrire sur  la console (i.e. <em>System.out</em>), la JVM assure que ce flux est bien géré et que les deux threads accèdent exclusivement  à cette ressource.  Par ailleurs la concurrence n&#8217;est pas forte car les deux threads ne partagent aucun objet ou variable, mis à part bien entendu les objets systemes tels que <em>Systeme,out</em>.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="exercice-3">
+<h1>1.3. <strong>Exercice 3.</strong><a class="headerlink" href="#exercice-3" title="Lien permanent vers ce titre">¶</a></h1>
+<p>Le programme met en concurrence deux threads qui manipulent le même ObjetEntier qui se nomme Compteur. La première tache (tache1) incrémente Compteur tandis que la seconde (tache2) le décrémente, ceci 1 million de fois chacune.</p>
+<p>À la fin du calcul la valeur du compteur devrait être zéro.</p>
+<p>Le programme contient deux erreurs :</p>
+<ol class="arabic simple">
+<li>La valeur du compteur  affichée par le thread principal est provisoire car tache1 et tache2 sont en cours. Ainsi si on affiche plusieurs fois la valeur de Compteur à la fin du code du thread principal, la valeur affichée va varier.</li>
+<li>Les tâches 1 et 2 manipulent et modifient le même objet (ici Compteur) et cela crée des inconsistances, dans le cas qui nous occupe il s&#8217;agit d&#8217;un problème dit de <em>race condition</em> (qui est décrit dans la fiche 2). Même si on attend que les tâches 1 et 2 aient terminé leur calcul,  le compteur final ne vaudra souvent pas zéro. Si on change <span class="math">\(10^6\)</span> en 100 on peut très bien avoir un programme qui fonctionne apparement bien. C&#8217;est bien là l&#8217;aspect le plus délicat des problèmes de concurrence : ils n&#8217;apparaissent pas toujours et un programme apparement satisfaisant peut contenir des erreurs cachées. Bien entendu les programmes déterministes utilisant un seul fil de calcul eux aussi peuvent contenir des erreurs cachées, mais elles sont bien plus faciles à décéler.</li>
+</ol>
+</div>
+<div class="section" id="exercice-4">
+<h1>1.4. <strong>Exercice 4.</strong><a class="headerlink" href="#exercice-4" title="Lien permanent vers ce titre">¶</a></h1>
+<p>Pour protéger le compteur et garantir un accès cohérent il suffit de synchroniser la méthode <em>add</em>. Ce qui se fait simplement en écrivant :</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ObjetEntier</span> <span class="o">{</span>
+           <span class="o">...........</span>
+           <span class="o">................</span>
+<span class="kd">public</span>  <span class="kt">int</span> <span class="nf">val</span><span class="o">(){</span> <span class="k">return</span> <span class="n">ma_valeur</span><span class="o">;}</span>
+<span class="hll"><span class="kd">public</span> <span class="kd">synchronized</span>   <span class="kt">void</span> <span class="nf">add</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">)</span> <span class="o">{</span> <span class="n">ma_valeur</span><span class="o">+=</span><span class="n">i</span><span class="o">;}</span>
+</span>
+  <span class="o">}</span>
+</pre></div>
+</div>
+<p>La valeur du compteur sera alors correcte, cependant pour l&#8217;afficher il faut soit placer une très longue boucle à la fin du thread principal ou encore l&#8217;afficher à la fin des tâches 1 et 2. Par exemple on peut ajouter une ligne à la fin de la méthode run() des threads.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+      <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mf">1e7</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+        <span class="o">{</span>
+                  <span class="n">notre_entier</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">increment</span><span class="o">);</span>
+        <span class="o">}</span>
+ <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Thread faisant %d terminé. Compteur= %s\n&quot;</span> <span class="o">,</span> <span class="n">increment</span><span class="o">,</span><span class="n">notre_entier</span><span class="o">);</span>
+  <span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="exercice-5">
+<h1>1.5. <strong>Exercice 5.</strong><a class="headerlink" href="#exercice-5" title="Lien permanent vers ce titre">¶</a></h1>
+<p>Les codes complets sont disponibles ici <a class="reference download internal" href="../_downloads/Voiture.java" download=""><code class="xref download docutils literal"><span class="pre">Classe</span> <span class="pre">Voiture.java</span></code></a>  et  classe <a class="reference download internal" href="../_downloads/Parking.java" download=""><code class="xref download docutils literal"><span class="pre">Parking.java</span></code></a>.</p>
+<p>On commence par écrire le code pour une voiture, pour en simuler plusieurs on lancera simplement plusieurs threads.</p>
+<p>Chaque voiture sera donc simulée par un thread. Une voiture dispose d&#8217;un nom et pointe  sur le <em>Parking</em> qui ici est partagé.
+Le comportement de chaque voiture est cyclique et peut se décrire comme suit:</p>
+<p><strong>Répéter</strong>:</p>
+<ul class="simple">
+<li>Se déplacer à l&#8217;extérieur un <em>certain temps</em>.</li>
+<li>Demander et obtenir l&#8217;accès au parking.</li>
+<li>Rentrer dans le parking se garer et y  rester un <em>certain temps</em></li>
+<li>Sortir du parking.</li>
+</ul>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text"><em>Exemple pour la classe voiture</em></span><a class="headerlink" href="#id2" title="Lien permanent vers ce code">¶</a></div>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Voiture</span> <span class="kd">implements</span> <span class="n">Runnable</span> <span class="o">{</span> 
+	<span class="n">String</span> <span class="n">nom</span><span class="o">;</span> 
+	<span class="n">Parking</span> <span class="n">park</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="nf">Voiture</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">Parking</span> <span class="n">park</span><span class="o">){</span>
+	<span class="k">this</span><span class="o">.</span><span class="na">nom</span><span class="o">=</span><span class="n">name</span><span class="o">;</span> 
+<span class="hll">	<span class="k">this</span><span class="o">.</span><span class="na">park</span><span class="o">=</span><span class="n">park</span><span class="o">;</span> 
+</span>
+<span class="hll">	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span> 
+</span>	<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;[%s]: Je débute !  \n&quot;</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">nom</span><span class="o">);</span>
+<span class="hll">	<span class="k">try</span> <span class="o">{</span>
+</span>	    <span class="k">while</span><span class="o">(</span><span class="kc">true</span><span class="o">){</span>
+<span class="hll">		<span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">((</span><span class="kt">long</span><span class="o">)</span>  <span class="o">(</span><span class="mi">50000</span><span class="o">*</span> <span class="n">Math</span><span class="o">.</span><span class="na">random</span><span class="o">()));</span>
+</span>		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;[%s]: Je demande à rentrer  \n&quot;</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">nom</span><span class="o">);</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">rentrer</span><span class="o">();</span>
+		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;[%s]: Je viens d&#39;entrer \n&quot;</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">nom</span><span class="o">);</span>
+		<span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">((</span><span class="kt">long</span><span class="o">)</span>  <span class="o">(</span><span class="mi">50000</span><span class="o">*</span> <span class="n">Math</span><span class="o">.</span><span class="na">random</span><span class="o">()));</span>
+		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;[%s]: Je demande à sortir  \n&quot;</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">nom</span><span class="o">);</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">park</span><span class="o">.</span><span class="na">leave</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>  
+	<span class="o">}}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<p>Dans ce code :</p>
+<ul class="simple">
+<li>la ligne 5 attends à l extérieur.</li>
+<li>la ligne 7 demande l autorisation de rentrer, elle est bloquante.</li>
+<li>la ligne 9 simule le temps passé dans le garage,</li>
+<li>la ligne 10 quiite le parking.</li>
+</ul>
+<p>Le Parking est simpliste, on le crée en passant sa taille au constructeur. Il propose deux méthodes atomiques (<em>synchronized</em>), <em>leave()</em> et <em>accept()</em>.</p>
+<ul class="simple">
+<li><em>accept()</em> retourne vrai si il y a de la place et reserve la place (incrémente le nombre de places occupées), et faux sinon.</li>
+<li><em>leave</em> laisse sortir la voiture et décrémente le nombre de places occupées.</li>
+</ul>
+<p>J ai ajouté une structure qui maintient l&#8217;ensemble des voitures situées dans le parking mais ce n&#8217;etait pas demandé. Il serait facile de comptabiliser de manière analogue le temps passé par chaque voiture dans le parking.</p>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text"><strong>Exemple pour la classe Parking</strong></span><a class="headerlink" href="#id3" title="Lien permanent vers ce code">¶</a></div>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Parking</span> <span class="o">{</span>
+    <span class="kt">int</span> <span class="n">PlacesOccupees</span><span class="o">;</span> 
+    <span class="kt">int</span> <span class="n">Capacite</span> <span class="o">;</span> 
+    <span class="kd">public</span> <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Voiture</span><span class="o">&gt;</span> <span class="n">infoVoitures</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Voiture</span><span class="o">&gt;();</span>
+    <span class="n">Parking</span><span class="o">(</span><span class="kt">int</span> <span class="n">size</span><span class="o">){</span> <span class="k">this</span><span class="o">.</span><span class="na">Capacite</span> <span class="o">=</span> <span class="n">size</span><span class="o">;}</span> 
+    <span class="kt">int</span> <span class="nf">places</span><span class="o">(){</span> <span class="k">return</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">Capacite</span> <span class="o">-</span> <span class="k">this</span><span class="o">.</span><span class="na">PlacesOccupees</span><span class="o">);</span> <span class="o">}</span>  
+	
+<span class="hll">    <span class="kd">synchronized</span> <span class="kt">boolean</span>  <span class="nf">accept</span><span class="o">(</span><span class="n">Voiture</span> <span class="n">myVoit</span><span class="o">)</span> <span class="o">{</span>
+</span>	<span class="k">if</span>  <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">places</span><span class="o">()</span> <span class="o">&gt;</span><span class="mi">0</span> <span class="o">)</span>
+	    <span class="o">{</span> 
+<span class="hll">		<span class="k">this</span><span class="o">.</span><span class="na">PlacesOccupees</span> <span class="o">++</span> <span class="o">;</span>
+</span>		<span class="n">infoVoitures</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">myVoit</span><span class="o">);</span> 
+		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;[Parking] :%s acceptée, il reste %d places \n&quot;</span><span class="o">,</span> <span class="n">myVoit</span><span class="o">.</span><span class="na">nom</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">places</span><span class="o">());</span>
+		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Voiture Garees\n&quot;</span><span class="o">);</span>
+		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">infoVoitures</span><span class="o">);</span>
+<span class="hll">		<span class="k">return</span> <span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">;</span> 
+</span>	    <span class="o">}</span>
+	<span class="k">else</span> <span class="o">{</span>
+	    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Parking : %s refusée, il reste  %d places \n&quot;</span><span class="o">,</span> <span class="n">myVoit</span><span class="o">.</span><span class="na">nom</span><span class="o">,</span><span class="k">this</span><span class="o">.</span><span class="na">places</span><span class="o">());</span>
+	    <span class="k">return</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span> <span class="o">;</span>
+	<span class="o">}</span>
+    <span class="o">}</span>
+<span class="hll">    <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">leave</span><span class="o">(</span><span class="n">Voiture</span> <span class="n">myVoit</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="hll">	<span class="n">PlacesOccupees</span> <span class="o">--;</span> 
+</span>	<span class="n">infoVoitures</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">myVoit</span><span class="o">);</span>
+	<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Parking :[%s] est sortie, reste  %d places\n&quot;</span><span class="o">,</span> <span class="n">myVoit</span><span class="o">.</span><span class="na">nom</span><span class="o">,</span> <span class="n">places</span><span class="o">());</span>
+    <span class="o">}}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<p>La méthode rentrer qui bloque la voiture tant qu&#8217;il n y a pas de places innonde le parking de demandes, entre chaque demande la voiture attend un peu. On verra plus tard comment éviter cela.</p>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text"><strong>Méthode rentrer</strong></span><a class="headerlink" href="#id4" title="Lien permanent vers ce code">¶</a></div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Voiture</span> <span class="kd">implements</span> <span class="n">Runnable</span> <span class="o">{</span> 
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">rentrer</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">InterruptedException</span><span class="o">{</span>	
+		<span class="k">while</span> <span class="o">(!(</span><span class="k">this</span><span class="o">.</span><span class="na">park</span><span class="o">.</span><span class="na">accept</span><span class="o">(</span><span class="k">this</span><span class="o">)))</span>
+		<span class="o">{</span>
+		    <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">((</span><span class="kt">long</span><span class="o">)</span>  <span class="o">(</span><span class="mi">1000</span><span class="o">*</span> <span class="n">Math</span><span class="o">.</span><span class="na">random</span><span class="o">()));</span>
+		    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;[%s]  : Je redemande à rentrer  \n&quot;</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">nom</span><span class="o">);</span>
+		<span class="o">}</span>
+	<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<p>Le programme principal se contente de créer le parking ainsi que les thread associés aux voitures tout en démarramt ces threads.</p>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text"><strong>Main du simulateur de parking</strong></span><a class="headerlink" href="#id5" title="Lien permanent vers ce code">¶</a></div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Voiture</span> <span class="kd">implements</span> <span class="n">Runnable</span> <span class="o">{</span> 
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+	<span class="kt">int</span> <span class="n">TailleParking</span><span class="o">=</span><span class="mi">8</span><span class="o">;</span>
+	<span class="kt">int</span> <span class="n">nbVoitures</span><span class="o">=</span><span class="mi">15</span><span class="o">;</span> 
+	<span class="n">Parking</span> <span class="n">leParking</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Parking</span><span class="o">(</span><span class="n">TailleParking</span><span class="o">);</span>
+	<span class="n">Thread</span> <span class="n">MesVoitures</span><span class="o">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">[</span><span class="n">nbVoitures</span><span class="o">];</span>
+	<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span> <span class="n">nbVoitures</span><span class="o">;</span> <span class="n">i</span><span class="o">++){</span>
+	    <span class="n">MesVoitures</span><span class="o">[</span><span class="n">i</span><span class="o">]=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="k">new</span> <span class="n">Voiture</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Voit %d &quot;</span><span class="o">,</span> <span class="n">i</span><span class="o">)</span> <span class="o">,</span> <span class="n">leParking</span><span class="o">));</span>
+	    <span class="n">MesVoitures</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">start</span><span class="o">();}}}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="exercice-6">
+<h1>1.6. <strong>Exercice 6.</strong><a class="headerlink" href="#exercice-6" title="Lien permanent vers ce titre">¶</a></h1>
+<p>Afin que la valeur affichée par la thread principal soit toujours correcte il suffit de lui demander d&#8217;attendre les tâches 1 et 2.
+En Java ceci donne le morceau de code suivant, que l&#8217;on utilise pour la méthode main du thread principal.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span> <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+ <span class="n">ObjetEntier</span> <span class="n">Compteur</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjetEntier</span><span class="o">();</span>
+ <span class="n">PetitJob</span> <span class="n">objex1</span><span class="o">=</span> <span class="k">new</span> <span class="n">PetitJob</span><span class="o">(</span><span class="n">Compteur</span><span class="o">,</span> <span class="mi">1</span><span class="o">);</span>
+ <span class="n">PetitJob</span> <span class="n">objex2</span><span class="o">=</span> <span class="k">new</span> <span class="n">PetitJob</span><span class="o">(</span><span class="n">Compteur</span><span class="o">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">);</span>
+ <span class="n">Thread</span> <span class="n">tache1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">objex1</span> <span class="o">,</span><span class="s">&quot;incrementeur&quot;</span><span class="o">);</span>
+ <span class="n">Thread</span> <span class="n">tache2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">objex2</span><span class="o">,</span> <span class="s">&quot;decrementeur&quot;</span><span class="o">);</span>
+
+ <span class="n">tache1</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+ <span class="n">tache2</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+
+<span class="hll"> <span class="k">try</span> <span class="o">{</span>
+</span><span class="hll"> <span class="n">tache1</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>
+</span><span class="hll"> <span class="n">tache2</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>
+</span><span class="hll"> <span class="o">}</span>
+</span><span class="hll"> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="hll"> <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();}</span>
+</span>
+ <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Le compteur vaut %s\n&quot;</span> <span class="o">,</span> <span class="n">Compteur</span><span class="o">);</span>
+ <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Le compteur vaut %s\n&quot;</span> <span class="o">,</span> <span class="n">Compteur</span><span class="o">);</span>
+
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="exercice-7">
+<h1>1.7. <strong>Exercice 7.</strong><a class="headerlink" href="#exercice-7" title="Lien permanent vers ce titre">¶</a></h1>
+<p>Un Exemple de solution est donné ci dessous. Un Objet de la classe Dormeur à un antécédent qui est un thread.
+La méthode <em>run()</em> commence par attendre que l&#8217;antécédent ai terminé.</p>
+<p>Ensuite il suffit de créer les Threads et de définr pour chacun son antécedent.</p>
+<div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text"><li>Exemple avec deux Threads*</li>
+</span><a class="headerlink" href="#id6" title="Lien permanent vers ce code">¶</a></div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="hll"><span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Dormeur</span> <span class="kd">implements</span> <span class="n">Runnable</span> <span class="o">{</span>
+	<span class="n">String</span> <span class="n">nom</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+	<span class="n">Thread</span> <span class="n">antecedent</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+
+	<span class="kd">public</span> <span class="nf">Dormeur</span><span class="o">(</span><span class="n">String</span> <span class="n">nom</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Thread</span><span class="o">&gt;</span> <span class="n">list_antecedents</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">nom</span> <span class="o">=</span> <span class="n">nom</span><span class="o">;</span>
+		<span class="k">for</span> <span class="o">(</span><span class="n">Thread</span> <span class="n">t</span> <span class="o">:</span> <span class="n">list_antecedents</span><span class="o">)</span> <span class="o">{</span>
+			<span class="k">this</span><span class="o">.</span><span class="na">antecedent</span> <span class="o">=</span> <span class="n">t</span><span class="o">;</span>
+		<span class="o">}</span>
+	<span class="o">}</span>
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;%s, started !\n&quot;</span><span class="o">,</span> <span class="n">nom</span><span class="o">);</span>
+		<span class="k">if</span> <span class="o">(</span><span class="n">antecedent</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span>
+			<span class="k">try</span> <span class="o">{</span>
+				<span class="n">antecedent</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>
+				<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;%s: %s a fini !!\n&quot;</span><span class="o">,</span> <span class="n">nom</span><span class="o">,</span><span class="n">antecedent</span><span class="o">.</span><span class="na">getName</span><span class="o">());</span>
+			<span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+				<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Issue with %s inte while waiting\n&quot;</span><span class="o">,</span> <span class="n">nom</span><span class="o">);</span>
+			<span class="o">}</span>
+		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;%s dit: Super je peux enfin demarrer! !\n&quot;</span><span class="o">,</span> <span class="n">nom</span><span class="o">);</span>
+		<span class="n">zzzz</span><span class="o">();</span> 
+				<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;%s dit: Super j&#39;ai FINI!!! !\n&quot;</span><span class="o">,</span> <span class="n">nom</span><span class="o">);</span>
+	<span class="o">}</span>
+	<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+		<span class="n">List</span><span class="o">&lt;</span><span class="n">Thread</span><span class="o">&gt;</span> <span class="n">mon_antecedent</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">();</span>
+
+		<span class="n">Dormeur</span> <span class="n">OC</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Dormeur</span><span class="o">(</span><span class="s">&quot;Glandeur C&quot;</span><span class="o">,</span> <span class="n">mon_antecedent</span><span class="o">);</span>
+		<span class="n">Thread</span> <span class="n">TC</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">OC</span><span class="o">,</span> <span class="s">&quot;Mister C&quot;</span><span class="o">);</span>
+
+		<span class="n">mon_antecedent</span> <span class="o">=</span> <span class="n">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="n">TC</span><span class="o">);</span>
+		<span class="n">Dormeur</span> <span class="n">OB</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Dormeur</span><span class="o">(</span><span class="s">&quot;Glandeur B&quot;</span><span class="o">,</span> <span class="n">mon_antecedent</span><span class="o">);</span>
+		<span class="n">Thread</span> <span class="n">TB</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">OB</span><span class="o">,</span> <span class="s">&quot;Mister B&quot;</span><span class="o">);</span>
+
+		<span class="n">mon_antecedent</span> <span class="o">=</span> <span class="n">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="n">TB</span><span class="o">);</span>
+		<span class="n">Dormeur</span> <span class="n">OA</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Dormeur</span><span class="o">(</span><span class="s">&quot;Glandeur A&quot;</span><span class="o">,</span> <span class="n">mon_antecedent</span><span class="o">);</span>
+		<span class="n">Thread</span> <span class="n">TA</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">OA</span><span class="o">,</span> <span class="s">&quot;Mister A&quot;</span><span class="o">);</span>
+
+		<span class="n">TA</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+		<span class="n">TB</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+		<span class="n">TC</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+
+		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Main :Fini ici  !\n&quot;</span><span class="o">);</span>
+	<span class="o">}</span>
+
+	
+	
+	<span class="kd">private</span> <span class="kt">void</span> <span class="nf">zzzz</span><span class="o">(){</span>
+		
+		<span class="k">try</span> <span class="o">{</span>
+			<span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">((</span><span class="kt">int</span><span class="o">)</span> <span class="o">(</span><span class="mf">1e3</span> <span class="o">*</span> <span class="n">Math</span><span class="o">.</span><span class="na">random</span><span class="o">()));</span>
+		<span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+			<span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+		<span class="o">}</span>
+	<span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="exercice-8">
+<h1>1.8. <strong>Exercice 8.</strong><a class="headerlink" href="#exercice-8" title="Lien permanent vers ce titre">¶</a></h1>
+<ul class="simple">
+<li>Il suffit de passer à chaque thread la liste des threads qu&#8217;il doit attendre, on peut le faire via le constructeur ou via une méthode <em>SetAntecedent</em>.</li>
+<li>Ensuite tant que la liste des predecesseurs est non vide, on dépile un thread T, et on effectue <em>T.join()</em></li>
+<li>Le code final se trouve ici : <a class="reference download internal" href="../_downloads/redormeur.java" download=""><code class="xref download docutils literal"><span class="pre">Classe</span> <span class="pre">redormeur</span></code></a></li>
+</ul>
+</div>
+<div class="section" id="exercice-9">
+<h1>1.9. <strong>Exercice 9.</strong><a class="headerlink" href="#exercice-9" title="Lien permanent vers ce titre">¶</a></h1>
+<p>Le code final se trouve ici : <a class="reference download internal" href="../_downloads/TreeTask.java" download=""><code class="xref download docutils literal"><span class="pre">Classe</span> <span class="pre">TreeTask</span></code></a>  et  classe <a class="reference download internal" href="../_downloads/MutableInt.java" download=""><code class="xref download docutils literal"><span class="pre">MutableInt</span></code></a>. Le code est commenté ci dessous, il est un peu long, nous verrons <em>plus tard</em> comment faire un code minimal en utilisant une librairie de graphe. En effet l&#8217;exercice 9 est une généralisation de cet exercice qui porte sur un graphe de dépendance particulier.</p>
+<p>Dans cette exercice on commence par déclarer la  classe <em>TreeTask</em> censée représenter une tâche.</p>
+<div class="section" id="la-classe-treetask">
+<h2>1.9.1. <strong>La Classe TreeTask</strong><a class="headerlink" href="#la-classe-treetask" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Cette classe possède les attributs suivants :</p>
+<ol class="arabic simple">
+<li><em>myIndex</em>  l&#8217;index de la tâche dans la table des tâches.</li>
+<li>une référence  <em>TreeTask</em> au tableau des tâches.</li>
+<li>l&#8217;index de la tâche précédente <em>predIndex</em>, si cette tâche est inexistante (ce qui est le cas de la tâche racine) predIndex vaudra -1.</li>
+<li>Une chaine <em>myName</em> le nom de la tâche.</li>
+</ol>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">TreeTask</span>  <span class="kd">implements</span>  <span class="n">Runnable</span>
+<span class="o">{</span>
+  <span class="n">Integer</span> <span class="n">predIndex</span><span class="o">;</span>
+  <span class="n">TreeTask</span><span class="o">[]</span> <span class="n">TasksArray</span><span class="o">;</span>
+  <span class="n">String</span> <span class="n">myName</span><span class="o">;</span>
+  <span class="kt">int</span> <span class="n">myIndex</span><span class="o">;</span>
+  <span class="n">Thread</span> <span class="n">myThread</span><span class="o">;</span>
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="la-methode-run">
+<h2>1.9.2. <strong>La méthode run()</strong><a class="headerlink" href="#la-methode-run" title="Lien permanent vers ce titre">¶</a></h2>
+<ol class="arabic simple">
+<li>Attends que la tâche précédente soit terminée (ligne 5)</li>
+<li>Affiche quelle commence à travailler (ligne 12)</li>
+<li>Simule un temps aléatoire  (ligne 13)</li>
+<li>Annonce qu&#8217;elle se termine et se termine (ligne 14).</li>
+</ol>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;%s Started\n&quot;</span><span class="o">,</span> <span class="n">myName</span><span class="o">);</span>
+  <span class="n">Thread</span> <span class="n">previousTask</span><span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">predIndex</span><span class="o">&gt;=</span><span class="mi">0</span><span class="o">){</span>
+<span class="hll">    <span class="n">previousTask</span><span class="o">=</span>  <span class="n">TasksArray</span><span class="o">[</span><span class="n">predIndex</span><span class="o">].</span><span class="na">myThread</span><span class="o">;</span>
+</span>    <span class="k">try</span>       <span class="o">{</span>
+      <span class="n">previousTask</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>
+      <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+<span class="hll">    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;%s Running\n&quot;</span><span class="o">,</span> <span class="n">myName</span><span class="o">);</span>
+</span><span class="hll">    <span class="n">zzzz</span><span class="o">();</span>
+</span><span class="hll">    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;%s Completed\n&quot;</span><span class="o">,</span> <span class="n">myName</span><span class="o">);</span>
+</span>  <span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<hr class="docutils" />
+<div class="section" id="le-constructeur-de-tache">
+<h2>1.9.3. <strong>Le Constructeur de Tâche</strong><a class="headerlink" href="#le-constructeur-de-tache" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Dans ce constructeur on recopie simplement quelques info : la référence au tableau, le nom, l&#8217;index de la tâche précédente, l&#8217;index de la tâche (respectivement lignes 3,4,5,6).</p>
+<p>L&#8217;index courant est un entier déguisé car on veut qu&#8217;il soit modifiable (ie passable par référence) car on l&#8217;incrémente à chaque fois que l&#8217;on crée une tâche. Java est un langage stupide qui ne propose pas d&#8217;entiers mutables (sauf en utilisant la librairie apache).</p>
+<p>Ce qui est un peut particulier ce sont les lignes 7,8,9:</p>
+<ol class="arabic simple">
+<li>Ligne 7, on place aussi une référence à notre tâche dans le tableau des tâches.</li>
+<li>Ligne 8 on incrémente l&#8217;index courant.</li>
+<li>Ligne 9 on crée le thread associé à la tâche.</li>
+</ol>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="kd">public</span> <span class="nf">TreeTask</span><span class="o">(</span><span class="n">String</span> <span class="n">Name</span><span class="o">,</span> <span class="n">MutableInt</span> <span class="n">index</span><span class="o">,</span>  <span class="n">TreeTask</span><span class="o">[]</span> <span class="n">TA</span><span class="o">,</span> <span class="kt">int</span> <span class="n">pred</span> <span class="o">)</span>
+  <span class="o">{</span>
+    <span class="n">TasksArray</span><span class="o">=</span><span class="n">TA</span><span class="o">;</span>
+    <span class="n">myName</span><span class="o">=</span> <span class="n">Name</span><span class="o">;</span>
+    <span class="n">predIndex</span><span class="o">=</span><span class="n">pred</span><span class="o">;</span>
+    <span class="n">myIndex</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="na">val</span><span class="o">();</span>
+<span class="hll">    <span class="n">TasksArray</span><span class="o">[</span><span class="n">myIndex</span><span class="o">]=</span><span class="k">this</span><span class="o">;</span>
+</span><span class="hll">    <span class="n">index</span><span class="o">.</span><span class="na">increment</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+</span><span class="hll">    <span class="n">myThread</span><span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+</span>    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Creating Runnable %s with index %d, pred=%s\n&quot;</span><span class="o">,</span> <span class="n">myName</span><span class="o">,</span><span class="n">myIndex</span><span class="o">,</span><span class="n">predIndex</span><span class="o">);</span>
+   <span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="la-construction-recursive-des-taches">
+<h2>1.9.4. <strong>La Construction Récursive des Tâches</strong><a class="headerlink" href="#la-construction-recursive-des-taches" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Afin de créer les tâches récursivement on utilise la récursion suivante, qui est basée sur le fait suivant:</p>
+<blockquote>
+<div>Un arbre binaire de profondeur <span class="math">\(i\)</span> est formé de deux arbres binaires de profondeur <span class="math">\(i-1\)</span> attachés à une même racine.</div></blockquote>
+<ul class="simple">
+<li>Une tâche au niveau <span class="math">\(i&gt;0\)</span> crée deux tâches filles : une  tache droite et une tâche gauche toutes deux de niveau <span class="math">\(i-1\)</span>. Puis elle demande aux deux tâches filles de créer leur descendance.</li>
+<li>Une tâche de niveau <span class="math">\(0\)</span> ne fait rien.</li>
+</ul>
+<p><strong>Remarque</strong> : Pour un arbre on crée la racine puis récursivement on crée les deux arbres fils, mais ici la tâche mère ne peut pas se créer elle même, la récursion classique est donc quelque peu décalée. Et la tâche racine est elle crée par la méthode <em>main</em>.</p>
+<p>Ceci conduit au code de génération suivant :</p>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kt">void</span> <span class="nf">generateSon</span><span class="o">(</span><span class="kt">int</span> <span class="n">depth</span><span class="o">,</span> <span class="n">MutableInt</span> <span class="n">firsfreeindex</span><span class="o">)</span>
+      <span class="o">{</span>
+              <span class="k">if</span> <span class="o">(</span><span class="n">depth</span><span class="o">==</span><span class="mi">0</span><span class="o">)</span> <span class="k">return</span><span class="o">;</span>
+              <span class="n">String</span>  <span class="n">leftName</span><span class="o">=</span> <span class="n">myName</span><span class="o">+</span> <span class="s">&quot;0&quot;</span><span class="o">;</span>
+              <span class="n">String</span>  <span class="n">rightName</span><span class="o">=</span> <span class="n">myName</span><span class="o">+</span> <span class="s">&quot;1&quot;</span><span class="o">;</span>
+
+<span class="hll">              <span class="n">TreeTask</span> <span class="n">Left</span><span class="o">=</span><span class="k">new</span> <span class="n">TreeTask</span><span class="o">(</span><span class="n">leftName</span><span class="o">,</span> <span class="n">firsfreetindex</span><span class="o">,</span><span class="n">TasksArray</span><span class="o">,</span> <span class="n">myIndex</span><span class="o">);</span>
+</span><span class="hll">              <span class="n">TreeTask</span> <span class="n">Right</span><span class="o">=</span><span class="k">new</span> <span class="n">TreeTask</span><span class="o">(</span><span class="n">rightName</span><span class="o">,</span> <span class="n">firsfreetindex</span><span class="o">,</span><span class="n">TasksArray</span><span class="o">,</span> <span class="n">myIndex</span><span class="o">);</span>
+</span><span class="hll">
+</span>              <span class="n">Left</span><span class="o">.</span><span class="na">generateSon</span><span class="o">(</span><span class="n">depth</span><span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="n">firsfreeindex</span><span class="o">);</span>
+              <span class="n">Right</span><span class="o">.</span><span class="na">generateSon</span><span class="o">(</span><span class="n">depth</span><span class="o">-</span><span class="mi">1</span><span class="o">,</span><span class="n">firsfreeindex</span><span class="o">);</span>
+      <span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="la-methode-main-de-la-classe">
+<h2>1.9.5. <strong>La Méthode main() de la Classe</strong><a class="headerlink" href="#la-methode-main-de-la-classe" title="Lien permanent vers ce titre">¶</a></h2>
+<p>La méthode se contente de :</p>
+<ol class="arabic simple">
+<li>De déclarer la profondeur de l´arbre (ici 4).</li>
+<li>De Créer le tableau des tâches, l&#8217;index entier modifiable (lignes 3-4)</li>
+<li>De créer  la <em>tâche racine</em> (ligne 6)</li>
+<li>D&#8217;engendrer la descendance de la tache racine (ligne 8).</li>
+</ol>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+    <span class="kt">int</span> <span class="n">depthofTree</span><span class="o">=</span><span class="mi">4</span><span class="o">;</span>
+    <span class="n">TreeTask</span><span class="o">[]</span> <span class="n">MyExObjects</span><span class="o">=</span> <span class="k">new</span> <span class="n">TreeTask</span><span class="o">[</span><span class="mi">256</span><span class="o">];</span>
+    <span class="n">MutableInt</span> <span class="n">index</span><span class="o">=</span> <span class="k">new</span> <span class="n">MutableInt</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+
+<span class="hll">    <span class="n">TreeTask</span> <span class="n">RootTask</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TreeTask</span><span class="o">(</span> <span class="s">&quot;R&quot;</span><span class="o">,</span> <span class="n">index</span><span class="o">,</span> <span class="n">MyExObjects</span><span class="o">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">);</span>
+</span>
+<span class="hll">    <span class="n">RootTask</span><span class="o">.</span><span class="na">generateSon</span><span class="o">(</span><span class="n">depthofTree</span><span class="o">,</span> <span class="n">index</span><span class="o">);</span>
+</span></pre></div>
+</td></tr></table></div>
+<p>Le code final se trouve ici : <a class="reference download internal" href="../_downloads/TreeTask.java" download=""><code class="xref download docutils literal"><span class="pre">Classe</span> <span class="pre">TreeTask</span></code></a>  elle utilise la classe <a class="reference download internal" href="../_downloads/MutableInt.java" download=""><code class="xref download docutils literal"><span class="pre">MutableInt</span></code></a>.</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="corrige2.html" class="btn btn-neutral" title="1. Corrigé du TD numéro 2 : Java et les Threads" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Stéphane Perennes.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

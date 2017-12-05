@@ -1,0 +1,78 @@
+
+Serveur Mono, ne traitant qu’un client
+======================================
+
+Le B.A.BA , un serveur jouet
+--------------------------------------------
+
+Écrire une classe Serveur\_Jouet qui :
+
+#. crée un gestionnaire de socket sur le port 12000 (ServerSocket).
+
+#. Attend une connections entrante et associe à celle-ci une socket
+   (Socket) quand elle arrive.
+
+#. Lit de façons bloquante et ligne à ligne les données recues et les
+   affiche à l’écran avec un compteur de lignes (on utilisera les
+   classes InputStreamReader BufferedReader).
+
+#. On veillera à traiter au minimum les erreurs potentielles d’entrée
+   sortie.
+
+Afin de tester le fonctionnement on utilisera telnet (telnet 127.0.0.1
+12000) pour se connecter au Serveur Jouet.
+
+#. Que ce passe t’il si on lance plusieurs sessions telnet ?
+
+#. Que deviennent les sessions telnet si on arrête le serveur ?
+
+#. Que se passe t-il si on lance une seconde instance du Serveur Jouet ?
+
+Un Serveur Amélioré
+----------------------------------
+
+| On veut modifier le Serveur afin qu’il puisse traiter sequentiellement
+plusieurs connections. Afin que cela soit possible il faut pouvoir
+terminer une connections. La terminaison va s’opérer à l’initiative du
+client, celui-ci terminera la connection en envoyant une séquence de
+caractère spéciale que nous notons FINISH.
+
+On rendra compte du comportement du serveur (démarrage, prise en charge,
+terminaison etc ...) via des messages sur la sortie standard.
+
+À partir de la classe Serveur\_Jouet, définir la classe Serveur\_multi
+qui obéit aux spécifications suivantes :
+
+#. Un des créateurs (à priori c’est le seul) associé à classe prend
+   comme argument le numéro de port sur lequel le serveur va écouter,
+   cet argument est fourni par l’utilisateur (ex: java Serveur\_Multi
+   1234). Il sera aussi souhaitable de vérifier que l’argument
+   correspond bel et bien à un numéro de port correctement formaté.
+
+#. La méthode run() Examine si des connections sont actives sur
+   Server\_Socket, si oui elle en prend une en charge et lui applique la
+   méthode Service\_Client.
+
+#. La méthode Service\_Client lit puis affiche (sur la sortie standard)
+   les données envoyées par le client (comme dans le cas du
+   Serveur\_Jouet. Cependant elle recherche dans chaque ligne envoyée
+   par le client la séquence de terminaison FINISH, si cette séquence
+   apparait la méthode Service\_Client se termine, la socket est alors
+   close et l’on retourne écouter le Serveur\_Socket.
+
+#. Le choix de la séquence de terminaison FINISH vous est laissé,
+   attention toutefois de ne pas utiliser quelque chose de trop commun
+   (pex “:math:`\backslash`\ n”, “ab”). Le caractère EOT, ctrl-D dont le
+   code ASCII est 4 est un choix acceptable.
+
+*Tests: (telnet encore)*
+
+#. Que se passe t’il si plusieurs sessions telnet sont lancées
+   concurremment ?
+
+#. En quoi envoyer la séquence FINISH diffère de “tuer” le processus
+   telnet (kill, ctrl-c) ?
+
+#. Faire divers tests avec des telnet concurrents que l’on terminera.
+
+#. Quelle entité gère les connections bloquées en attente de service ?

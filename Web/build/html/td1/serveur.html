@@ -1,0 +1,297 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Serveur Mono, ne traitant qu’un client &mdash; documentation MiniWeb 0</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Recherche" href="../search.html"/>
+    <link rel="top" title="documentation MiniWeb 0" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> MiniWeb
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="sujet1.html">1. <strong>TD numéro 1 : Communication via des sockets</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td2/sujet2.html">2. <strong>TD numéro 2 : Threads en Java, Concurrence</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td3/sujet3.html">3. <strong>TD numéro 3 : Quelques  exemples de programation concurrente</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td4/sujet4.html">4. <strong>TD numéro 4 : Interbloquage, Graphe de tache, acyclicité</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td5/sujet5.html">5. <strong>TD numéro 5: Un Exemple de programme distribué sans arbitre : La table de Hachage distribuée.</strong></a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="corrige1.html"><strong>Corrigé du TD numéro 1 : Communication via des sockets</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td2/corrige2.html">1. <strong>Corrigé du TD numéro 2 :  Java et les Threads</strong></a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MiniWeb</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Serveur Mono, ne traitant qu’un client</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/td1/serveur.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="serveur-mono-ne-traitant-quun-client">
+<h1>Serveur Mono, ne traitant qu’un client<a class="headerlink" href="#serveur-mono-ne-traitant-quun-client" title="Lien permanent vers ce titre">¶</a></h1>
+<div class="section" id="le-b-a-ba-un-serveur-jouet">
+<h2>Le B.A.BA , un serveur jouet<a class="headerlink" href="#le-b-a-ba-un-serveur-jouet" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Écrire une classe Serveur_Jouet qui&nbsp;:</p>
+<ol class="arabic simple">
+<li>crée un gestionnaire de socket sur le port 12000 (ServerSocket).</li>
+<li>Attend une connections entrante et associe à celle-ci une socket
+(Socket) quand elle arrive.</li>
+<li>Lit de façons bloquante et ligne à ligne les données recues et les
+affiche à l’écran avec un compteur de lignes (on utilisera les
+classes InputStreamReader BufferedReader).</li>
+<li>On veillera à traiter au minimum les erreurs potentielles d’entrée
+sortie.</li>
+</ol>
+<p>Afin de tester le fonctionnement on utilisera telnet (telnet 127.0.0.1
+12000) pour se connecter au Serveur Jouet.</p>
+<ol class="arabic simple">
+<li>Que ce passe t’il si on lance plusieurs sessions telnet ?</li>
+<li>Que deviennent les sessions telnet si on arrête le serveur ?</li>
+<li>Que se passe t-il si on lance une seconde instance du Serveur Jouet ?</li>
+</ol>
+</div>
+<div class="section" id="un-serveur-ameliore">
+<h2>Un Serveur Amélioré<a class="headerlink" href="#un-serveur-ameliore" title="Lien permanent vers ce titre">¶</a></h2>
+<div class="line-block">
+<div class="line">On veut modifier le Serveur afin qu’il puisse traiter sequentiellement</div>
+</div>
+<p>plusieurs connections. Afin que cela soit possible il faut pouvoir
+terminer une connections. La terminaison va s’opérer à l’initiative du
+client, celui-ci terminera la connection en envoyant une séquence de
+caractère spéciale que nous notons FINISH.</p>
+<p>On rendra compte du comportement du serveur (démarrage, prise en charge,
+terminaison etc ...) via des messages sur la sortie standard.</p>
+<p>À partir de la classe Serveur_Jouet, définir la classe Serveur_multi
+qui obéit aux spécifications suivantes :</p>
+<ol class="arabic simple">
+<li>Un des créateurs (à priori c’est le seul) associé à classe prend
+comme argument le numéro de port sur lequel le serveur va écouter,
+cet argument est fourni par l’utilisateur (ex: java Serveur_Multi
+1234). Il sera aussi souhaitable de vérifier que l’argument
+correspond bel et bien à un numéro de port correctement formaté.</li>
+<li>La méthode run() Examine si des connections sont actives sur
+Server_Socket, si oui elle en prend une en charge et lui applique la
+méthode Service_Client.</li>
+<li>La méthode Service_Client lit puis affiche (sur la sortie standard)
+les données envoyées par le client (comme dans le cas du
+Serveur_Jouet. Cependant elle recherche dans chaque ligne envoyée
+par le client la séquence de terminaison FINISH, si cette séquence
+apparait la méthode Service_Client se termine, la socket est alors
+close et l’on retourne écouter le Serveur_Socket.</li>
+<li>Le choix de la séquence de terminaison FINISH vous est laissé,
+attention toutefois de ne pas utiliser quelque chose de trop commun
+(pex “<span class="math">\(\backslash\)</span>n”, “ab”). Le caractère EOT, ctrl-D dont le
+code ASCII est 4 est un choix acceptable.</li>
+</ol>
+<p><em>Tests: (telnet encore)</em></p>
+<ol class="arabic simple">
+<li>Que se passe t’il si plusieurs sessions telnet sont lancées
+concurremment ?</li>
+<li>En quoi envoyer la séquence FINISH diffère de “tuer” le processus
+telnet (kill, ctrl-c) ?</li>
+<li>Faire divers tests avec des telnet concurrents que l’on terminera.</li>
+<li>Quelle entité gère les connections bloquées en attente de service ?</li>
+</ol>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Stéphane Perennes.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

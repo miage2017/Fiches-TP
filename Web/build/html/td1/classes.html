@@ -1,0 +1,301 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Librairies et Classes Utilisées &mdash; documentation MiniWeb 0</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Recherche" href="../search.html"/>
+    <link rel="top" title="documentation MiniWeb 0" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> MiniWeb
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="sujet1.html">1. <strong>TD numéro 1 : Communication via des sockets</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td2/sujet2.html">2. <strong>TD numéro 2 : Threads en Java, Concurrence</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td3/sujet3.html">3. <strong>TD numéro 3 : Quelques  exemples de programation concurrente</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td4/sujet4.html">4. <strong>TD numéro 4 : Interbloquage, Graphe de tache, acyclicité</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td5/sujet5.html">5. <strong>TD numéro 5: Un Exemple de programme distribué sans arbitre : La table de Hachage distribuée.</strong></a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="corrige1.html"><strong>Corrigé du TD numéro 1 : Communication via des sockets</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td2/corrige2.html">1. <strong>Corrigé du TD numéro 2 :  Java et les Threads</strong></a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MiniWeb</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Librairies et Classes Utilisées</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/td1/classes.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="librairies-et-classes-utilisees">
+<h1>Librairies et Classes Utilisées<a class="headerlink" href="#librairies-et-classes-utilisees" title="Lien permanent vers ce titre">¶</a></h1>
+<p>Les classes sont documentées sur le site d&#8217;Oracle :<a class="reference external" href="https://docs.oracle.com/javase/7/docs/api/java/net/Socket.html">Javadoc</a></p>
+<p>On va utilser les librairies standard réseau, entrées sortie et utilitaires.</p>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span></span>  <span class="kn">import</span> <span class="nn">java.net.*</span><span class="o">;</span>
+  <span class="kn">import</span> <span class="nn">java.io.*</span><span class="o">;</span>
+  <span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+</pre></div>
+</td></tr></table></div>
+<div class="section" id="classes-reseau">
+<h2><strong>Classes Réseau</strong><a class="headerlink" href="#classes-reseau" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Principalement vous utiliserez les classes suivantes :</p>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.oracle.com/javase/7/docs/api/java/net/ServerSocket.html">ServerSocket</a> qui fournit une classe <em>Serveur</em>, cette classe implémente un objet qui va écouter sur un port donné et attendre une demande de connection. La classe Serveur fournit donc une <em>salle d&#8217;attente</em> où faire attendre d&#8217;éventuels clients.  Quand un tel objet est créé sur un port $p$ tout client qui se connecte sur ce port est accueilli et placé en attente, les paquets qu&#8217;il envoie sont aussi acceptés et conservés par le SocketServer.</li>
+</ul>
+<blockquote>
+<div><ul class="simple">
+<li>En dehors de la méthode création  la méthode principale de cette classe est <strong>accept</strong> qui  place le demandeur en attente et lui retourne un client  dès qu&#8217;il y en a un. Le client est <em>fourni</em>  via un objet  <em>Socket</em> retourné par la méthode accept, ceci permet de communiquer avec avec le client. Notons enfin que la socket va alors contenir les paquets que le client a envoyé quand il était en attente.</li>
+<li>Une autre méthode importante est <strong>close</strong> car qui  termine (coté serveur) les connections des clients de la salle d&#8217;attente.  Cela devrait donc  aussi deconnecter les clients.</li>
+<li>La classe dispose de bien d&#8217;autres méthodes, on peut en effet limiter la taille de la salle d&#8217;attente, spécifier un timeout. Pour plus  voir les spécifications <a class="reference external" href="https://docs.oracle.com/javase/7/docs/api/java/net/ServerSocket.html">ServerSocker</a></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.oracle.com/javase/7/docs/api/java/net/Socket.html">Socket</a>  cette classe permet d&#8217;établir des connections, le système d&#8217;exploitation et la JVM tentent  d&#8217;ouvrir la connection lors de la création de l&#8217;objet. Une socket est une connection bidirectionnelle, aussi la socket est associée à deux &#8220;flux de bits&#8221;, un flux entrant et un flux sortant.<ul>
+<li>On va écrire sur la <em>sortie</em> qui est un <em>OutputStream</em> (flux de bit sortant)  on accède à ce flux via la méthode <em>getOutputStream()</em>.</li>
+<li>On va lire le données recues  sur l&#8217;<em>entrée</em> qui est un <em>InputStream</em> (flux de bits entrant) on accède à ce flux via la  méthode <em>getInputStream()</em>.</li>
+<li>Pour spécifier un timeout pour la lecture de données on utilise la méthode <a class="reference external" href="https://docs.oracle.com/javase/7/docs/api/java/net/Socket.html#setSoTimeout(int)">SetSosetSoTimeout</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="classes-entree-sortie">
+<h2><strong>Classes Entrée Sortie</strong><a class="headerlink" href="#classes-entree-sortie" title="Lien permanent vers ce titre">¶</a></h2>
+<p><strong>Les Flux (Streams)</strong>
+- En Java la notion de  &#8220;flux&#8221; entrant (file, flot, stream) d&#8217;objets correspond
+à  une séquence potentiellement infinie (dans une direction) d&#8217;objets.  Un flux est un peu comme l&#8217;ensemble des entiers. Une chaine de caractère est un flux de caractères, un fichier est un flux de bits, et une connection réseau entrante est un flux.</p>
+<ul class="simple">
+<li>De facon analogue,  Java propose la notion un &#8220;flux&#8221; sortant (file, flot, stream) d&#8217;objets.</li>
+<li>Étant donnée une socket, le flux de sortie retourné par <em>getOutputStream()</em> (respectivement  le flux entrant retourné par  <em>InputStream</em>) est un  <strong>flux de bits</strong>. Le flux de sortie (resp. flux entrant) se manipule comme un fichier ouvert en écriture (resp lecture).</li>
+<li>En général on encapsule ces flux dans des flux de caractères de plus haut niveau.</li>
+</ul>
+</div>
+<div class="section" id="bit-caractere-mise-en-tampon">
+<h2><strong>Bit, caractère, mise en tampon</strong><a class="headerlink" href="#bit-caractere-mise-en-tampon" title="Lien permanent vers ce titre">¶</a></h2>
+<ul class="simple">
+<li>Si on échange des informations en utilisant des sockets (via donc des streams), on a besoin de traduire les  bits en caractères.  Ceci pose le problème du codage des caractère en  binaire (bits). Longtemps ce fut un sujet de maux de têtes car les caractères étaient codés sur 1 octet et il existait un codage par langue, même deux langues voisines avaient des codage différents (p.ex les lettre accentuées du Portugais diffèrent de celle du Francais). De plus chaque famille de système d&#8217;exploitation utilisait un codage qui lui était propre (ie Windows, Linux, Apple).</li>
+<li>Comme en général le concepteur souhaite écrire/lire des chaines de caractères et non pas des bits sur un stream, Java procure un mécanisme d&#8217;encapsulation qui permet de manipuler des caractères, ce mecanisme converti les flux de bits en flux de caractère. L´ecapsulation permet aussi d&#8217;utiliser des opération d&#8217;entrée sortie de haut niveau <em>(print(), format(), println(), readline())</em> alors que les flux de bas niveau ne proposent que les opération atomiques <em>write</em> et <em>read</em>.</li>
+</ul>
+<p>Les 2 lignes de code ci dessous encapsulent les 2 flux de bit dans des flux de caractères.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">ma_connection</span><span class="o">=</span><span class="n">Socket</span><span class="o">()</span>
+<span class="n">InputStreamReader</span> <span class="n">isr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">ma_connection</span><span class="o">.</span><span class="na">getInputStream</span><span class="o">(),</span> <span class="s">&quot;UTF-8&quot;</span><span class="o">);</span>
+<span class="n">PrintWriter</span> <span class="n">ma_sortie</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintWriter</span><span class="o">(</span><span class="n">ma_connection</span><span class="o">.</span><span class="na">getOutputStream</span><span class="o">()</span> <span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+</pre></div>
+</div>
+<div class="topic">
+<p class="topic-title first">Javadoc about <strong>InputStreamReader</strong></p>
+<p>An <strong>InputStreamReader</strong> is a bridge from byte streams to character streams: It reads bytes and decodes them into characters using a specified charset. The charset that it uses may be specified by name or may be given explicitly, or the platform&#8217;s default charset may be accepted.</p>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">ma_connection</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Socket</span><span class="o">(</span><span class="s">&quot;127.0.0.1&quot;</span><span class="o">,</span> <span class="mi">2017</span><span class="o">);</span>
+<span class="n">ma_connection</span><span class="o">.</span><span class="na">SetSotimeout</span><span class="o">(</span><span class="mi">5000</span><span class="o">)</span>
+
+<span class="n">InputStreamReader</span> <span class="n">isr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">ma_connection</span><span class="o">.</span><span class="na">getInputStream</span><span class="o">(),</span> <span class="s">&quot;UTF-8&quot;</span><span class="o">);</span>
+<span class="n">BufferedReader</span> <span class="n">flux_entrant</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="n">isr</span><span class="o">)</span> <span class="o">;</span>
+
+<span class="n">nouveau_message</span><span class="o">=</span><span class="n">flux</span><span class="o">.</span><span class="na">entrant</span><span class="o">.</span><span class="na">readline</span><span class="o">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Stéphane Perennes.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,154 @@
+
+
+Un Serveur Séquentiel 
+======================================
+
+
+Principe
+-----------------------------------
+
+On va simplement ajouter une boule infinie autour du code précedent, que l'on organise un peu.  La méthode main() se réduit à la création du serveur et à son exécution (les try catch la rende un brin verbeuse).
+
+
+Méthode Main
+-----------------------------------
+
+Seules les lignes 10 et 19 font vraiment quelque chose, respectivement : la ligne 10 crée le serveur et la ligne 19 l'exécute. 
+
+
+
+.. code-block:: java
+  :linenos:
+  :emphasize-lines: 10,19
+
+	public static void main(String[] args) {
+		/* On crée puis lance le serveur */
+		Serveur_Ameliore Mon_serveur = null;
+		if (args.length != 1) {
+			System.err.println("usage: java "+ Serveur_Ameliore.class.getCanonicalName()
+							+ " serverPort");
+			System.exit(-1);
+		}
+		try {
+			Mon_serveur = new Serveur_Ameliore(Integer.parseInt(args[0]));
+		} catch (NumberFormatException e) {
+			System.out.println("Format du port incorrect \n:  format exception for "
+							+ e.getMessage());
+			System.exit(-1);
+		} catch (IOException e) {
+			System.out.println("Impossible de créer le  socket server : " + e);
+			System.exit(-1);
+		}
+		Mon_serveur.run();
+	}
+
+
+
+La Méthode run()
+-----------------------------------
+
+Dans  cette méthode le serveur se contente de : 
+
+#. D'attendre et d'accepter un client  ligne 6). 
+
+#. Puis de  servir le client  (ligne 16).  
+
+#. De recommencer à  l'infini (ligne 3)
+
+Ce sont les vérifications et les message pour l'utilisateur qui rende le code long car au fond il se limite à 3 instructions. 
+
+.. code-block:: java
+  :linenos:
+  :emphasize-lines: 6,16,3
+
+	public void run() {
+		Socket ma_connection = null;
+		while (true) {
+
+			try {  			//  Attente bloquante connexion 
+				ma_connection = this.mon_connecteur.accept();
+			} catch (IOException e) {
+				System.out.println("Impossible de détacher une socket  : " + e);
+				System.exit(-1);
+			}
+			int c_port = ma_connection.getPort();
+			String c_ip = ma_connection.getInetAddress().toString();
+			System.out.format("Un client est arrivé avec IP : %s sur le port %d\n", c_ip,c_port);
+			/* On traite le client que l'on a associé */
+			try {
+				Service_Client(ma_connection);
+			} catch (IOException e) {
+				System.out.println("Erreur de Service Client  : " + e);
+				System.exit(-1);	}
+		}
+	}
+
+
+La Méthode Service_Client()
+---------------------------------------------------
+
+Dans cette méthode le serveur reçoit les données envoyées par le client en les lisant
+ligne à ligne de façon bloquante. 
+
+Le code se résume à quelques opérations :
+
+#. En lignes 3-5 on récupère de flux entrant de données. 
+
+#.  En ligne 7 on récupère le flux de sortie. 
+
+#. En lignes 12-13 on déclare un compteur de ligne et une chaine où stocker le message du client. 
+
+#. En ligne 20 on envoie un message au client, l'opération n'est pas bloquante et on ne sait pas si le client la reçoit. 
+
+#. Le while de la ligne 21 contient une instruction bloquante -- cf le serveur jouet --
+
+#. Le If de la ligne 25 permet de tester si le client à demandé de terminer la transmission, si oui on clot la socket (ligne 30) et on termine en quittant la méthode de service (ligne 31). 
+
+.. code-block:: java
+  :linenos:
+  :emphasize-lines: 3,4,5,7,12,13,20,21,25,30,31
+
+    private Boolean Service_Client(Socket la_connection) throws IOException {
+		/* On Associe une file d'entrée a la connection */
+		InputStreamReader isr = new InputStreamReader(la_connection.getInputStream());
+		/* On transforme cette file en file avec tampon */
+		BufferedReader flux_entrant = new BufferedReader(isr);
+		System.out.println("Tampon entree attache ");
+		PrintWriter ma_sortie = new PrintWriter(la_connection.getOutputStream(), true);
+		System.out.println("Sortie attachée");
+		System.out.println("Prêt à servir le Client : "+ la_connection.getRemoteSocketAddress());
+
+		String clientName = la_connection.getRemoteSocketAddress().toString();
+		String message_lu = new String();
+		int line_num = 0;
+
+		/*
+		 * On lit le flux_entrant ligne à ligne ATTENTION : La fonction readline
+		 * est Bloquante readline retourne null si il y a souci avec la
+		 * connexion On s arrete aussisi connexion_non_terminee est vraie
+		 */
+		ma_sortie.format("Bonjour %s j attends tes données  \n",clientName);
+		while  (  (message_lu = flux_entrant.readLine()) != null))   {
+			System.out.format("%d: ->  [%s]\n", line_num, message_lu);
+			line_num++;
+			/* si on recoit Finish on clot et annonce cette terminaison */
+			if (message_lu.contains(Finish)) {
+				System.out.println("Reception de  " + Finish
+						+ " -> Transmission finie");
+				// On ferme la connection
+				System.out.format("Je clos la connection  %s :\n",clientName);
+				terminer(la_connection);
+				return (true);
+			}
+		}
+		return false;
+
+Exemple de  Code  pour le Serveur Amélioré
+-------------------------------------------------------------------------------------
+
+Ici c'est juste le récapitulatif.
+
+.. literalinclude:: Serveur_Ameliore.java
+   :language: Java
+
+

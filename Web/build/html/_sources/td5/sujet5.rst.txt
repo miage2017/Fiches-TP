@@ -1,0 +1,184 @@
+**TD numéro 5: Un Exemple de programme distribué sans arbitre : La table de Hachage distribuée.** 
+************************************************************************************************************
+
+**Objectif**:
+
+
+Le but est de
+
+#. Jouer avec un système vraiment pair à pair, c'est à dire sans arbitre. 
+
+#. comprendre comment fonctionne une table de hachage distribuée fonctionnant par passage de message via le protocol TCP.
+
+#. de savoir en  programmer une version simplifiée  (on simulera le réseau de pairs en utilisant des threads).
+
+#. De comprendre pourquoi  le paradigme de la table de hachage est important de part les fonctionnalités qu'il apporte. 
+
+--------------------------
+
+
+
+Le principe d'une table de hachage distribuée
+===================================================
+
+La table se comporte comme une Haskey ou un dictionnaire python. Elle  implémente les deux méthodes suivantes :
+
+- Publier (Donnée D,Clef C) : cette méthode *publie* la donnée D (par exemple un fichier) et  la place dans le réseau de pairs en l'associant à la clef C.  
+
+- Récupérer (Clef C) :  retourne la donnée associée à la clef (si elle existe) ou null sinon. 
+
+  
+  Les membres du réseau vont donc  publier des couples (Donnée,Clef) et les Données seront accessibles  par quiconque connaitra la clef associée. On souhaite que la table :
+
+  #. soit Entièrement distribuée (aucun arbitre central ne sait où sont les données, qui sont les pairs ...)
+  #. Supporte le départ et l'arrivée de pairs.
+  #. Garantisse la persistance des données.
+  #. Distribue la charge de travail relativement uniformément sur les pairs.
+  #. soit performante. 
+
+Le protocol Chord fut originalement décrit dans le papier ci-joint :download:`Article sur Chord <chord.pdf>`. Il s été très étudié et on trouve donc de nombreuses présentations de celui-ci sur internet (rechercher "Chord, Distributed Hash table" etc...). 
+
+     
+
+La Table Chord Simplifée(Principe Général) 
+===================================================
+
+L'idée des inventeurs de la table *Chord* est assez simple : On suppose que les clefs sont déjà déterminées et codées sur :math:`n` bits, elle correspondent donc aux nombres entiers de l'intervale :math:`Ids=[0,2^n-1]`. En pratique si on souhaite publier un fichier on utilisera le md5 de ce fichier ou alors une description du fichier (une chaine de caractères) sur laquelle on applique une fonction de type md5.
+
+*Remarque*:
+On suppose implicitement qu'un pair recherchant une donnée connait sa clef, souvent la liste des clefs des données existantes et de leur clef se trouve sur un annuaire extérieur au système (tracker).  Mais cet annaire n'indique pas du tout ou se trouve la donnée ni comment y accéder, il se contente d'indiquer de lister des couples  (Données,Clef) qui sont peut être dans la table. La clef peut aussi être facile à deteminer : par exemple le descriptif peut être "D=Emission 52 Canal 18 15/11/2026" et la clef sera :math:`Md5sum(D)`. 
+
+
+On associe alors aussi à chaque pair une identité *unique* dans :math:`[0,2^n-1]`, en pratique on va simplement utiliser une fonction de hachage standard utilisant l'IP ou le couples (IP,port) du pair.
+
+Les pairs sont alors organisés en anneau virtuel, si les identités des pairs sont :math:`p_1,p_2,\ldots,p_k` l'anneau sera :math:`p_1 \leftrightarrow p_2 \leftrightarrow  p_3 \leftrightarrow  \cdots p_k \leftrightarrow  p_1`.  
+
+Chaque pair est alors responsable d'un intervale de clefs :
+
+#. :math:`p_2` s'occupe de :math:`]p_1,p_2]`
+#. :math:`p_3` s'occupe de :math:`]p_2,p_3]` 
+#. :math:`p_4` s'occupe de :math:`]p_3,p_4]`
+#. etc
+
+#. et enfin :math:`p_1` s'occupe des clefs de :math:`]p_k,p_1]`
+   
+**Attention**  on travaille modulo :math:`2^n` donc ici :math:`]p_k,p_1]=]p_k,2^n-1] \cup [0,p_1]`.
+   
+**Exemple**:
+
+Si on utilise 64 clefs et que les pairs présents sont :math:`5,22,33,45,55` alors :math:`22` s'occupe des clefs :math:`[6,22]` et :math:`5` s'occupe de  :math:`[56,63] \cup [0,5]`. 
+
+
+Si un pair :math:`p_{3bis} \in ]p_3,p_4[` rejoint le réseau on doit :
+
+- Inserer le pair :math:`p_{3bis}` entre les pairs :math:`p_3` et :math:`p_4`.
+- Déplacer les données dont la clef est dans :math:`]p_3,p_{3bis}]` (donc situées sur :math:`p_4`)  depuis :math:`p_4` vers :math:`p_{3bis}`. 
+    
+
+Nous allons procéder par étapes, dans un premier temps nous allons juste assurer le maintient de la consistence de l'anneau puis nous nous occuperons du déplacement de clefs.
+
+
+Afin de nous simplifier la tâche nous allons écrire une version utilisant des objets classiques (ie passifs), pour obtenir une version fonctionnant sur le réseau il faudra remplacer les invocations de méthodes locales par des invocations de méthodes distantes sur des objets actifs. On peut le faire soit manuellement soit en utilisant des RMI (invocation de méthode distante) java.  
+
+On utilise donc une table de noeuds mais chaque noeud ne connait que son successeur.
+
+
+Exercice 1 :Recherche de clef sur l´anneau chord 
+------------------------------------------------------
+
+La classe ChordPeer, la méthode findkey()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+On va écrire une classe ChordPeer qui va simuler un noeud du réseau Chord. 
+
+Chaque pair de la classe ChordPeer  connaitra ici :
+ 
+- son identifiant :math:`myId`
+- la référence de son successeur :math:`succ`.
+- la référence de son prédécesseur :math:`pred`.
+
+De plus la classe ChordPeer fournira la méthode :math:`getID()` qui retourne :math:`myiD` et une méthode :math:`toString()` qui décrit le pair.  
+    
+
+La première méthode que nous devons fournir permet de localiser le pair responsable d'une clef (i.e une identité).
+C'est la méthode :math:`findkey(int key)` qui renvoie la référence à un ChordPeer. 
+
+Écrire le code de la méthode :math:`findkey(int key)` qui renvoie  la référence du noeud responsable de la clef :math:`key`.
+Le principe est le suivant : 
+
+#. si :math:`key \in ]pred.getID(),me]` alors je suis responsable de la clef et je retourne :math:`this`.   
+#. si :math:`key \not \in ]pred.getID(),me]` alors je demande à mon successeur où se trouve la clef; j'invoque donc sa méthode et je renvoie le résultat. 
+
+   On fera attention au fait que les intervales sont circulaires et au cas particulier d'un pair unique (cas où:math:`succ=pred=this`). 
+
+Observer et tester : la classe Chord
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^   
+   
+Afin de comprendre ce qui ce passe et de tester valider on veut pouvoir créer un anneau chord en cours de fonctionement.
+
+
+- Ajouter  une classe Chord() qui à partir d'une liste d'identifiants crée le réseau dont les pairs ont les identités specifiées dans la liste. i.e si la liste est :math:`8,13,25,96` on veut obtenir l'anneau :math:`8 \leftrightarrow 13  \leftrightarrow 25 \leftrightarrow 96` où le succeseur de  :math:`8` sera :math:`13` où le successeur de :math:`96` sera :math:`8`.
+
+- Ajouter à la classe Chord une méthode qui affiche sur la sortie standard l'état des pairs.
+    
+- Ajouter à la classe Chord une méthode qui permet de demander à un des pairs :math:`P` de trouver la  clef  :math:`key`  (ie elle invoque simplement :math:`P.findkey(key)`.
+    
+- vérifier les classes ChordPeer et Chord, en particulier s'assurer que :math:`findkey()` fonctionne correctement. 
+      
+NB. L'objet chord n'existera pas dans le réseau pair à pair, il est centralisé nous l'utilisons pour observer le réseau.
+
+
+Publier et Consulter 
+------------------------------------------------------ 
+
+On va se limiter à la publication de chaines de caractère, une table réelle stokerai des objets sérialisé (i.e applatis) sous forme de séquences de bit.
+
+- Ajouter à la classe ChordPeer un champs qui est un dictionnaire qui va contenir les chaines stockées par le pair.
+- Ajouter une méthode :math:`getItem(int key)` qui renvoie la chaine dont la clef est key, on utilisera la fonction :math:`findkey` afin de déterminer le pair responsable de key.
+- Ajouter une méthode :math:`setItem(int key)` qui publie  la chaine dont la clef est key et la stocke dans le dictionnaire du pair responsable de :math:`key`. 
+    
+
+
+Exercice 2 Insertion de nouveau pair dans l'anneau chord
+-----------------------------------------------------------------
+
+
+Ajouter à la class ChordPeer une méthode :math:`JoinChord(ChordPeer handle)` qui permet à un nouveau pair :math:`N` (non attaché au réseau) connaissant un pair quelconque du réseau(ici handle) de rejoindre le réseau. Le pair devra s'insérer à sa place dans le réseau. Ainsi, si  son identifiant est :math:`myID` il devra s'insérer juste avant  le pair :math:`S=handle.findkey(myID)`, on devra alors mettre à jour les objets :math:`S, S.pred` ainsi que les informations du nouveau pair :math:`N`.
+
+N.B: la procédure est presque identique à celle utilisée pour l'insertion dans  une liste. 
+
+Tester en utilisant la classe Chord, pour s'assurer que tout va bien on commencera par un réseau ne contenant qu'un seul pair. 
+
+Exercice 3: Depart d'un pair
+-----------------------------------------------------------------
+
+Ajouter à la classe ChordPeer une méthode :math:`LeaveChord()`  qui détache le pair du réseau, comme dans le cas de l'insertion de pair on mettra la structure de l'anneau chord à jour. 
+
+
+La Table Chord Améliorée
+===================================================
+
+La recherche d'une clef dans la table simplifiée  n'est pas efficace car la procédure de recherche peut être amenée à parcourir  l'intégralité de l'anneau virtuel. Afin d'accélérer la recherche on va ajouter des **cordes** à l'anneau. Le nom Chord provient de ces cordes ("Chords").
+
+Au lieu de connaitre simplement son successeur sur l'anneau, un pair va connaitre :math:`\log N` successeurs, où :math:`N` est le nombre de clefs possibles  (ie la taille de l'espace d'adressage). Cet ensemble d'informations est appelé (en anglais) la *fingertable*, elle  contient les informations suivantes :
+
+Pour tout :math:`i \in 0,1,\ldots \log N`
+
+- :math:`finger[i]` l'adresse du pair responsable de la clef :math:`myid+2^i modulo N`
+  
+  La table permet d'accélérer la recherche car si un pair  n'est pas responsable d'une clef on peut (au lieu de simplement demander la clef au successeur du pair) la demander au pair de la :math"`fingertable` le plus proche de la clef (mais sité avant celle-ci.
+  
+
+Exercice 4  Recherche améliorée 
+-----------------------------------------------------------------
+
+- Modifier la méthode math:`findkey` afin qu'elle utilise la table finger.
+
+- Combien d'appels a des pairs sont nécessaire afin de trouver une clef, si vous ne savez pas essayer de tester en comptant ce nombre d'appel dans la méthode :math:`findkey`.
+
+
+Exercice 5  Maintient des informations de :math:`fingertable`
+-----------------------------------------------------------------
+
+- Modifier la méthode :math:`JoinChord` afin que les information de :math:`fingertable` soient mise à jour en cas d'insertion d'un pair et de départ d'un part. On pourra aussi ajouter une méthode qui génère la table  :math:`findertable` quand celle-ci n'est plus valide. 
+  
+  

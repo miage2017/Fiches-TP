@@ -1,0 +1,752 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>2. TD numéro 2 : Threads en Java, Concurrence &mdash; documentation MiniWeb 0</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Recherche" href="../search.html"/>
+    <link rel="top" title="documentation MiniWeb 0" href="../index.html"/>
+        <link rel="next" title="3. TD numéro 3 : Quelques exemples de programation concurrente" href="../td3/sujet3.html"/>
+        <link rel="prev" title="1. TD numéro 1 : Communication via des sockets" href="../td1/sujet1.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> MiniWeb
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../td1/sujet1.html">1. <strong>TD numéro 1 : Communication via des sockets</strong></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">2. <strong>TD numéro 2 : Threads en Java, Concurrence</strong></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#objectifs">2.1. Objectifs :</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#blabla-zzzzzzzzzz">2.2. <em>Blabla ...zzzzzzzzzz</em></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pourquoi-la-programmation-distribuee-et-ou-concurrente">2.2.1. Pourquoi la programmation distribuée et (où?) concurrente ?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#la-creation-de-threads-sous-java">2.3. La création de threads sous Java</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#creation-via-les-objets-executables">2.3.1. Création via les objets exécutables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creation-par-heritage-de-classe-thread">2.3.2. Création par héritage de classe Thread.</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#quelques-exemples-de-concurrence-et-de-coordination-en-java">2.4. Quelques exemples de concurrence et de coordination en Java</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#un-exemple-sans-reelle-concurrence-enfin-un-peu-mais-pas-mechante">2.4.1. Un exemple sans réelle concurrence, enfin ... un peu mais pas méchante ...</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#exemple-canonique-dinconsistance-grave">2.4.2. Exemple canonique d’inconsistance grave</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#consistance-des-donnees-et-problemes-d-ordonnancement">2.4.3. Consistance des données et problèmes d&#8217;ordonnancement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#consistance-et-verrouillage-le-cas-de-java">2.4.4. Consistance et Verrouillage, le cas de Java</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#synchronized-le-verouillage-de-methode">2.4.4.1. <strong>Synchronized</strong> : Le Verouillage de méthode</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#le-verrouillage-de-block">2.4.4.2. Le Verrouillage de block</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ordonnancement-en-java">2.4.4.3. Ordonnancement en Java</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../td3/sujet3.html">3. <strong>TD numéro 3 : Quelques  exemples de programation concurrente</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td4/sujet4.html">4. <strong>TD numéro 4 : Interbloquage, Graphe de tache, acyclicité</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td5/sujet5.html">5. <strong>TD numéro 5: Un Exemple de programme distribué sans arbitre : La table de Hachage distribuée.</strong></a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../td1/corrige1.html"><strong>Corrigé du TD numéro 1 : Communication via des sockets</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="corrige2.html">1. <strong>Corrigé du TD numéro 2 :  Java et les Threads</strong></a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MiniWeb</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>2. <strong>TD numéro 2 : Threads en Java, Concurrence</strong></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/td2/sujet2.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="td-numero-2-threads-en-java-concurrence">
+<h1>2. <strong>TD numéro 2 : Threads en Java, Concurrence</strong><a class="headerlink" href="#td-numero-2-threads-en-java-concurrence" title="Lien permanent vers ce titre">¶</a></h1>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ul class="simple">
+<li>Pour exécuter la classe Classe_de_Test en ligne de commande il faut
+(en théorie) se placer à la racine de votre répertoire de travail
+Eclipse et taper javac nom_du_package:Classe_de_Test, puis idem
+pour java. Si votre paquet se nomme miage2016:td1 java va en effet
+chercher toutes les classes dans .\miage2016\td1.</li>
+</ul>
+<p><strong>Rappel</strong>  Le site d’Oracle fournit des : <a class="reference external" href="http://docs.oracle.com/javase/tutorial/tutorial/LearningPaths.html">tutoriaux</a> ainsi qu’une documentation officielle. Les classes sont documentées dans la <a class="reference external" href="http://docs.oracle.com/javase/8/docs/api/index.html">doc oracle</a>.</p>
+<div class="section" id="objectifs">
+<h2>2.1. Objectifs :<a class="headerlink" href="#objectifs" title="Lien permanent vers ce titre">¶</a></h2>
+<ul class="simple">
+<li>Comprendre les problèmes posés par concurrence.</li>
+<li>Savoir lancer des Threads en Java.</li>
+<li>Comprendre les principes des solutions proposées par les systèmes de
+gestion d’applications concurrentes (la JVM, un Système
+d’exploitation etc).</li>
+<li>Savoir comment s’assurer l’exclusivité sur un objet en Java, et
+comment synchroniser 2 Threads (cas simples).</li>
+</ul>
+</div>
+<div class="section" id="blabla-zzzzzzzzzz">
+<h2>2.2. <em>Blabla ...zzzzzzzzzz</em><a class="headerlink" href="#blabla-zzzzzzzzzz" title="Lien permanent vers ce titre">¶</a></h2>
+<div class="section" id="pourquoi-la-programmation-distribuee-et-ou-concurrente">
+<h3>2.2.1. Pourquoi la programmation distribuée et (où?) concurrente ?<a class="headerlink" href="#pourquoi-la-programmation-distribuee-et-ou-concurrente" title="Lien permanent vers ce titre">¶</a></h3>
+<ul class="simple">
+<li>Dans le cas des applications réseaux elle est en quelque sorte
+inhérente, en effet les infrastructures numériques actuelles
+répliquent l’information et gèrent des bases de données distribuées à
+l’échelle mondiale.</li>
+<li>Une solution distribuée passe à l’échelle plus facilement qu’une
+application centralisée. On doit cependant noter que à cause des
+économies d’échelle on observe un certain retour à la centralisation
+(Data Center immenses), mais ces solutions sont toutes massivement
+distribuées bien que souvent localisées sur un site géographique
+restreint et disposant un réseau dédié et opérant des milliers de
+processeurs.</li>
+<li>Une solution concurrente permet d’utiliser les nombreux coeurs des
+processeurs modernes. Le modèle formel dit pram datant des années 80
+envisageait des processeurs partageant une certaine quantité de
+mémoire vive; il est aujourd’hui devenu une réalité car on trouve
+aujourd’hui des processeurs très abordables ayant 64 coeurs, et
+l’ordinateur de base en contient <span class="math">\(4\)</span> à <span class="math">\(8\)</span>.</li>
+<li>Une application distribuée est aussi en théorie plus fiable car une
+application centralisée est vulnérable en son coeur. Cependant le
+comportement d’un processus distribué est bien plus complexe que
+celui d’un processus centralisé. Mettre au point une application
+distribuée qui fonctionne correctement en absence de malice est déjà
+difficile, mais la sécuriser est extrêmement difficile</li>
+<li>La programmation distribuée est aussi un paradigme qui permet de
+concevoir plus facilement une application, car il est souvent facile
+de l’imaginer comme un ensemble de tâches à effectuer. Par exemple un
+serveur de fichier peut être un considéré comme un ensemble de tâches
+(coordonnées) servant un fichier donné à un client donné. De même les
+applications proposant une interface graphique utilisent souvent
+“tâche interface” qui communique avec le reste de l’application. Ou
+encore, un navigateur internet peut utiliser un thread par page, ou
+par contenu. En quelque sorte la programmation distribuée impose ou
+du moins conduit à programmer de façon modulaire, et c’est ce qui est
+attendu de la part d’un développeur.</li>
+</ul>
+<p><strong>Systèmes avec ou sans arbitre ?</strong></p>
+<p>La JVM gère, ordonnance les threads et permet de gérer la cohérence des données, c’est aussi ce que fait le noyau d’un système
+d’exploitation. Dans les deux cas le calcul distribué s’effectue sous l’égide d’un <em>arbitre fiable</em> et que l’on suppose contrôler
+parfaitement. Le cas d’un système distribué (sur le réseau) doté d’un coordinateur central est en principe assez analogue (bien que la latence
+des opérations soit plus élevée). Par contre, nous ne considérons pas ici et maintenant les systèmes de type <em>pair à pair sans arbitre</em>, dans
+de tels systèmes procurer une fonctionnalité aussi élémentaire qu’une variable globale est délicat (quels participants vont stocker <span class="math">\(x\)</span>
+? certains pairs mentent t-il à propos de cette valeur ? sont-ils en panne? aucun participant n’est fiable...). La seule facon de procéder consiste à demander la valeur de <span class="math">\(x\)</span> à de nombreux pairs choisis au hasard et à se fier à la réponse majoritaire. La théorie démontre même dans le cas de pairs malicieux et byzantins (i.e. cherchant à rendre le système défectueux) qui exécutent le code qui leur chante on peut cependant encore émuler un système avec arbitre fiable, sous la condition qu’au moins 50% des pairs jouent parfaitement le jeu. Mais c’est très complexe et cela induit un surcoût important pour la couche de contrôle. <strong>Donc on ne considère pas ce cas ici</strong></p>
+</div>
+</div>
+<div class="section" id="la-creation-de-threads-sous-java">
+<h2>2.3. La création de threads sous Java<a class="headerlink" href="#la-creation-de-threads-sous-java" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Au minimum il nous faut savoir créer des Threads. Notons que les Threads disposent de leur champs propres mais partagent les objets extérieurs sur lesquels ils pointent, parmi ces objets ont trouve bien entendu les objets globaux. Il est donc assez facile de partager de la “mémoire” (sic des objets) tout en ayant une mémoire “locale” propre au thread. Mais ce partage à un prix, car qui dit objet partagé dit possibilité d’effectuer en même temps des opérations dessus ce qui aura souvent pour effet de faire planter.</p>
+<p>On peut avoir une idée des problèmes posés en utilisant Google Doc et en éditant à deux le même document, Si deux utilisateurs corrigent au même moment à peu près au même endroit le résultat sera en général incohérent.</p>
+<div class="section" id="creation-via-les-objets-executables">
+<h3>2.3.1. Création via les objets exécutables<a class="headerlink" href="#creation-via-les-objets-executables" title="Lien permanent vers ce titre">¶</a></h3>
+<p>En Java, la façon la plus simple pour créer un thread est la suivante :</p>
+<p>On définit une classe qui implémente l’interface Runnable</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="n">Classe_de</span> <span class="n">Test</span> <span class="kd">implements</span> <span class="n">Runnable</span> <span class="o">{</span>  <span class="o">.....}</span>
+</pre></div>
+</div>
+<p>On redéfini la méthode run() de la classe :</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span>   <span class="o">{........</span> <span class="o">}</span>
+</pre></div>
+</div>
+<p>Attention on ne peut pas passer de paramètres à la méthode run(), si  donc l’objet doit pointer sur des objets externes on doit le faire lors de la création, ou avec une méthode, avant de créer le thread proprement dit.</p>
+<blockquote>
+<div>On crée l’objet exécutable :</div></blockquote>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">Classe_de_Test</span> <span class="n">mon_objet_executable</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Classe_de_Test</span><span class="o">();</span>
+</pre></div>
+</div>
+<p>Enfin on crée le Thread lui même, puis on le démarre :</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">Thread</span> <span class="n">monJob</span> <span class="o">=</span> <span class="n">New</span> <span class="nf">Thread</span><span class="o">(</span><span class="n">mon_objet_executable</span><span class="o">);</span>
+<span class="n">monJob</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+</pre></div>
+</div>
+<p><strong>Attention! :</strong>  Ici encore, si start() exécute bel et bien run() elle effectue bien d’autres opérations (cachées). En effet elle demande au gestionnaire de Thread d’en créer un nouveau, de le référencer , de lui allouer de la mémoire, de l’ordonnancer et de l’exécuter. Ainsi par exemple l’objet global Threads contiendra dès lors de nombreuse informations afférentes au thread. <strong>Appeler la méthode run peut sembler fonctionner, mais au Thread n est créé, run est exécutée par le fil de calcul courant, attention donc</strong>.</p>
+<p><strong>Au final cela donne :</strong></p>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text"><em>Exemple atomique de thread.</em></span><a class="headerlink" href="#id4" title="Lien permanent vers ce code">¶</a></div>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="hll"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">DumbClass</span>  <span class="kd">implements</span> <span class="n">Runnable</span><span class="o">{</span>
+</span>    <span class="n">String</span> <span class="n">nom</span><span class="o">=</span><span class="s">&quot;Toto&quot;</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">maxIter</span><span class="o">=</span> <span class="mi">1000</span> <span class="o">;</span>
+    <span class="kd">public</span> <span class="nf">DumbClass</span><span class="o">(</span><span class="n">String</span>  <span class="n">nom</span><span class="o">)</span>    <span class="o">{</span>
+	<span class="k">this</span><span class="o">.</span><span class="na">nom</span><span class="o">=</span><span class="n">nom</span><span class="o">;</span>
+    <span class="o">}</span>
+
+<span class="hll">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span>    <span class="o">{</span>
+</span>	<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Ici le  thread %s, je debute!\n&quot;</span><span class="o">,</span> <span class="n">nom</span><span class="o">);</span>
+	<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">maxIter</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+	    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;[%s] dit  je suis Ici %d\n&quot;</span><span class="o">,</span><span class="n">nom</span><span class="o">,</span><span class="n">i</span><span class="o">);</span> 	<span class="o">}</span>
+	<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Ici le  thread %s, je  Termine!\n&quot;</span><span class="o">,</span> <span class="n">nom</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span>  <span class="kd">throws</span>  <span class="n">Exception</span> <span class="o">{</span>
+	<span class="n">String</span> <span class="n">jobName</span><span class="o">=</span> <span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Job_%d&quot;</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
+<span class="hll">	<span class="n">DumbClass</span>   <span class="n">objetExec</span>  <span class="o">=</span> <span class="k">new</span> <span class="n">DumbClass</span><span class="o">(</span> <span class="n">jobName</span><span class="o">);</span>
+</span><span class="hll">	<span class="n">Thread</span> <span class="n">job</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">objetExec</span><span class="o">);</span>
+</span>	<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Creating thread %s\n&quot;</span><span class="o">,</span> <span class="n">jobName</span><span class="o">);</span>
+<span class="hll">	<span class="n">job</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+</span>	<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Thread principal terminé  !\n&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<p>Dans le programme précédent, 5 lignes sont importantes:</p>
+<ol class="arabic simple">
+<li>La ligne 1 déclare une classe  exécutable.</li>
+<li>La ligne 6 déclare la méthode run() appelée par start().</li>
+<li>La ligne 13 crée un objet exécutable.</li>
+<li>La ligne 11 crée un thread basé sur cet objet exécutable.</li>
+<li>La ligne 13 démarre le thread.</li>
+</ol>
+<hr class="docutils" />
+<div class="topic">
+<p class="topic-title first"><strong>Exercice 1</strong></p>
+<p>Écrire un programme qui crée deux Threads TA et TB, l’un devra
+compter de 1 à 1000 et l’autre décompter de 1000 à 1.</p>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="creation-par-heritage-de-classe-thread">
+<h3>2.3.2. Création par héritage de classe Thread.<a class="headerlink" href="#creation-par-heritage-de-classe-thread" title="Lien permanent vers ce titre">¶</a></h3>
+<div class="topic">
+<p class="topic-title first"><strong>Création directe de thread par héritage</strong></p>
+<p>Il y a une autre façon de créer un Thread, on peut tout simplement hériter de la classe Thread. L’objet est alors directement un Thread et on appelle la méthode start sur l’objet lui-même sans créer de Thread car l’objet en est un.</p>
+</div>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text"><em>Création de thread par héritage</em></span><a class="headerlink" href="#id5" title="Lien permanent vers ce code">¶</a></div>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="hll"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">DummyClass</span>  <span class="kd">extends</span> <span class="n">Thread</span> <span class="o">{</span> 
+</span>    <span class="n">String</span> <span class="n">nom</span><span class="o">=</span><span class="s">&quot;Toto&quot;</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">maxv</span><span class="o">=</span> <span class="mi">10</span> <span class="o">;</span>
+    <span class="kd">public</span> <span class="nf">DummyClass</span><span class="o">(</span><span class="n">String</span>  <span class="n">nom</span><span class="o">){</span>
+	<span class="k">this</span><span class="o">.</span><span class="na">nom</span><span class="o">=</span><span class="n">nom</span><span class="o">;}</span>
+
+<span class="hll">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+</span>	<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Ici le  thread %s, je debute!\n&quot;</span><span class="o">,</span> <span class="n">nom</span><span class="o">);</span>
+	<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">maxv</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+	    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;[%s] dit  je suis la %d\n&quot;</span><span class="o">,</span><span class="n">nom</span><span class="o">,</span><span class="n">i</span><span class="o">);</span> 	
+    <span class="o">}}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span>  <span class="kd">throws</span>  <span class="n">Exception</span> <span class="o">{</span>
+	<span class="n">String</span> <span class="n">jobname</span><span class="o">=</span> <span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Job_%d&quot;</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span> 
+<span class="hll">	<span class="n">DummyClass</span>   <span class="n">objet_executable</span>   <span class="o">=</span> <span class="k">new</span> <span class="n">DummyClass</span><span class="o">(</span> <span class="n">jobname</span><span class="o">);</span>
+</span>	<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Creating thread %s\n&quot;</span><span class="o">,</span> <span class="n">jobname</span><span class="o">);</span>
+<span class="hll">	<span class="n">objet_executable</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+</span>	<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Main :Fini ici  !\n&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+ 
+</pre></div>
+</td></tr></table></div>
+</div>
+<ol class="arabic simple">
+<li>La ligne 1 déclare la Classe <em>DummyClass</em> qui hérite de la classes Thread.</li>
+<li>La ligne 6 (re)déclare la méthode run() appelée par start().</li>
+<li>La ligne 11 crée un objet exécutable.</li>
+<li>La ligne 13 démarre le thread.</li>
+</ol>
+</div>
+</div>
+<div class="section" id="quelques-exemples-de-concurrence-et-de-coordination-en-java">
+<h2>2.4. Quelques exemples de concurrence et de coordination en Java<a class="headerlink" href="#quelques-exemples-de-concurrence-et-de-coordination-en-java" title="Lien permanent vers ce titre">¶</a></h2>
+<div class="section" id="un-exemple-sans-reelle-concurrence-enfin-un-peu-mais-pas-mechante">
+<h3>2.4.1. Un exemple sans réelle concurrence, enfin ... un peu mais pas méchante ...<a class="headerlink" href="#un-exemple-sans-reelle-concurrence-enfin-un-peu-mais-pas-mechante" title="Lien permanent vers ce titre">¶</a></h3>
+<div class="topic">
+<p class="topic-title first"><strong>Exercice 2</strong></p>
+<ul class="simple">
+<li>Lire, télécharger - ou recopier - le programme <a class="reference external" href="http://www-sop.inria.fr/members/Stephane.Perennes/TD_Web/Web/source/td2/TestOrdre0.java">TestOrdre0.java</a>,    l’exécuter plusieur fois.</li>
+<li>Que fait le programme, que fait chaque thread ?</li>
+<li>L’affichage sur la sortie standard est il déterministe ? ou le semble t’il seulement ?</li>
+<li>Ajouter dans la fonction run() des délais aléatoires (représentant l’activité à priori inconnue de threads plus complexes) afin d rendre le comportement encore plus chaotique.</li>
+<li>Quel est la principale ressource utilisée concurremment par les   threads ?</li>
+</ul>
+</div>
+<p>Attention ce programme utilise deux arguments : i.e</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="o">(</span><span class="n">args</span><span class="o">.</span><span class="na">length</span> <span class="o">!=</span> <span class="mi">2</span><span class="o">)</span> <span class="o">{</span>
+  <span class="n">System</span><span class="o">.</span><span class="na">err</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;utilsa. java %s #threads maxvalue&quot;</span><span class="o">,</span><span class="n">Test_ordre0</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">getCanonicalName</span><span class="o">());</span>
+      <span class="n">System</span><span class="o">.</span><span class="na">exit</span><span class="o">(-</span><span class="mi">1</span><span class="o">);</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Sous Eclipse les arguments sont définis via le memu Run-&gt;Run Configuration puis sélectionner l’onglet paramètres.</p>
+</div>
+</div>
+<div class="section" id="exemple-canonique-dinconsistance-grave">
+<h3>2.4.2. Exemple canonique d’inconsistance grave<a class="headerlink" href="#exemple-canonique-dinconsistance-grave" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Lire, télécharger - ou recopier - le programme    <a class="reference external" href="http://www-sop.inria.fr/members/Stephane.Perennes/TD_Web/Web/source/td2/PetitJob.java">PetitJob.java</a>,    (il utilise <a class="reference external" href="http://www-sop.inria.fr/members/Stephane.Perennes/TD_Web/Web/source/td2/ObjetEntier.java">ObjetEntier.java</a>). Éxécuter Petit_Job.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ObjetEntier</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">ma_valeur</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="nf">ObjetEntier</span><span class="o">()</span>    <span class="o">{</span>
+	<span class="n">ma_valeur</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> 
+	<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Valeur partagee initialisee a %d\n&quot;</span><span class="o">,</span> <span class="n">ma_valeur</span><span class="o">);</span> 
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="n">String</span>  <span class="nf">toString</span><span class="o">(){</span>
+	<span class="k">return</span> <span class="n">Integer</span><span class="o">.</span><span class="na">toString</span> <span class="o">(</span><span class="n">ma_valeur</span><span class="o">);</span>    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">val</span><span class="o">(){</span> <span class="k">return</span> <span class="n">ma_valeur</span><span class="o">;}</span>
+    <span class="kd">public</span>     <span class="kt">void</span> <span class="nf">add</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">)</span> <span class="o">{</span> <span class="n">ma_valeur</span><span class="o">+=</span><span class="n">i</span><span class="o">;}</span> 
+
+<span class="o">}</span> 
+   
+</pre></div>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">PetitJob</span> <span class="kd">implements</span> <span class="n">Runnable</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="n">ObjetEntier</span> <span class="n">notre_entier</span> <span class="o">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">increment</span><span class="o">;</span>
+    <span class="n">PetitJob</span><span class="o">(</span><span class="n">ObjetEntier</span> <span class="n">notre_entier</span> <span class="o">,</span> <span class="kt">int</span> <span class="n">increment</span><span class="o">){</span>
+	<span class="k">this</span><span class="o">.</span><span class="na">increment</span><span class="o">=</span><span class="n">increment</span><span class="o">;</span> 
+	<span class="k">this</span><span class="o">.</span><span class="na">notre_entier</span> <span class="o">=</span> <span class="n">notre_entier</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+	<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mf">1e8</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+	    <span class="o">{</span>
+		<span class="n">notre_entier</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">increment</span><span class="o">);</span>
+	    <span class="o">}</span>  
+	<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Thread faisant %d - termine, compteur= %s\n&quot;</span> <span class="o">,</span> <span class="n">increment</span><span class="o">,</span><span class="n">notre_entier</span><span class="o">);</span>
+
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+	<span class="n">ObjetEntier</span> <span class="n">Compteur</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjetEntier</span><span class="o">();</span> 
+	<span class="n">PetitJob</span> <span class="n">objex1</span><span class="o">=</span> <span class="k">new</span> <span class="n">PetitJob</span><span class="o">(</span><span class="n">Compteur</span><span class="o">,</span> <span class="mi">1</span><span class="o">);</span>
+	<span class="n">PetitJob</span> <span class="n">objex2</span><span class="o">=</span> <span class="k">new</span> <span class="n">PetitJob</span><span class="o">(</span><span class="n">Compteur</span><span class="o">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">);</span>
+	<span class="n">Thread</span> <span class="n">tache1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">objex1</span> <span class="o">,</span><span class="s">&quot;incrementeur&quot;</span><span class="o">);</span>
+	<span class="n">Thread</span> <span class="n">tache2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">objex2</span><span class="o">,</span> <span class="s">&quot;decrementeur&quot;</span><span class="o">);</span>
+
+	<span class="n">tache1</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+	<span class="n">tache2</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+	
+	<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Le compteur vaut %s\n&quot;</span> <span class="o">,</span> <span class="n">Compteur</span><span class="o">);</span>
+	<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Le compteur vaut %s\n&quot;</span> <span class="o">,</span> <span class="n">Compteur</span><span class="o">);</span>
+    
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<div class="topic">
+<p class="topic-title first"><strong>Exercice 3</strong></p>
+<ul class="simple">
+<li>Que fait le programme, que fait chaque thread ?</li>
+<li>Quelle devrait être la valeur stockée par l’ObjetEntier nommé Compteur à la fin du calcul ?</li>
+<li>Expliquer ce qui arrive, ou se trouve la concurrence ?</li>
+<li>Comment pourrait-on faire pour que le calcul retourne <span class="math">\(0\)</span> et cela de façon certaine ?</li>
+<li>Le programme principal peut il détecter la terminaison des threads ?</li>
+</ul>
+</div>
+</div>
+<div class="section" id="consistance-des-donnees-et-problemes-d-ordonnancement">
+<h3>2.4.3. Consistance des données et problèmes d&#8217;ordonnancement<a class="headerlink" href="#consistance-des-donnees-et-problemes-d-ordonnancement" title="Lien permanent vers ce titre">¶</a></h3>
+<p>L’absence de fil de calcul unique et déterministe pose de nombreux
+problèmes. Un cas simple (d’ordonnancement) et de consistance est le
+suivant :</p>
+<ul class="simple">
+<li>le thread A lit <span class="math">\(x\)</span> calcule <span class="math">\(f(x)\)</span> et remplace <span class="math">\(x\)</span>
+par <span class="math">\(f(x)\)</span>.</li>
+<li>le thread B lit <span class="math">\(x\)</span> calcule quand à lui <span class="math">\(g(x)\)</span> et
+remplace <span class="math">\(x\)</span> par <span class="math">\(g(x)\)</span>.</li>
+</ul>
+<p>Le résultat est complètement imprévisible, à la fin du calcul on peut en
+effet trouver <span class="math">\(f(g(x))\)</span>, <span class="math">\(g(f(x))\)</span> mais tout aussi bien
+<span class="math">\(f(x)\)</span> ou <span class="math">\(g(x)\)</span>. L’exemple classique est donné dans la
+figure [fig:1].</p>
+<div class="align-center figure">
+<a class="reference internal image-reference" href="../_images/race.png"><img alt="alternate text" src="../_images/race.png" style="width: 600px; height: 300px;" /></a>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Cette inconsistance est dite de <strong>race-condition</strong>, ici bien que les fonctions <span class="math">\(f: x\rightarrow x+1\)</span> et <span class="math">\(g : x \rightarrow x+1\)</span> commutent,  le calcul retourne n’importe quoi.</p>
+</div>
+<p>Pour résoudre les problèmes de consistance des données, les systèmes
+distribués fournissent divers mécanismes, leur but est le même s’assurer
+l’exclusivité de l’accès à des parties (en général des données)  communes.</p>
+<ul class="simple">
+<li>(UNIX, Noyau Système): On peut déclarer des <em>sections critiques</em> (de
+code) et utiliser des opérations atomiques. Quand une tâche effectue
+une section critique le système assure qu’elle ne sera pas
+interrompue; les tâches qui sont ainsi bloquées sont mises en sommeil
+et réveillées quand la phase critique est terminée.</li>
+<li>(UNIX,Java) Le <em>sémaphore</em> : Celui ci permet de réserver une ressource
+ou un objet, quand l’autorisation est délivrée (en attendant la tâche
+sommeille) le système assure que personne d’autre n’accède à l’objet
+ou la ressource. Quand la tâche à terminé son travail critique elle
+informe le système qui va alors délivrer une autre autorisation et
+potentiellement réveiller une des tâche en attente (si il y en a).</li>
+<li>En Java on peut verrouiller un objet un utilisant la déclaration
+synchronized (c.f ci-dessous), là encore le système distribué de la
+JVM va endormir les Threads (quand la ressource est occupée) et elle
+réveillera ces Thread en attente quand la ressource sera libérée.</li>
+</ul>
+<p>Le sémaphore diffère un peu du verrou, en effet c’est le sémaphore qui
+techniquement sait si la ressource critique est occupée ou disponible
+alors que dans le cas d’un verrou on utilise un <em>jeton</em> et celui qui
+souhaite utiliser la ressource s’empare du jeton et le rend quand il en
+a terminé.</p>
+<p>Pour gérer les problèmes d’ordonnancement les systèmes distribués permettent aussi :</p>
+<ul class="simple">
+<li>de terminer une tâche</li>
+<li>d’attendre qu’une tâche soit terminée.</li>
+<li>de mettre en sommeil ou de réveiller une tâche.</li>
+</ul>
+</div>
+<div class="section" id="consistance-et-verrouillage-le-cas-de-java">
+<h3>2.4.4. Consistance et Verrouillage, le cas de Java<a class="headerlink" href="#consistance-et-verrouillage-le-cas-de-java" title="Lien permanent vers ce titre">¶</a></h3>
+<div class="section" id="synchronized-le-verouillage-de-methode">
+<h4>2.4.4.1. <strong>Synchronized</strong> : Le Verouillage de méthode<a class="headerlink" href="#synchronized-le-verouillage-de-methode" title="Lien permanent vers ce titre">¶</a></h4>
+<p>Une des directive de verrouillage en Java consiste à déclarer qu’une méthode ou un bloc de code est <em>synchronisé</em>.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Compteur_Synchro</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+     <span class="o">.......</span><span class="na">blabla</span><span class="o">...............</span>
+
+    <span class="kd">public</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">add</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">c</span><span class="o">+=</span><span class="n">j</span><span class="o">;</span>
+    <span class="o">}</span>
+</pre></div>
+</div>
+<p>Ici la méthode add(int j) est déclarée synchrone, cette déclaration empêche que plus d’un thread exécute une méthode synchrone de l’objet concerné. Les méthodes non synchrones de la classe ne sont pas affectées,  et bien entendu les appels effectués sur des objets différents de la classe Compteur_Synchro ne sont pas affectés. Si toutes les méthodes de la classes sont synchrones, l’objet est complètement verrouillé.</p>
+<p>C’est exactement le genre de verrou qu’il nous faut dans le cas du
+compteur de l’exemple <a class="reference external" href="http://www-sop.inria.fr/members/Stephane.Perennes/TD_Web/Web/source/td2/Petit_Job.java">Petit_job.java</a>,</p>
+<div class="topic">
+<p class="topic-title first"><strong>Exercice 4</strong></p>
+<ul class="simple">
+<li>Quelle méthode pose problème dans Petit_Job  ? La rendre synchrone.</li>
+<li>Observer le résultat ? Pourquoi le thread principal n’affiche t’il pas <span class="math">\(0\)</span>?</li>
+<li>Ajouter une longue boucle (:math:<a href="#id1"><span class="problematic" id="id2">`</span></a>10^9 ` tours) juste avant la fin du programme principal et afficher à nouveau le compteur, que concluez vous ?</li>
+</ul>
+</div>
+<p><strong>Attention !</strong> Si on verrouille une méthode statique on va verrouiller tous les objets de la Classe, ce qui parfois peût être utile.</p>
+</div>
+<div class="section" id="le-verrouillage-de-block">
+<h4>2.4.4.2. Le Verrouillage de block<a class="headerlink" href="#le-verrouillage-de-block" title="Lien permanent vers ce titre">¶</a></h4>
+<p>Il s’agit d’un verrou bien plus précis car il ne concerne qu’un bloc.
+Pour verrouiller un bloc on utilise un objet (ie une référence, un
+identifiant d’objet), en général il est conseillé de faire usage d’un
+champ privé de l’objet sur lequel la méthode (le thread) s’exécute car
+si le verrou est public toute tache pourra verrouiller notre bloc en
+utilisant le même verrou ailleurs. Ce verrouillage ne bloque pas les
+autres méthodes applicables à l’objet, il peut cependant bloquer l’accès
+à d’autres bloc synchronisés utilisant le même verrou.
+Attention le verrou doit être un véritable objet (pas un int ou un char)</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Compteur_Synchro</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="n">Int</span> <span class="n">Monverrou</span><span class="o">=</span><span class="mi">0</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+     <span class="o">.......</span><span class="na">blabla</span><span class="o">...............</span>
+
+    <span class="kd">public</span>  <span class="kt">void</span> <span class="nf">fairequelchose</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">)</span> <span class="o">{</span>
+                  <span class="n">blabla</span> <span class="o">...</span>
+              <span class="kd">synchronized</span><span class="o">(</span><span class="n">Monverrou</span><span class="o">)</span>
+                      <span class="o">{</span> <span class="n">BLOC</span> <span class="n">PROTËGË</span> <span class="o">}</span>
+    <span class="o">}</span>
+</pre></div>
+</div>
+<p><strong>Exercice 5 (simulation rudimentaire de parking)</strong></p>
+<p>On veut simuler un parking de <span class="math">\(N\)</span> places.</p>
+<ul class="simple">
+<li>Chaque voiture aura un identifiant (pex 1,2,3,...) et sera simulée par un thread, une voiture se comporte comme suit : elle demande à rentrer dans le parking, quand sa requête est acceptée elle rentre et attend un temps aléatoire puis elle sort.</li>
+<li>Le controleur assure que moins de <span class="math">\(N\)</span> voitures sont dans le parking il fournit deux méthodes : <em>enter()</em> qui retourne <em>true</em> si la demande d&#8217;entrée est acceptée(et <em>false</em> sinon) ainsi que la méthode <em>leave()</em> qui permet à une voiture d&#8217;annoncer qu&#8217;elle sort.</li>
+<li>Écrire le petit simulateur, une voiture demandera à entrer tant que sa demande sera refusée. Ajouter des messages indiquant se que font les voitures. Ajouter au controleur une liste lui permettant d&#8217;afficher régulièrement la liste des voitures garées.</li>
+<li>Quel est le principal problème de cette implémentation ?</li>
+</ul>
+</div>
+<div class="section" id="ordonnancement-en-java">
+<h4>2.4.4.3. Ordonnancement en Java<a class="headerlink" href="#ordonnancement-en-java" title="Lien permanent vers ce titre">¶</a></h4>
+<p>Une instruction permet de demander à un Thread d’attendre qu’une tâche
+ai terminé son calcul. Cette simple instruction permet d’imposer des
+règles de précédence telles que <em>A doit se terminer avant B</em>  (i.e :  <em>B dépend de  A</em>).
+Si le thread  TA  (resp. TB) exécute la tâche  A  (resp.  B) on
+spécifie en Java que  A  <span class="math">\(&lt;\)</span> B   en écrivant au début de l’exécution de  B :</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">TA</span><span class="o">.</span><span class="na">join</span><span class="o">()</span>
+</pre></div>
+</div>
+<p>Cette instruction bloque le fil calcul du thread qui l’effectue jusqu’à
+ce que le thread <span class="math">\(TA\)</span> soit terminé, bien entendu il faut le que  thread
+invoquant cette méthode puisse accéder à <span class="math">\(TA\)</span>.</p>
+<p><strong>Exercice 6</strong></p>
+<p>Reprendre encore une fois le code de l’exemple <a class="reference external" href="http://www-sop.inria.fr/members/Stephane.Perennes/TD_Web/Web/source/td2/Petit_Job.java">Petit_job.java</a>, et demander au thread principal d’attendre que les threads t1,t2 aient terminé avant d’afficher la valeur du compteur. Le résultat est il enfin
+fiable ?</p>
+<p><strong>Exercice 7</strong></p>
+<p>Écrire un programme qui crée trois threads <span class="math">\(A,B,C\)</span> opérant sur un
+objet exécutable  <strong>Dormeur</strong></p>
+<ul class="simple">
+<li>La méthode run() de Dormeur se contente d’attendre quelques secondes
+puis avant de se terminer elle écrit un message (du type je suis XX j&#8217;ai fini).</li>
+<li>le thread principal crée <span class="math">\(3\)</span> threads à partir de Dormeur et les
+démarre dans “l’ordre” <span class="math">\(A,B,C\)</span>.</li>
+</ul>
+<p>On veut maintenant que <span class="math">\(C&lt;B&lt;A\)</span> (donc <span class="math">\(A\)</span> doit terminer en dernier, et <span class="math">\(C\)</span> en premier).</p>
+<ul class="simple">
+<li>Modifier le code du constructeur de la classe Dormeur pour qu’il
+prenne en paramètre une liste de <span class="math">\(0\)</span> ou <span class="math">\(1\)</span> threads à
+attendre, alternativement définir une méthode set_pred(Thread t) qui
+permet de définir le prédecesseur d’un Dormeur.</li>
+<li>Construire <span class="math">\(C\)</span> pour qu’il n’attende personne (ie
+<span class="math">\(\emptyset\)</span>).</li>
+<li>Construire <span class="math">\(B\)</span> pour qu’il attende <span class="math">\(C\)</span>.</li>
+<li>Construire <span class="math">\(A\)</span> pour qu’il attende <span class="math">\(B\)</span>.</li>
+<li>Lancer les <span class="math">\(3\)</span> threads et observer.</li>
+<li>Que ce passerait-il si on ajoutait un thread <span class="math">\(TS\)</span> avec
+<span class="math">\(D&lt;C\)</span> et <span class="math">\(A&lt;D\)</span> ?</li>
+</ul>
+<blockquote>
+<div><strong>Ce qui suit est totalement optionnel, si le coeur vous en dit donc …</strong></div></blockquote>
+<p><strong>Exercice 8</strong> Généraliser le programme précédent au cas de <span class="math">\(n\)</span> threads
+<span class="math">\(T1&lt;T2&lt;T3&lt; \ldots Tn\)</span> ou <span class="math">\(n\)</span> est un argument passé au
+programme, i.e <span class="math">\(Tn\)</span> ne dépend de personne et <span class="math">\(T1\)</span> est le
+dernier à s’exécuter.</p>
+<p><strong>Exercice 9</strong>
+Généraliser le programme précédent au cas où les dépendances forment un
+arbre binaire de profondeur <span class="math">\(n\)</span>, ie la tache <span class="math">\(R\)</span> ne dépend
+de personne, <span class="math">\(R0,R1\)</span> dépendent de <span class="math">\(R\)</span>, <span class="math">\(R01,R00\)</span>
+dépendent de <span class="math">\(R0\)</span> tandis que <span class="math">\(R10,R11\)</span> dépendent de
+<span class="math">\(R1\)</span> et ainsi de suite, <span class="math">\(RX1,RX0\)</span> dépendent de <span class="math">\(RX\)</span></p>
+<p><strong>Exercice 10</strong></p>
+<ul class="simple">
+<li>Trouver un moyen de faire dépendre une tâche d’une liste de tâches qui ne soit pas limitée à un élément.</li>
+<li>Supposons que nous ayons en entrée un graphe de dependance, c’est à dire un ensemble de taches <span class="math">\(T=\{0,1,2,\ldots T-1\}\)</span> qui nous procure pour chaque tache <span class="math">\(t \in T\)</span> la liste des tâches dont elle dépend. Écrire un programme qui génére les Threads avec les conditions de synchronisation assurant que l’exécution se deroulera dans le bon ordre et que les tâches réalisables en même temps pourront l’être. Le corp des Thread sera remplacé par une fonction factice (une attente aléatoire, une boucle).</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../td3/sujet3.html" class="btn btn-neutral float-right" title="3. TD numéro 3 : Quelques exemples de programation concurrente" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../td1/sujet1.html" class="btn btn-neutral" title="1. TD numéro 1 : Communication via des sockets" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Stéphane Perennes.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

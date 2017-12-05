@@ -1,0 +1,76 @@
+Prérequis, liens utiles
+===================================================================================================
+
+- En cas de problème Instaler la JDK, à priori c'est déjà fait surtout si vous avez instalé Eclipse.  Ou la trouve  ici 
+ 
+- Instaler  telnet : Sous linux ou MacOSX ce petit programme est instalé par défaut.  Sous windows entrer dans une invite de commande admin ::
+
+    dism /online /Enable-Feature /FeatureName:TelnetClient   
+
+
+ Voir aussi `récupérer telnet <https://www.rootusers.com/how-to-enable-the-telnet-client-in-windows-10>`_   pour d'autre méthodes.  Telnet permet d'ouvrir manuellement des connections réseau (TCP) et donc de tester un serveur ou un protocole. Il est ainsi possible d'effectuer des requêtes HTTP élémentaires en utilisant telnet ou encore d´envoyer un email (vous trouverez de nombreux exemple sur internet, comme celui-ci `envoyer un mail avec telnet <https://practical365.com/exchange-server/how-to-send-email-via-telnet/>`_.
+
+- Vérifier les chemins (en particulier sous windows) ,  diverses méthodes sont données  `Ici <http://stackoverflow.com/questions/1672281/environment-variables-for-java-installation>`_ 
+
+**Contact :**
+  Stéphane Perennes  stephane.perennes@cnrs.fr 
+ 
+**Documentations :**
+  Le site d'Oracle fournit des  `Tutoriaux <http://docs.oracle.com/javase/tutorial/tutorialLearningPaths.html>`_ ainsi qu'une documentation officielle.  Les classes sont documentées `Ici <http://docs.oracle.com/javase/8/docs/api/index.html>`_ Par ailleurs les environements de devellopement intégrés fournissent une documentation immédiate. 
+
+
+
+Contexte et Objectif:  
+===================================================
+
+**Importance de l'échange de messages réseau**
+------------------------------------------------
+
+
+L'élément de base de la programmation distribuée est la communication entre processus.
+Une des méthodes les plus générales et élémentaire pour faire communiquer deux processus consiste à simplement passer des messages sur le réseau. Notez bien que le réseau est souvent utilisé afin d'échanger des messages entre des processus situés sur la même machine physique. L'objectif de cette fiche est d'apprendre à faire communiquer des processus différents via des échanges de messages sur le *réseau*.
+
+
+Des milliers de protocoles sont basés sur de simples échanges de messages, souvent même en mode texte et en clair, certains sont même lisible par un humain. Par exemple :
+
+- le protocole HTTP utilisé pour distribuer des pages web est principalement basé sur deux messages *GET* et *POST*.
+  
+- le courrier electronique.
+
+- Certains player multimédia sont controlé via de échanges de message (VLC, mpd)
+
+- Il est courant de fournir une *interface réseau* permettant de télécommander et de contrôler un programme ou un service. 
+
+
+**Les autres méthodes de communication**
+----------------------------------------------
+  
+Par ailleurs c’est souvent par dessus ces
+méthodes de communication que sont construites des couches plus hautes, plus abstraites 
+et plus complexes (appels de procédure distants, appels de méthodes rpc, rmi).
+
+Il existe d’autres méthodes permettant de communiquer, en particulier
+dans le cas de processus s’exécutant sur une même machine, ceux ci
+partageant le système d’exploitation, la mémoire et le système, il leur
+est possible de communiquer de bien d’autres manières (thread, signaux
+unix, mémoire partagée, messages via le système de fichier, messages via des objets partagés).
+
+Ceci dit l'utilisation de la couche réseau a l'avantage d'être universelle, deux processus distants hétérogènes (implémentés dans des langages différents, s'éxécutant sur des systèmes différents etc ..) peuvent toujours communiquer du moment qu'ils ont accès à la couche réseau. 
+
+**UN réseau "orienté paquet", Opération bloquantes, timeout**
+---------------------------------------------------------------
+Les protocoles réseau courants sont *orientés paquet* et non pas *session
+ou connexion*. Ainsi quand on écoute un flux d’entrée il n’existe à
+priori aucun moyen de savoir si l’autre intervenant dans la
+communication est encore actif. Sa réponse peut être simplement tardive,
+mais il peut aussi être en panne (plantage), etc... La couche TCP/IP ne
+garantit que deux choses : les paquets arrivés sont valides, et les 
+paquets arrivent dans le bon ordre.
+
+En Java, par défaut un bon nombre de méthodes procurées par les objets réseau (accueil de client, lecture de message entrant) sont *Bloquantes*.
+Par exemple, par défaut, la lecture d'un message entrant est bloquante,  ceci signifie que le flux d'exécution va s'interrompre jusqu'à ce qu'un message soit arrivé. Notez que les emissions de message sont non bloquantes, car envoyer un message consiste à le placer sur le réseau sans savoir si et quand il sera recu.
+
+
+Les opérations bloquantes peuvent conduire à des pannes (i.e. atttentes infinie). Afin d'éviter cela on peut positionner en option un *Timeout* (délai maximum). Le cas typique est celui de deux processus échangeant des messages selon un protocole, si l'un deux vient à cesser de répondre le second peut  être bloqué (si il attend une réponse). Le positionement d'un timeout permet donc à celui-ci de detecter le depassement du délai maximum et de gérer lanon réponse (plus exactement la non réponse à temps) du premier.
+
+En Java les timeouts sont gérés via un mecanisme d'exception et de *try/catch*. Une attente top longue déclenche une exception particulière. 

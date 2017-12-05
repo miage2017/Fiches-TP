@@ -1,0 +1,530 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>1. TD numéro 1 : Communication via des sockets &mdash; documentation MiniWeb 0</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Recherche" href="../search.html"/>
+    <link rel="top" title="documentation MiniWeb 0" href="../index.html"/>
+        <link rel="next" title="2. TD numéro 2 : Threads en Java, Concurrence" href="../td2/sujet2.html"/>
+        <link rel="prev" title="TD De Systèmes Distribués" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> MiniWeb
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">1. <strong>TD numéro 1 : Communication via des sockets</strong></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#prerequis-liens-utiles">1.1. Prérequis, liens utiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contexte-et-objectif">1.2. Contexte et Objectif:</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#importance-de-l-echange-de-messages-reseau">1.2.1. <strong>Importance de l&#8217;échange de messages réseau</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#les-autres-methodes-de-communication">1.2.2. <strong>Les autres méthodes de communication</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#un-reseau-oriente-paquet-operation-bloquantes-timeout">1.2.3. <strong>UN réseau &#8220;orienté paquet&#8221;, Opération bloquantes, timeout</strong></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#librairies-et-classes-utilisees">1.3. Librairies et Classes Utilisées</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#classes-reseau">1.3.1. <strong>Classes Réseau</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#classes-entree-sortie">1.3.2. <strong>Classes Entrée Sortie</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bit-caractere-mise-en-tampon">1.3.3. <strong>Bit, caractère, mise en tampon</strong></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#serveur-mono-ne-traitant-quun-client">1.4. Serveur Mono, ne traitant qu’un client</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#le-b-a-ba-un-serveur-jouet">1.4.1. Le B.A.BA , un serveur jouet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#un-serveur-ameliore">1.4.2. Un Serveur Amélioré</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#un-client-basique">1.5. Un Client Basique</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#un-client-put">1.5.1. Un client Put</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pour-aller-plus-loin-put-et-get">1.5.2. Pour aller plus loin : Put et Get</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../td2/sujet2.html">2. <strong>TD numéro 2 : Threads en Java, Concurrence</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td3/sujet3.html">3. <strong>TD numéro 3 : Quelques  exemples de programation concurrente</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td4/sujet4.html">4. <strong>TD numéro 4 : Interbloquage, Graphe de tache, acyclicité</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td5/sujet5.html">5. <strong>TD numéro 5: Un Exemple de programme distribué sans arbitre : La table de Hachage distribuée.</strong></a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="corrige1.html"><strong>Corrigé du TD numéro 1 : Communication via des sockets</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td2/corrige2.html">1. <strong>Corrigé du TD numéro 2 :  Java et les Threads</strong></a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MiniWeb</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>1. <strong>TD numéro 1 : Communication via des sockets</strong></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/td1/sujet1.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="td-numero-1-communication-via-des-sockets">
+<h1>1. <strong>TD numéro 1 : Communication via des sockets</strong><a class="headerlink" href="#td-numero-1-communication-via-des-sockets" title="Lien permanent vers ce titre">¶</a></h1>
+<p>La section 1 positionne les questions étudiées tandis que la section 2 présente brièvement les classes qui seront utilisées. Leur lecture est optionnelle car ce sont potentiellement des rappels.</p>
+<p>Les questions commencent en 1.4.</p>
+<div class="section" id="prerequis-liens-utiles">
+<h2>1.1. Prérequis, liens utiles<a class="headerlink" href="#prerequis-liens-utiles" title="Lien permanent vers ce titre">¶</a></h2>
+<ul>
+<li><p class="first">En cas de problème Instaler la JDK, à priori c&#8217;est déjà fait surtout si vous avez instalé Eclipse.  Ou la trouve  ici</p>
+</li>
+<li><p class="first">Instaler  telnet : Sous linux ou MacOSX ce petit programme est instalé par défaut.  Sous windows entrer dans une invite de commande admin</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">dism</span> <span class="o">/</span><span class="n">online</span> <span class="o">/</span><span class="n">Enable</span><span class="o">-</span><span class="n">Feature</span> <span class="o">/</span><span class="n">FeatureName</span><span class="p">:</span><span class="n">TelnetClient</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<blockquote>
+<div>Voir aussi <a class="reference external" href="https://www.rootusers.com/how-to-enable-the-telnet-client-in-windows-10">récupérer telnet</a>   pour d&#8217;autre méthodes.  Telnet permet d&#8217;ouvrir manuellement des connections réseau (TCP) et donc de tester un serveur ou un protocole. Il est ainsi possible d&#8217;effectuer des requêtes HTTP élémentaires en utilisant telnet ou encore d´envoyer un email (vous trouverez de nombreux exemple sur internet, comme celui-ci <a class="reference external" href="https://practical365.com/exchange-server/how-to-send-email-via-telnet/">envoyer un mail avec telnet</a>.</div></blockquote>
+<ul class="simple">
+<li>Vérifier les chemins (en particulier sous windows) ,  diverses méthodes sont données  <a class="reference external" href="http://stackoverflow.com/questions/1672281/environment-variables-for-java-installation">Ici</a></li>
+</ul>
+<dl class="docutils">
+<dt><strong>Contact :</strong></dt>
+<dd>Stéphane Perennes  <a class="reference external" href="mailto:stephane&#46;perennes&#37;&#52;&#48;cnrs&#46;fr">stephane<span>&#46;</span>perennes<span>&#64;</span>cnrs<span>&#46;</span>fr</a></dd>
+<dt><strong>Documentations :</strong></dt>
+<dd>Le site d&#8217;Oracle fournit des  <a class="reference external" href="http://docs.oracle.com/javase/tutorial/tutorialLearningPaths.html">Tutoriaux</a> ainsi qu&#8217;une documentation officielle.  Les classes sont documentées <a class="reference external" href="http://docs.oracle.com/javase/8/docs/api/index.html">Ici</a> Par ailleurs les environements de devellopement intégrés fournissent une documentation immédiate.</dd>
+</dl>
+</div>
+<div class="section" id="contexte-et-objectif">
+<h2>1.2. Contexte et Objectif:<a class="headerlink" href="#contexte-et-objectif" title="Lien permanent vers ce titre">¶</a></h2>
+<div class="section" id="importance-de-l-echange-de-messages-reseau">
+<h3>1.2.1. <strong>Importance de l&#8217;échange de messages réseau</strong><a class="headerlink" href="#importance-de-l-echange-de-messages-reseau" title="Lien permanent vers ce titre">¶</a></h3>
+<p>L&#8217;élément de base de la programmation distribuée est la communication entre processus.
+Une des méthodes les plus générales et élémentaire pour faire communiquer deux processus consiste à simplement passer des messages sur le réseau. Notez bien que le réseau est souvent utilisé afin d&#8217;échanger des messages entre des processus situés sur la même machine physique. L&#8217;objectif de cette fiche est d&#8217;apprendre à faire communiquer des processus différents via des échanges de messages sur le <em>réseau</em>.</p>
+<p>Des milliers de protocoles sont basés sur de simples échanges de messages, souvent même en mode texte et en clair, certains sont même lisible par un humain. Par exemple :</p>
+<ul class="simple">
+<li>le protocole HTTP utilisé pour distribuer des pages web est principalement basé sur deux messages <em>GET</em> et <em>POST</em>.</li>
+<li>le courrier electronique.</li>
+<li>Certains player multimédia sont controlé via de échanges de message (VLC, mpd)</li>
+<li>Il est courant de fournir une <em>interface réseau</em> permettant de télécommander et de contrôler un programme ou un service.</li>
+</ul>
+</div>
+<div class="section" id="les-autres-methodes-de-communication">
+<h3>1.2.2. <strong>Les autres méthodes de communication</strong><a class="headerlink" href="#les-autres-methodes-de-communication" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Par ailleurs c’est souvent par dessus ces
+méthodes de communication que sont construites des couches plus hautes, plus abstraites
+et plus complexes (appels de procédure distants, appels de méthodes rpc, rmi).</p>
+<p>Il existe d’autres méthodes permettant de communiquer, en particulier
+dans le cas de processus s’exécutant sur une même machine, ceux ci
+partageant le système d’exploitation, la mémoire et le système, il leur
+est possible de communiquer de bien d’autres manières (thread, signaux
+unix, mémoire partagée, messages via le système de fichier, messages via des objets partagés).</p>
+<p>Ceci dit l&#8217;utilisation de la couche réseau a l&#8217;avantage d&#8217;être universelle, deux processus distants hétérogènes (implémentés dans des langages différents, s&#8217;éxécutant sur des systèmes différents etc ..) peuvent toujours communiquer du moment qu&#8217;ils ont accès à la couche réseau.</p>
+</div>
+<div class="section" id="un-reseau-oriente-paquet-operation-bloquantes-timeout">
+<h3>1.2.3. <strong>UN réseau &#8220;orienté paquet&#8221;, Opération bloquantes, timeout</strong><a class="headerlink" href="#un-reseau-oriente-paquet-operation-bloquantes-timeout" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Les protocoles réseau courants sont <em>orientés paquet</em> et non pas <em>session
+ou connexion</em>. Ainsi quand on écoute un flux d’entrée il n’existe à
+priori aucun moyen de savoir si l’autre intervenant dans la
+communication est encore actif. Sa réponse peut être simplement tardive,
+mais il peut aussi être en panne (plantage), etc... La couche TCP/IP ne
+garantit que deux choses : les paquets arrivés sont valides, et les
+paquets arrivent dans le bon ordre.</p>
+<p>En Java, par défaut un bon nombre de méthodes procurées par les objets réseau (accueil de client, lecture de message entrant) sont <em>Bloquantes</em>.
+Par exemple, par défaut, la lecture d&#8217;un message entrant est bloquante,  ceci signifie que le flux d&#8217;exécution va s&#8217;interrompre jusqu&#8217;à ce qu&#8217;un message soit arrivé. Notez que les emissions de message sont non bloquantes, car envoyer un message consiste à le placer sur le réseau sans savoir si et quand il sera recu.</p>
+<p>Les opérations bloquantes peuvent conduire à des pannes (i.e. atttentes infinie). Afin d&#8217;éviter cela on peut positionner en option un <em>Timeout</em> (délai maximum). Le cas typique est celui de deux processus échangeant des messages selon un protocole, si l&#8217;un deux vient à cesser de répondre le second peut  être bloqué (si il attend une réponse). Le positionement d&#8217;un timeout permet donc à celui-ci de detecter le depassement du délai maximum et de gérer lanon réponse (plus exactement la non réponse à temps) du premier.</p>
+<p>En Java les timeouts sont gérés via un mecanisme d&#8217;exception et de <em>try/catch</em>. Une attente top longue déclenche une exception particulière.</p>
+</div>
+</div>
+<div class="section" id="librairies-et-classes-utilisees">
+<h2>1.3. Librairies et Classes Utilisées<a class="headerlink" href="#librairies-et-classes-utilisees" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Les classes sont documentées sur le site d&#8217;Oracle :<a class="reference external" href="https://docs.oracle.com/javase/7/docs/api/java/net/Socket.html">Javadoc</a></p>
+<p>On va utilser les librairies standard réseau, entrées sortie et utilitaires.</p>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span></span>  <span class="kn">import</span> <span class="nn">java.net.*</span><span class="o">;</span>
+  <span class="kn">import</span> <span class="nn">java.io.*</span><span class="o">;</span>
+  <span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+</pre></div>
+</td></tr></table></div>
+<div class="section" id="classes-reseau">
+<h3>1.3.1. <strong>Classes Réseau</strong><a class="headerlink" href="#classes-reseau" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Principalement vous utiliserez les classes suivantes :</p>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.oracle.com/javase/7/docs/api/java/net/ServerSocket.html">ServerSocket</a> qui fournit une classe <em>Serveur</em>, cette classe implémente un objet qui va écouter sur un port donné et attendre une demande de connection. La classe Serveur fournit donc une <em>salle d&#8217;attente</em> où faire attendre d&#8217;éventuels clients.  Quand un tel objet est créé sur un port $p$ tout client qui se connecte sur ce port est accueilli et placé en attente, les paquets qu&#8217;il envoie sont aussi acceptés et conservés par le SocketServer.</li>
+</ul>
+<blockquote>
+<div><ul class="simple">
+<li>En dehors de la méthode création  la méthode principale de cette classe est <strong>accept</strong> qui  place le demandeur en attente et lui retourne un client  dès qu&#8217;il y en a un. Le client est <em>fourni</em>  via un objet  <em>Socket</em> retourné par la méthode accept, ceci permet de communiquer avec avec le client. Notons enfin que la socket va alors contenir les paquets que le client a envoyé quand il était en attente.</li>
+<li>Une autre méthode importante est <strong>close</strong> car qui  termine (coté serveur) les connections des clients de la salle d&#8217;attente.  Cela devrait donc  aussi deconnecter les clients.</li>
+<li>La classe dispose de bien d&#8217;autres méthodes, on peut en effet limiter la taille de la salle d&#8217;attente, spécifier un timeout. Pour plus  voir les spécifications <a class="reference external" href="https://docs.oracle.com/javase/7/docs/api/java/net/ServerSocket.html">ServerSocker</a></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.oracle.com/javase/7/docs/api/java/net/Socket.html">Socket</a>  cette classe permet d&#8217;établir des connections, le système d&#8217;exploitation et la JVM tentent  d&#8217;ouvrir la connection lors de la création de l&#8217;objet. Une socket est une connection bidirectionnelle, aussi la socket est associée à deux &#8220;flux de bits&#8221;, un flux entrant et un flux sortant.<ul>
+<li>On va écrire sur la <em>sortie</em> qui est un <em>OutputStream</em> (flux de bit sortant)  on accède à ce flux via la méthode <em>getOutputStream()</em>.</li>
+<li>On va lire le données recues  sur l&#8217;<em>entrée</em> qui est un <em>InputStream</em> (flux de bits entrant) on accède à ce flux via la  méthode <em>getInputStream()</em>.</li>
+<li>Pour spécifier un timeout pour la lecture de données on utilise la méthode <a class="reference external" href="https://docs.oracle.com/javase/7/docs/api/java/net/Socket.html#setSoTimeout(int)">SetSosetSoTimeout</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="classes-entree-sortie">
+<h3>1.3.2. <strong>Classes Entrée Sortie</strong><a class="headerlink" href="#classes-entree-sortie" title="Lien permanent vers ce titre">¶</a></h3>
+<p><strong>Les Flux (Streams)</strong>
+- En Java la notion de  &#8220;flux&#8221; entrant (file, flot, stream) d&#8217;objets correspond
+à  une séquence potentiellement infinie (dans une direction) d&#8217;objets.  Un flux est un peu comme l&#8217;ensemble des entiers. Une chaine de caractère est un flux de caractères, un fichier est un flux de bits, et une connection réseau entrante est un flux.</p>
+<ul class="simple">
+<li>De facon analogue,  Java propose la notion un &#8220;flux&#8221; sortant (file, flot, stream) d&#8217;objets.</li>
+<li>Étant donnée une socket, le flux de sortie retourné par <em>getOutputStream()</em> (respectivement  le flux entrant retourné par  <em>InputStream</em>) est un  <strong>flux de bits</strong>. Le flux de sortie (resp. flux entrant) se manipule comme un fichier ouvert en écriture (resp lecture).</li>
+<li>En général on encapsule ces flux dans des flux de caractères de plus haut niveau.</li>
+</ul>
+</div>
+<div class="section" id="bit-caractere-mise-en-tampon">
+<h3>1.3.3. <strong>Bit, caractère, mise en tampon</strong><a class="headerlink" href="#bit-caractere-mise-en-tampon" title="Lien permanent vers ce titre">¶</a></h3>
+<ul class="simple">
+<li>Si on échange des informations en utilisant des sockets (via donc des streams), on a besoin de traduire les  bits en caractères.  Ceci pose le problème du codage des caractère en  binaire (bits). Longtemps ce fut un sujet de maux de têtes car les caractères étaient codés sur 1 octet et il existait un codage par langue, même deux langues voisines avaient des codage différents (p.ex les lettre accentuées du Portugais diffèrent de celle du Francais). De plus chaque famille de système d&#8217;exploitation utilisait un codage qui lui était propre (ie Windows, Linux, Apple).</li>
+<li>Comme en général le concepteur souhaite écrire/lire des chaines de caractères et non pas des bits sur un stream, Java procure un mécanisme d&#8217;encapsulation qui permet de manipuler des caractères, ce mecanisme converti les flux de bits en flux de caractère. L´ecapsulation permet aussi d&#8217;utiliser des opération d&#8217;entrée sortie de haut niveau <em>(print(), format(), println(), readline())</em> alors que les flux de bas niveau ne proposent que les opération atomiques <em>write</em> et <em>read</em>.</li>
+</ul>
+<p>Les 2 lignes de code ci dessous encapsulent les 2 flux de bit dans des flux de caractères.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">ma_connection</span><span class="o">=</span><span class="n">Socket</span><span class="o">()</span>
+<span class="n">InputStreamReader</span> <span class="n">isr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">ma_connection</span><span class="o">.</span><span class="na">getInputStream</span><span class="o">(),</span> <span class="s">&quot;UTF-8&quot;</span><span class="o">);</span>
+<span class="n">PrintWriter</span> <span class="n">ma_sortie</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintWriter</span><span class="o">(</span><span class="n">ma_connection</span><span class="o">.</span><span class="na">getOutputStream</span><span class="o">()</span> <span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+</pre></div>
+</div>
+<div class="topic">
+<p class="topic-title first">Javadoc about <strong>InputStreamReader</strong></p>
+<p>An <strong>InputStreamReader</strong> is a bridge from byte streams to character streams: It reads bytes and decodes them into characters using a specified charset. The charset that it uses may be specified by name or may be given explicitly, or the platform&#8217;s default charset may be accepted.</p>
+</div>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="n">ma_connection</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Socket</span><span class="o">(</span><span class="s">&quot;127.0.0.1&quot;</span><span class="o">,</span> <span class="mi">2017</span><span class="o">);</span>
+<span class="n">ma_connection</span><span class="o">.</span><span class="na">SetSotimeout</span><span class="o">(</span><span class="mi">5000</span><span class="o">)</span>
+
+<span class="n">InputStreamReader</span> <span class="n">isr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">ma_connection</span><span class="o">.</span><span class="na">getInputStream</span><span class="o">(),</span> <span class="s">&quot;UTF-8&quot;</span><span class="o">);</span>
+<span class="n">BufferedReader</span> <span class="n">flux_entrant</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="n">isr</span><span class="o">)</span> <span class="o">;</span>
+
+<span class="n">nouveau_message</span><span class="o">=</span><span class="n">flux</span><span class="o">.</span><span class="na">entrant</span><span class="o">.</span><span class="na">readline</span><span class="o">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="serveur-mono-ne-traitant-quun-client">
+<h2>1.4. Serveur Mono, ne traitant qu’un client<a class="headerlink" href="#serveur-mono-ne-traitant-quun-client" title="Lien permanent vers ce titre">¶</a></h2>
+<div class="section" id="le-b-a-ba-un-serveur-jouet">
+<h3>1.4.1. Le B.A.BA , un serveur jouet<a class="headerlink" href="#le-b-a-ba-un-serveur-jouet" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Écrire une classe Serveur_Jouet qui&nbsp;:</p>
+<ol class="arabic simple">
+<li>crée un gestionnaire de socket sur le port 12000 (ServerSocket).</li>
+<li>Attend une connections entrante et associe à celle-ci une socket
+(Socket) quand elle arrive.</li>
+<li>Lit de façons bloquante et ligne à ligne les données recues et les
+affiche à l’écran avec un compteur de lignes (on utilisera les
+classes InputStreamReader BufferedReader).</li>
+<li>On veillera à traiter au minimum les erreurs potentielles d’entrée
+sortie.</li>
+</ol>
+<p>Afin de tester le fonctionnement on utilisera telnet (telnet 127.0.0.1
+12000) pour se connecter au Serveur Jouet.</p>
+<ol class="arabic simple">
+<li>Que ce passe t’il si on lance plusieurs sessions telnet ?</li>
+<li>Que deviennent les sessions telnet si on arrête le serveur ?</li>
+<li>Que se passe t-il si on lance une seconde instance du Serveur Jouet ?</li>
+</ol>
+</div>
+<div class="section" id="un-serveur-ameliore">
+<h3>1.4.2. Un Serveur Amélioré<a class="headerlink" href="#un-serveur-ameliore" title="Lien permanent vers ce titre">¶</a></h3>
+<div class="line-block">
+<div class="line">On veut modifier le Serveur afin qu’il puisse traiter sequentiellement</div>
+</div>
+<p>plusieurs connections. Afin que cela soit possible il faut pouvoir
+terminer une connections. La terminaison va s’opérer à l’initiative du
+client, celui-ci terminera la connection en envoyant une séquence de
+caractère spéciale que nous notons FINISH.</p>
+<p>On rendra compte du comportement du serveur (démarrage, prise en charge,
+terminaison etc ...) via des messages sur la sortie standard.</p>
+<p>À partir de la classe Serveur_Jouet, définir la classe Serveur_multi
+qui obéit aux spécifications suivantes :</p>
+<ol class="arabic simple">
+<li>Un des créateurs (à priori c’est le seul) associé à classe prend
+comme argument le numéro de port sur lequel le serveur va écouter,
+cet argument est fourni par l’utilisateur (ex: java Serveur_Multi
+1234). Il sera aussi souhaitable de vérifier que l’argument
+correspond bel et bien à un numéro de port correctement formaté.</li>
+<li>La méthode run() Examine si des connections sont actives sur
+Server_Socket, si oui elle en prend une en charge et lui applique la
+méthode Service_Client.</li>
+<li>La méthode Service_Client lit puis affiche (sur la sortie standard)
+les données envoyées par le client (comme dans le cas du
+Serveur_Jouet. Cependant elle recherche dans chaque ligne envoyée
+par le client la séquence de terminaison FINISH, si cette séquence
+apparait la méthode Service_Client se termine, la socket est alors
+close et l’on retourne écouter le Serveur_Socket.</li>
+<li>Le choix de la séquence de terminaison FINISH vous est laissé,
+attention toutefois de ne pas utiliser quelque chose de trop commun
+(pex “<span class="math">\(\backslash\)</span>n”, “ab”). Le caractère EOT, ctrl-D dont le
+code ASCII est 4 est un choix acceptable.</li>
+</ol>
+<p><em>Tests: (telnet encore)</em></p>
+<ol class="arabic simple">
+<li>Que se passe t’il si plusieurs sessions telnet sont lancées
+concurremment ?</li>
+<li>En quoi envoyer la séquence FINISH diffère de “tuer” le processus
+telnet (kill, ctrl-c) ?</li>
+<li>Faire divers tests avec des telnet concurrents que l’on terminera.</li>
+<li>Quelle entité gère les connections bloquées en attente de service ?</li>
+</ol>
+</div>
+</div>
+<div class="section" id="un-client-basique">
+<h2>1.5. Un Client Basique<a class="headerlink" href="#un-client-basique" title="Lien permanent vers ce titre">¶</a></h2>
+<div class="section" id="un-client-put">
+<h3>1.5.1. Un client Put<a class="headerlink" href="#un-client-put" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Ce client jouet sera implémenté via une classe Mini_Client, qui
+s’utilisera comme suit : java Mini_Client hote port NOM. On modifiera
+très légerement Serveur_Multi afin qu’il detecte le nom du client et
+accuse réception de la connection.</p>
+<ul class="simple">
+<li>Le client cherchera à se connecter au serveur, ensuite une fois la
+connexion établie&nbsp;:</li>
+<li>il annoncera son NOM , pour cela il utilisera une <em>annonce</em> formatée
+selon des règles de votre choix (par exemple “Hello je suis: NOM”).</li>
+<li>Le serveur détectera cette annonce en utilisant un <em>analyseur
+d’expressions régulières</em> (classes Pattern, Matcher du paquet
+java.util.regex. Pour tester l’expression régulière on pourra
+utiliser <a class="reference external" href="http://www.regexplanet.com/advanced/java/index.html">http://www.regexplanet.com/advanced/java/index.html</a> et
+determinera ainsi le NOM du client.</li>
+<li>Le serveur retournera alors un accusé de réception (pex “Bonjour
+NOM”).</li>
+<li>Le client transmettra alors des données (on pourra au choix
+transmettre une chaîne aléatoire (i.e n importe quoi) ou structurée
+(pex. l’alphabet répété 100 fois) de caractère, ou le contenu d’un
+fichier).</li>
+<li>le client cloturera alors la session.</li>
+</ul>
+<p><em>Option :</em> Bien que la correction des erreurs soit assurée par la couche
+réseau tcp/ip , pour s’assurer de la bonne transmission on pourra :</p>
+<ul class="simple">
+<li>Demander que le serveur retourne comme accusé de réception le hash
+des données reçues.</li>
+<li>Le client controlera alors que ce hash correspond bien à ses données,
+si oui il cloture la session.</li>
+<li>Sinon le client renverra les données, jusqu’à ce que la transmission
+soit correcte.</li>
+</ul>
+</div>
+<div class="section" id="pour-aller-plus-loin-put-et-get">
+<h3>1.5.2. Pour aller plus loin : Put et Get<a class="headerlink" href="#pour-aller-plus-loin-put-et-get" title="Lien permanent vers ce titre">¶</a></h3>
+<p><em>Section optionnelle à faire à la maison pour les motivés.</em> Étoffer le
+client et le serveur afin qu’un client puisse effectuer les trois
+opérations suivantes :</p>
+<ol class="arabic simple">
+<li>Consulter la liste des données stockées par le serveur.</li>
+<li>Poser un ensemble de données sur le serveur , cet ensemble sera
+identifié par les couple (nom du client, nom de la donnée).</li>
+<li>Récupérer un ensemble de données.</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Afin d’éviter des problèmes liés au passage de messages de contrôle et de données sur le même canal on pourra décider que toute ligne envoyée commençant par ctrl-D est une ligne de contrôle et supposer que les données ne contiennent pas telles lignes ou échapper de telles lignes.</p>
+</div>
+<div class="line-block">
+<div class="line">Le serveur et le client étant assez symétrique on pourra essayer de structurer le programme afin de leur faire partager du code ou des objets.</div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../td2/sujet2.html" class="btn btn-neutral float-right" title="2. TD numéro 2 : Threads en Java, Concurrence" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../index.html" class="btn btn-neutral" title="TD De Systèmes Distribués" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Stéphane Perennes.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

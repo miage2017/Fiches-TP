@@ -1,0 +1,359 @@
+
+**Exercice 1.**
+===============================
+Il suffit de créer deux objets exécutables appartenant à la même classe (ici appelée *CompteurBasique*), on va passer le sens du compteur dans le créateur de l'objet. Ensuite on crée les 2 threads puis on le démarre. On peut soit faire un test sur la valeur du paramètre *Direction* (**if,else**) et gérer deux cas, ou avoir une seule boucle avec des bornes dépendant de *Direction*. Enfin on peut tout simplement afficher un message différent, ici :math:`(maxIter-1)*( (1-Direction)/2 )+Direction*i)` vaut :math:`i` si Direction=1 et :math:`maxiter -i` si :math:`Direction=-1`.
+
+.. note : Le point clef est de comprendre que l'utilisation de paramètre permet de générer des comportements différent à partir d'un même objet exécutable. 
+
+.. literalinclude:: CompteurBasique.java
+   :language: java
+   :emphasize-lines: 1
+   :caption:  * Exemple avec deux Threads*
+
+
+-----------------------------------
+
+**Exercice 2.**
+===============================
+
+L'affichage est de fait apparement aléatoire, l'ordonnanceur de la JVM donne la main à chacun des Threads d'une facon indéterminée que nous ne pouvons pas prévoir. Même si apparement le thread qui démarre en premier peut souvent se terminer le premier et si un thread semble conserver la main un *certain temps*. Quand on ajoute des délai cette absence de déterminisme est renforcée.  L'ordonnanceur de la machine Java essaie à la fois d'optimiser le calcul (ce qui ici implique de ne pas faire alterner les deux threads) mais aussi d'être équitable en donnant la main aux deux threads. Au final on peut seulement supposer  que tout thread qui ne dort pas aura la main de temps à autre.
+
+Les deux Threads sont en concurrence bien entendu pour le CPU (sauf éventuellement sur un ordinateur multi-coeur), la mémoire, mais aussi pour l'accès au flux de sortie qui permet d'écrire sur  la console (i.e. *System.out*), la JVM assure que ce flux est bien géré et que les deux threads accèdent exclusivement  à cette ressource.  Par ailleurs la concurrence n'est pas forte car les deux threads ne partagent aucun objet ou variable, mis à part bien entendu les objets systemes tels que *Systeme,out*.
+
+------------------------------------------------------------------------------------
+
+**Exercice 3.**
+===============================
+
+Le programme met en concurrence deux threads qui manipulent le même ObjetEntier qui se nomme Compteur. La première tache (tache1) incrémente Compteur tandis que la seconde (tache2) le décrémente, ceci 1 million de fois chacune.
+
+À la fin du calcul la valeur du compteur devrait être zéro.
+
+Le programme contient deux erreurs :
+
+#. La valeur du compteur  affichée par le thread principal est provisoire car tache1 et tache2 sont en cours. Ainsi si on affiche plusieurs fois la valeur de Compteur à la fin du code du thread principal, la valeur affichée va varier.
+
+#. Les tâches 1 et 2 manipulent et modifient le même objet (ici Compteur) et cela crée des inconsistances, dans le cas qui nous occupe il s'agit d'un problème dit de *race condition* (qui est décrit dans la fiche 2). Même si on attend que les tâches 1 et 2 aient terminé leur calcul,  le compteur final ne vaudra souvent pas zéro. Si on change :math:`10^6` en 100 on peut très bien avoir un programme qui fonctionne apparement bien. C'est bien là l'aspect le plus délicat des problèmes de concurrence : ils n'apparaissent pas toujours et un programme apparement satisfaisant peut contenir des erreurs cachées. Bien entendu les programmes déterministes utilisant un seul fil de calcul eux aussi peuvent contenir des erreurs cachées, mais elles sont bien plus faciles à décéler.
+
+
+**Exercice 4.**
+===============================
+
+
+Pour protéger le compteur et garantir un accès cohérent il suffit de synchroniser la méthode *add*. Ce qui se fait simplement en écrivant :
+
+.. code-block:: java
+   :emphasize-lines: 5
+
+   public class ObjetEntier {
+              ...........
+              ................
+   public  int val(){ return ma_valeur;}
+   public synchronized   void add(int i) { ma_valeur+=i;}
+
+     }
+
+La valeur du compteur sera alors correcte, cependant pour l'afficher il faut soit placer une très longue boucle à la fin du thread principal ou encore l'afficher à la fin des tâches 1 et 2. Par exemple on peut ajouter une ligne à la fin de la méthode run() des threads.
+
+.. code-block:: java
+
+    public void run() {
+	  for (int i = 0; i < 1e7; i++)
+	    {
+		      notre_entier.add(increment);
+	    }
+     System.out.format("Thread faisant %d terminé. Compteur= %s\n" , increment,notre_entier);
+      }
+
+
+**Exercice 5.**
+===============================
+
+Les codes complets sont disponibles ici :download:`Classe Voiture.java<java2/Voiture.java>`  et  classe :download:`Parking.java<java2/Parking.java>`.
+
+
+On commence par écrire le code pour une voiture, pour en simuler plusieurs on lancera simplement plusieurs threads.
+
+
+Chaque voiture sera donc simulée par un thread. Une voiture dispose d'un nom et pointe  sur le *Parking* qui ici est partagé. 
+Le comportement de chaque voiture est cyclique et peut se décrire comme suit:
+
+**Répéter**:
+
+-  Se déplacer à l'extérieur un *certain temps*.
+-  Demander et obtenir l'accès au parking.
+-  Rentrer dans le parking se garer et y  rester un *certain temps*
+-  Sortir du parking.
+
+
+.. literalinclude:: java2/Voiturerun.java
+   :language: java
+   :emphasize-lines: 6,8,10,12
+   :linenos:
+   :caption:  *Exemple pour la classe voiture*
+
+Dans ce code :
+
+- la ligne 5 attends à l extérieur.
+- la ligne 7 demande l autorisation de rentrer, elle est bloquante. 
+- la ligne 9 simule le temps passé dans le garage, 
+- la ligne 10 quiite le parking.
+
+
+Le Parking est simpliste, on le crée en passant sa taille au constructeur. Il propose deux méthodes atomiques (*synchronized*), *leave()* et *accept()*.
+
+- *accept()* retourne vrai si il y a de la place et reserve la place (incrémente le nombre de places occupées), et faux sinon.
+
+- *leave* laisse sortir la voiture et décrémente le nombre de places occupées. 
+
+
+J ai ajouté une structure qui maintient l'ensemble des voitures situées dans le parking mais ce n'etait pas demandé. Il serait facile de comptabiliser de manière analogue le temps passé par chaque voiture dans le parking. 
+  
+
+.. literalinclude:: java2/Parking.java
+   :language: java
+   :emphasize-lines: 9,12,17,24,25
+   :linenos:
+   :caption:  **Exemple pour la classe Parking**
+
+
+
+  
+
+La méthode rentrer qui bloque la voiture tant qu'il n y a pas de places innonde le parking de demandes, entre chaque demande la voiture attend un peu. On verra plus tard comment éviter cela.
+
+.. literalinclude:: java2/rentrer.java
+   :language: java
+   :caption:  **Méthode rentrer**
+
+
+
+Le programme principal se contente de créer le parking ainsi que les thread associés aux voitures tout en démarramt ces threads. 
+
+.. literalinclude:: java2/voitmain.java
+   :language: java
+   :caption:  **Main du simulateur de parking**
+
+  
+
+    
+
+      
+
+**Exercice 6.**
+===============================================
+
+Afin que la valeur affichée par la thread principal soit toujours correcte il suffit de lui demander d'attendre les tâches 1 et 2.
+En Java ceci donne le morceau de code suivant, que l'on utilise pour la méthode main du thread principal.
+
+.. code-block:: java
+  :emphasize-lines: 11-16
+
+   public static void main(String[] args) {
+   ObjetEntier Compteur = new ObjetEntier();
+   PetitJob objex1= new PetitJob(Compteur, 1);
+   PetitJob objex2= new PetitJob(Compteur, -1);
+   Thread tache1 = new Thread(objex1 ,"incrementeur");
+   Thread tache2 = new Thread(objex2, "decrementeur");
+
+   tache1.start();
+   tache2.start();
+
+   try {
+   tache1.join();
+   tache2.join();
+   }
+   catch (InterruptedException e) {
+   e.printStackTrace();}
+
+   System.out.format("Le compteur vaut %s\n" , Compteur);
+   System.out.format("Le compteur vaut %s\n" , Compteur);
+
+    }
+  }
+
+
+
+**Exercice 7.**
+===============================
+
+Un Exemple de solution est donné ci dessous. Un Objet de la classe Dormeur à un antécédent qui est un thread.
+La méthode *run()* commence par attendre que l'antécédent ai terminé.
+
+Ensuite il suffit de créer les Threads et de définr pour chacun son antécedent.
+
+.. literalinclude:: Dormeur.java
+   :language: java
+   :emphasize-lines: 1
+   :caption:  * Exemple avec deux Threads*
+
+**Exercice 8.**
+===============================
+
+- Il suffit de passer à chaque thread la liste des threads qu'il doit attendre, on peut le faire via le constructeur ou via une méthode *SetAntecedent*.
+
+- Ensuite tant que la liste des predecesseurs est non vide, on dépile un thread T, et on effectue *T.join()*  
+
+- Le code final se trouve ici : :download:`Classe redormeur<redormeur.java>` 
+  
+
+
+  
+
+**Exercice 9.**
+===============================
+
+Le code final se trouve ici : :download:`Classe TreeTask<java2/TreeTask.java>`  et  classe :download:`MutableInt<java2/MutableInt.java>`. Le code est commenté ci dessous, il est un peu long, nous verrons *plus tard* comment faire un code minimal en utilisant une librairie de graphe. En effet l'exercice 9 est une généralisation de cet exercice qui porte sur un graphe de dépendance particulier.
+
+
+Dans cette exercice on commence par déclarer la  classe *TreeTask* censée représenter une tâche.
+
+**La Classe TreeTask**
+----------------------------------------------
+
+Cette classe possède les attributs suivants :
+
+#. *myIndex*  l'index de la tâche dans la table des tâches.
+#. une référence  *TreeTask* au tableau des tâches.
+#. l'index de la tâche précédente *predIndex*, si cette tâche est inexistante (ce qui est le cas de la tâche racine) predIndex vaudra -1.
+#. Une chaine *myName* le nom de la tâche.
+
+.. code-block:: java
+
+  public class TreeTask  implements  Runnable
+  {
+    Integer predIndex;
+    TreeTask[] TasksArray;
+    String myName;
+    int myIndex;
+    Thread myThread;
+
+----------------
+
+**La méthode run()**
+------------------------------------
+
+#. Attends que la tâche précédente soit terminée (ligne 5)
+#. Affiche quelle commence à travailler (ligne 12)
+#. Simule un temps aléatoire  (ligne 13)
+#. Annonce qu'elle se termine et se termine (ligne 14).
+
+.. code-block:: java
+  :emphasize-lines: 5,12,13,14
+  :linenos:
+
+  public void run() {
+    System.out.format("%s Started\n", myName);
+    Thread previousTask= null;
+    if (predIndex>=0){
+      previousTask=  TasksArray[predIndex].myThread;
+      try 	{
+        previousTask.join();
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+      }
+      System.out.format("%s Running\n", myName);
+      zzzz();
+      System.out.format("%s Completed\n", myName);
+    }
+
+
+--------
+
+
+**Le Constructeur de Tâche**
+------------------------------------------------
+
+Dans ce constructeur on recopie simplement quelques info : la référence au tableau, le nom, l'index de la tâche précédente, l'index de la tâche (respectivement lignes 3,4,5,6).
+
+L'index courant est un entier déguisé car on veut qu'il soit modifiable (ie passable par référence) car on l'incrémente à chaque fois que l'on crée une tâche. Java est un langage stupide qui ne propose pas d'entiers mutables (sauf en utilisant la librairie apache).
+
+Ce qui est un peut particulier ce sont les lignes 7,8,9:
+
+#.  Ligne 7, on place aussi une référence à notre tâche dans le tableau des tâches.
+#.  Ligne 8 on incrémente l'index courant.
+#.  Ligne 9 on crée le thread associé à la tâche.
+
+.. code-block:: java
+  :emphasize-lines: 7,8,9
+  :linenos:
+
+
+   public TreeTask(String Name, MutableInt index,  TreeTask[] TA, int pred )
+    {
+      TasksArray=TA;
+      myName= Name;
+      predIndex=pred;
+      myIndex = index.val();
+      TasksArray[myIndex]=this;
+      index.increment(1);
+      myThread= new Thread(this);
+      System.out.format("Creating Runnable %s with index %d, pred=%s\n", myName,myIndex,predIndex);
+     }
+
+
+**La Construction Récursive des Tâches**
+------------------------------------------------------------
+
+
+Afin de créer les tâches récursivement on utilise la récursion suivante, qui est basée sur le fait suivant:
+
+  Un arbre binaire de profondeur :math:`i` est formé de deux arbres binaires de profondeur :math:`i-1` attachés à une même racine.
+
+* Une tâche au niveau :math:`i>0` crée deux tâches filles : une  tache droite et une tâche gauche toutes deux de niveau :math:`i-1`. Puis elle demande aux deux tâches filles de créer leur descendance.
+
+* Une tâche de niveau :math:`0` ne fait rien.
+
+
+**Remarque** : Pour un arbre on crée la racine puis récursivement on crée les deux arbres fils, mais ici la tâche mère ne peut pas se créer elle même, la récursion classique est donc quelque peu décalée. Et la tâche racine est elle crée par la méthode *main*.
+
+
+Ceci conduit au code de génération suivant :
+
+.. code-block:: java
+  :emphasize-lines: 7,8,9
+  :linenos:
+
+  public void generateSon(int depth, MutableInt firsfreeindex)
+  	{
+  		if (depth==0) return;
+  		String  leftName= myName+ "0";
+  		String  rightName= myName+ "1";
+
+  		TreeTask Left=new TreeTask(leftName, firsfreetindex,TasksArray, myIndex);
+  		TreeTask Right=new TreeTask(rightName, firsfreetindex,TasksArray, myIndex);
+
+  		Left.generateSon(depth-1, firsfreeindex);
+  		Right.generateSon(depth-1,firsfreeindex);
+  	}
+
+
+**La Méthode main() de la Classe**
+---------------------------------------------------------------
+
+La méthode se contente de :
+
+#. De déclarer la profondeur de l´arbre (ici 4).
+#. De Créer le tableau des tâches, l'index entier modifiable (lignes 3-4)
+#. De créer  la *tâche racine* (ligne 6)
+#. D'engendrer la descendance de la tache racine (ligne 8).
+
+.. code-block:: java
+  :linenos:
+  :emphasize-lines: 6,8
+
+
+  public static void main(String[] args) {
+      int depthofTree=4;
+      TreeTask[] MyExObjects= new TreeTask[256];
+      MutableInt index= new MutableInt(0);
+
+      TreeTask RootTask = new TreeTask( "R", index, MyExObjects, -1);
+
+      RootTask.generateSon(depthofTree, index);
+
+
+
+
+Le code final se trouve ici : :download:`Classe TreeTask<java2/TreeTask.java>`  elle utilise la classe :download:`MutableInt<java2/MutableInt.java>`.

@@ -1,0 +1,475 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>3. TD numéro 3 : Quelques exemples de programation concurrente &mdash; documentation MiniWeb 0</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Recherche" href="../search.html"/>
+    <link rel="top" title="documentation MiniWeb 0" href="../index.html"/>
+        <link rel="next" title="4. TD numéro 4 : Interbloquage, Graphe de tache, acyclicité" href="../td4/sujet4.html"/>
+        <link rel="prev" title="2. TD numéro 2 : Threads en Java, Concurrence" href="../td2/sujet2.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> MiniWeb
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../td1/sujet1.html">1. <strong>TD numéro 1 : Communication via des sockets</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td2/sujet2.html">2. <strong>TD numéro 2 : Threads en Java, Concurrence</strong></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">3. <strong>TD numéro 3 : Quelques  exemples de programation concurrente</strong></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#une-version-multi-thread-du-serveur-du-td1">3.1. Une Version Multi-Thread du serveur du Td1.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#la-gestion-des-interruptions-en-java">3.2. La gestion des interruptions en Java</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#l-interruption-de-thread">3.2.1. L&#8217;interruption de Thread</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#l-utilisation-d-un-champ-volatile">3.2.2. L&#8217;utilisation d&#8217;un champ volatile</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#l-attente-d-evenement-wait-notify-et-notifyall">3.3. L&#8217;Attente d&#8217;évènement : <strong>wait()</strong>  <strong>notify()</strong> et <strong>notifyAll()</strong></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#exemple-d-application-le-schema-producteur-consommateur">3.3.1. Exemple d&#8217;Application : le schéma producteur consommateur</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#le-tri-bitonique-multithread-quicksort">3.4. Le tri bitonique multithread (quicksort)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vers-une-application-de-chat-centralisee">3.5. Vers une application de chat centralisée</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../td4/sujet4.html">4. <strong>TD numéro 4 : Interbloquage, Graphe de tache, acyclicité</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td5/sujet5.html">5. <strong>TD numéro 5: Un Exemple de programme distribué sans arbitre : La table de Hachage distribuée.</strong></a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../td1/corrige1.html"><strong>Corrigé du TD numéro 1 : Communication via des sockets</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td2/corrige2.html">1. <strong>Corrigé du TD numéro 2 :  Java et les Threads</strong></a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MiniWeb</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>3. <strong>TD numéro 3 : Quelques  exemples de programation concurrente</strong></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/td3/sujet3.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="td-numero-3-quelques-exemples-de-programation-concurrente">
+<h1>3. <strong>TD numéro 3 : Quelques  exemples de programation concurrente</strong><a class="headerlink" href="#td-numero-3-quelques-exemples-de-programation-concurrente" title="Lien permanent vers ce titre">¶</a></h1>
+<p><strong>Objectif</strong></p>
+<p>Le but est de mieux maitriser les sockets, les threads, la synchronisation et la concurrence et de comprendre comment fonctionne les fonction <em>wait()</em>, <em>notifyall()</em> et * interrupt()*, <em>isinterrupted</em>. Un autre objectif est de montrer comment la programmation concurrente permet de simplifier la conception en reportant les problèmes de concurrence et de synchronisation sur le noyau de programation distribuée de la JVM.</p>
+<div class="section" id="une-version-multi-thread-du-serveur-du-td1">
+<h2>3.1. Une Version Multi-Thread du serveur du Td1.<a class="headerlink" href="#une-version-multi-thread-du-serveur-du-td1" title="Lien permanent vers ce titre">¶</a></h2>
+<p><strong>Exercice 1</strong></p>
+<p>On veut reprendre le serveur du TD1 afin de traiter plusieurs clients à la fois.</p>
+<ol class="arabic simple">
+<li>Écrire une classe exécutable <em>ServiceClient</em>  (inspirée du TD1)  dont la partie exécutable (i.e la méthode <em>run()</em>  sert un client. Notez que cette méthode fait presque exactement ce que le méthode analogue faisait dans la version séquentielle.  On passera bien entendu  à l&#8217;objet exécutable la  Socket sur laquelle est connecté le client, plus eventuellement quelques informations annexes telles le numéro du port sur lequel le client est connecté.</li>
+<li>Écrire une classe principale <em>Repartiteur</em>  qui attend sur un port et qui à chaque arrivée de client crée un thread <em>ServiceClient</em>  qui le gère. La différence avec la version séquentielle du programme est la suivante : en sequentiel le répartiteur appelle la méthode <em>ServiceClient</em> et attend quelle se termine, en version <em>parallèle</em> le répartiteur crée une tâche qui sert le client et continue son calcul sans attendre que le service du client soit terminé.</li>
+<li>Écrire ou reprendre une classe <em>Client</em> (la plus simple possible) qui se connecte à un serveur et lui envoie les données saisies dans la console, ou contenues dans un fichier. Transformer Client pour rendre cet objet exécutable dans un thread.</li>
+<li>Pour terminer on veut simuler la connexion de nombreux clients. On va donc  écrire une classe <em>GenClients</em> qui crée <span class="math">\(N\)</span> Threads Clients (pex 5) qui se connectent tous au serveur et envoient  toutes les deux  secondes un message (quelconque tel que <em>appel numéro X</em>)  au serveur  et cela M fois (pex 10) .</li>
+</ol>
+</div>
+<div class="section" id="la-gestion-des-interruptions-en-java">
+<h2>3.2. La gestion des interruptions en Java<a class="headerlink" href="#la-gestion-des-interruptions-en-java" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Notez que dans le question précédente il y a <span class="math">\(2N\)</span>, soit <span class="math">\(2\)</span>  threads par client:</p>
+<ul class="simple">
+<li>le premier créé par le serveur (i.e par le répartiteur).</li>
+<li>le second par le générateur de clients.</li>
+</ul>
+<p>On voudrait maintenant pouvoir arrêter le serveur, pour cela il faut pouvoir lui indiquer qu&#8217;il doit cesser de s&#8217;exécuter et bien entendu il doit alors aussi indiquer au <em>threads fils</em>  qu&#8217;ils doivent aussi se terminer.</p>
+<p>On va donc avoir besoin d&#8217;utiliser des interruptions de thread. La méthode <em>stop</em> est déconseillée et est obsolète. À la place on utilise deux techniques. Ces techniques supposent que le concepteur à pris en compte la possibilité d&#8217;une demande d&#8217;arrêt du thread lors de la conception (ce qui est conseillé). C&#8217;est un choix de Java, on ne peut pas <em>tuer</em> un thread mais simplement lui demander de s&#8217;arreter.</p>
+<div class="section" id="l-interruption-de-thread">
+<h3>3.2.1. L&#8217;interruption de Thread<a class="headerlink" href="#l-interruption-de-thread" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Si on appelle la méthode <em>interrupt()</em> sur un objet thread un drapeau est positionné ce qui permet au thread
+de vérifier si il a été interompu ou non. Schématiquement on est dans la situation ci-dessous :</p>
+<ol class="arabic simple">
+<li>Le programme <em>maitre</em> envoie une interruption au thread via la méthode <em>monThread.interrupt()</em>.</li>
+<li>Le thread peut tester si une interruption a eu lieu via la méthode <em>Thread.interrupted()</em>.</li>
+<li>La méthode <em>interrupted()</em> appartient à la classe <em>Thread</em>, elle est donc utilisable directemment sur votre Thread lorsqu&#8217;il est construit en étendant la classe <em>Thread</em> via la directive <em>extends</em>. Si le thread est construit à partir d&#8217;un objet exécutable qui implémente la méthode <em>run()</em> il faut récupérer le thread courant. On le fait en utilisant la méthode <span class="math">\(Thread.currentThread()\)</span></li>
+</ol>
+<p><strong>La méthode Thread.currentThread()</strong></p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="c1">//exemple extrait du tutoriel d&#39;oracle.</span>
+<span class="kn">import</span> <span class="nn">java.lang.*</span><span class="o">;</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreadDemo</span> <span class="kd">implements</span> <span class="n">Runnable</span> <span class="o">{</span>
+
+ <span class="n">ThreadDemo</span><span class="o">()</span> <span class="o">{</span>
+ <span class="c1">// main thread</span>
+ <span class="n">Thread</span> <span class="n">currThread</span> <span class="o">=</span> <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">();</span>
+ <span class="c1">// thread created</span>
+ <span class="n">Thread</span> <span class="n">t</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="s">&quot;Admin Thread&quot;</span><span class="o">);</span>
+
+ <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;current thread = &quot;</span> <span class="o">+</span> <span class="n">currThread</span><span class="o">);</span>
+ <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;thread created = &quot;</span> <span class="o">+</span> <span class="n">t</span><span class="o">);</span>
+ <span class="c1">// this will call run() function</span>
+ <span class="n">t</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+ <span class="o">}</span>
+
+ <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+ <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;This is run() method&quot;</span><span class="o">);</span>
+ <span class="o">}</span>
+ <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span> <span class="n">args</span><span class="o">[])</span> <span class="o">{</span>
+ <span class="k">new</span> <span class="n">ThreadDemo</span><span class="o">();</span>
+ <span class="o">}</span>
+</pre></div>
+</div>
+<p><strong>Exemple d interruption</strong></p>
+<div class="highlight-java"><div class="highlight"><pre><span></span>  <span class="c1">// Methode run du thread ..</span>
+  <span class="kd">public</span>  <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+   <span class="k">while</span> <span class="o">(!</span><span class="n">Thread</span><span class="o">.</span><span class="na">interrupted</span><span class="o">()</span> <span class="o">)</span> <span class="o">{}</span>
+   <span class="o">}</span>
+   <span class="c1">// prog principal</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+  <span class="n">Thread</span> <span class="n">monThread</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">c</span><span class="o">);</span>
+  <span class="n">monThread</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+  <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">5000</span><span class="o">);</span>
+  <span class="n">monThread</span><span class="o">.</span><span class="na">interrupt</span><span class="o">();</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p><em>Nota Bene</em> : Dans le cas d une implémentation utilisant <em>extends Runnable</em>, on écrira</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="k">while</span><span class="o">(!</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">interrupted</span><span class="o">())</span>
+</pre></div>
+</div>
+<p><strong>Exercice 2</strong></p>
+<p>Utiliser des interruptions pour stopper les thread serveur quand on arrete le serveur. Pour cela</p>
+<ol class="arabic simple">
+<li>le serveur stokera les references au threads créés dans une liste.</li>
+<li>Le serveur n&#8217;acceptera que 5 clients puis il attendra 10 secondes et interrompera les thread engendrés.</li>
+<li>les threads de service verifieront si oui ou non il ont été interrompus.</li>
+</ol>
+<p><em>Optionnel:</em></p>
+<p>Réfléchir à comment interrompre le serveur après X secondes.</p>
+</div>
+<div class="section" id="l-utilisation-d-un-champ-volatile">
+<h3>3.2.2. L&#8217;utilisation d&#8217;un champ volatile<a class="headerlink" href="#l-utilisation-d-un-champ-volatile" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Un champs <em>volatile</em> est mis à jour immédiatement pour tous les threads utilisant l&#8217;objet.  C&#8217;est la JVM qui assure cette propriété, un tel champs est ainsi intrinsèquement synchronisé et ceci permet de synchroniser des threads  mais aussi de les faire communiquer. Dans l&#8217;exemple ci dessous le champs <em>done</em> est utilisé afin de transmettre l&#8217;ordre au thread de se terminer via la méthode <em>seterminer</em>. Notez bien qu&#8217;ici on communique via un champs de l&#8217;objet exécutable alors qu&#8217;avec la méthode utilisation des interruptions on utilise le thread lui même et les fonctionnalité de gestion de threads de la JVM.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span> <span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">ObjetExecutable</span>  <span class="kd">implements</span> <span class="n">Runnable</span> <span class="o">{</span>
+ <span class="kd">private</span> <span class="kd">volatile</span> <span class="kt">boolean</span> <span class="n">done</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+ <span class="kd">public</span> <span class="kt">void</span> <span class="nf">seterminer</span><span class="o">()</span> <span class="o">{</span><span class="n">done</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;}</span>
+
+<span class="kd">public</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span>
+<span class="o">{</span>
+  <span class="k">while</span> <span class="o">(!</span><span class="n">done</span><span class="o">)</span>
+     <span class="o">{}</span>
+ <span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+  <span class="n">ObjetExecutable</span> <span class="n">container</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjetExecutable</span><span class="o">();</span>
+  <span class="n">Thread</span> <span class="n">myThread</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">container</span><span class="o">);</span>
+  <span class="n">myThread</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+  <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">5000</span><span class="o">);</span>
+  <span class="n">container</span><span class="o">.</span><span class="na">seterminer</span><span class="o">();</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p><strong>Exercice 3</strong> : Écrire une classe qui lance un thread qui compte de 0 à l&#8217;infini mais qui lui ordonne de se terminer après 10 secondes.</p>
+</div>
+</div>
+<div class="section" id="l-attente-d-evenement-wait-notify-et-notifyall">
+<h2>3.3. L&#8217;Attente d&#8217;évènement : <strong>wait()</strong>  <strong>notify()</strong> et <strong>notifyAll()</strong><a class="headerlink" href="#l-attente-d-evenement-wait-notify-et-notifyall" title="Lien permanent vers ce titre">¶</a></h2>
+<p>La méthode <em>wait()</em> a pour objet de fournir un moyen d&#8217;attendre qu&#8217;une condition soit vérifiée (pex qu&#8217;une place de parking soit libre, qu&#8217;une ressource soit libérée, qu&#8217;un client arrive). Et ce sans saturer le système de tests en vérifiant la condition en permanence. C&#8217;est en effet le système qui va reveiller le thread quand la condition aura potentiellement changé.</p>
+<p><strong>Attention La méthode *wait()* s&#8217;applique à un objet</strong> et elle est invoquée par un thread, à priori toute référence à un objet peut être utilisée.</p>
+<p>Le fonctionement est le suivant :</p>
+<ol class="arabic simple">
+<li>lors de l&#8217;invocation, le thread qui invoque la méthode libère le verrou qu&#8217;il detient sur l&#8217;objet (verrou par exemple posé à l&#8217;entrée d&#8217;un bloc synchronisé). Ceci permet en général  à d autres threads de progresser.</li>
+<li>Le thread s´endort.</li>
+<li>Quand un <em>notify</em> est effectué sur l&#8217;objet (par un autre thread), <em>un des threads endormi</em> est reveillé (on ne peut pas préjuger lequel).</li>
+<li>Le thread reveillé reprend alors la main sur l&#8217;objet (ie le verrou associé à la référence de cet objet).</li>
+<li>Enfin ce thread reprend son exécution.</li>
+</ol>
+<p>L&#8217;intérêt principal de <em>wait()</em> est d&#8217;attendre qu&#8217;une condition soit debloquée en utilisant peu de ressources système (c.a.d sans faire de boucle vérifiant si la condition est vraie) et sans non plus bloquer les autres tâches.</p>
+<p><strong>Exemple d&#8217;utilisation de wait pour rentrer et sortir d&#8217;un parking</strong></p>
+<p>Ici on attend que le parking ne soit plus plein, autrement dit tant que le parking est plein le thread dort.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">synchronized</span> <span class="o">(</span><span class="n">Parking</span><span class="o">)</span>
+<span class="o">{</span>
+<span class="k">while</span> <span class="o">(</span><span class="n">Parking</span><span class="o">.</span><span class="na">full</span><span class="o">())</span>
+<span class="o">{</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Parking plein j&#39;attend\n&quot;</span><span class="o">);</span>
+<span class="n">Parking</span><span class="o">.</span><span class="na">wait</span><span class="o">();</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;%s is awake now \n&quot;</span><span class="o">,</span>  <span class="n">iD</span><span class="o">);</span>
+<span class="o">}</span>
+<span class="n">Parking</span><span class="o">.</span><span class="na">entrer</span><span class="o">(</span><span class="k">this</span><span class="o">)</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Les méthodes <em>notify()</em> et <em>notifyAll()</em>  sont en quelque sorte les symétriques de <em>wait</em>, elles aussi s&#8217;appliquent à un objet et elles sont invoquées par un thread, à priori toute référence à un objet peut être utilisée.
+Le fonctionement est le suivant :</p>
+<ol class="arabic simple">
+<li>notifyAll() va reveiller tout les threads mis en attente par un wait sur l&#8217;objet (i.e le verrou) utilisé, dès que le verrou sera relaché (p.ex. quand on sortira du bloc synchronisé). Ensuite il est probable qu&#8217;un seul de ces threads continue son fil de calcul, ce sera celui à qui la JVM va attribuer le verrou.</li>
+<li>notify va reveiller un des thread mis en attente par un wait sur l&#8217;objet (i.e le verrou) utilisé dès que le verrou sera relaché.</li>
+</ol>
+<p><strong>Exemple Sortie du Parking</strong></p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">synchronized</span> <span class="o">(</span><span class="n">Parking</span><span class="o">)</span>
+<span class="o">{</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Je sors du Parking\n&quot;</span><span class="o">);</span>
+<span class="n">Parking</span><span class="o">.</span><span class="na">sortir</span><span class="o">()</span>
+<span class="n">Parking</span><span class="o">.</span><span class="na">notify</span><span class="o">()</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Dans le cas ci-dessous des consommateurs et producteurs nous utilisons notifyAll(), mais dans ce cas précis notify fonctionnera aussi car de toute facon une fois le verrou relaché un unique et arbitraire thread sera autorisé à soit entrer dans la zone critique soit à  reprendre le calcul dans la zone critique. Cependant de manière générale notifyAll() est préférable afin d&#8217;éviter des situations de famine ou d&#8217;interbloquage.</p>
+<div class="section" id="exemple-d-application-le-schema-producteur-consommateur">
+<h3>3.3.1. Exemple d&#8217;Application : le schéma producteur consommateur<a class="headerlink" href="#exemple-d-application-le-schema-producteur-consommateur" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Deux type de threads coexistent, les premier sont les producteurs qui remplissent une file, les seconds la vide. La file étant de taille limitée. nous avons la situation symétrique suivante :</p>
+<ol class="arabic simple">
+<li>Un producteur doit attendre que la file ne soit plus pleine avant de produire.</li>
+<li>Un consommateur doit attendre que la file ne soit plus vide avant de consommer.</li>
+<li>Les opérations sur la file doivent être synchronisées (taille, ajout, suppresion).</li>
+</ol>
+<p><strong>Exercice 4</strong></p>
+<ul class="simple">
+<li>Écrire une classe exécutable <em>producteur</em> qui va creer sequentiellement des jobs 1,2,3,... l&#8217;intervale entre 2 productions sera aléatoire. Le producteur placera ses jobs  dans la file d&#8217;attente. Un objet de la classe producteur répond aux spécifications suivantes :<ol class="arabic">
+<li>Il se construit à partir de la file d&#8217;attente (une liste appelée nosJobs) et d&#8217;un idenfiant.</li>
+<li>la classe implemente une méthode <em>prod</em>  permettant d&#8217;ajouter un job à la file, cette méthode doit vérrouiller la nosJobs.</li>
+<li>si quand <em>prod</em> est invoquée la file nosJobs est pleine le thread doit attendre (<em>wait</em>) que la file ne soit plus pleine.</li>
+<li>Ensuite le thread peut ajouter un job à la file.</li>
+<li>Enfin quand le producteur réalise une production il doit informer les threads en attente que la file d&#8217;attente a changé (<em>notify</em>).</li>
+</ol>
+</li>
+<li>Écrire la classe consommateur, qui est analogue mais attend sur une file vide, dépile un job et effectue un notify. A nouveau le temps pour consommer sera aléatoire.</li>
+<li>Lancer un programme qui utilise une file d&#8217;attente de taille 5, crée 7 consommateurs et 5 producteurs et vérifier que tout fonctionne.</li>
+<li>Jouer avec les paramètres : taille de la file, nombre de producteurs, consommateur, temps moyen de production et consommation.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="le-tri-bitonique-multithread-quicksort">
+<h2>3.4. Le tri bitonique multithread (quicksort)<a class="headerlink" href="#le-tri-bitonique-multithread-quicksort" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Le tri bitonique est une procédure récursive très simple pour trier un tableau :</p>
+<ol class="arabic simple">
+<li>On coupe le tableau en 2, et on trie les deux parties.</li>
+<li>On fusionne les 2 parties en temps linéaire en parcourant les 2 tableaux de concert.</li>
+</ol>
+<p>En Java cela ressemble à</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">bitonicSort</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">a</span><span class="o">)</span> <span class="o">{</span>
+             <span class="k">if</span> <span class="o">(</span><span class="n">a</span><span class="o">.</span><span class="na">length</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="o">)</span> <span class="o">{</span>
+                     <span class="c1">// découpage</span>
+                     <span class="kt">int</span><span class="o">[]</span> <span class="n">left</span>  <span class="o">=</span> <span class="n">Arrays</span><span class="o">.</span><span class="na">copyOfRange</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span> <span class="o">/</span> <span class="mi">2</span><span class="o">);</span>
+                     <span class="kt">int</span><span class="o">[]</span> <span class="n">right</span> <span class="o">=</span> <span class="n">Arrays</span><span class="o">.</span><span class="na">copyOfRange</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span> <span class="o">/</span> <span class="mi">2</span><span class="o">,</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span><span class="o">);</span>
+
+                     <span class="c1">// tri des deux parties</span>
+                     <span class="n">bitonicSort</span><span class="o">(</span><span class="n">left</span><span class="o">);</span>
+                     <span class="n">bitonicSort</span><span class="o">(</span><span class="n">right</span><span class="o">);</span>
+                     <span class="c1">// fusion des parties</span>
+                     <span class="n">fusionner</span><span class="o">(</span><span class="n">left</span><span class="o">,</span> <span class="n">right</span><span class="o">,</span> <span class="n">a</span><span class="o">);</span>
+             <span class="o">}</span>
+</pre></div>
+</div>
+<p><strong>Exercice 5</strong>:</p>
+<ol class="arabic simple">
+<li>Écrire une version récursive du tri bitonique (il suffit d&#8217;écrire la méthode de fusion).</li>
+<li>Ecrire une version multi-thread du tri bitonique, bitonicSort(int[] a, int nCore) qui utilise nCore coeurs pour trier, ou nCore sera une puissance de 2. Quand ncore sera plus grand que 1, L&#8217;appel récursif sera remplacé par la création de 2 thread, l&#8217;un chargé de trier left et l&#8217;autre right, et chacun utilisant ncore/2 coeurs. Sinon on utilisera le tri sequentiel. <em>Attention</em> : La procédure <em>fusionner</em> ne sera pas parrallélisée.</li>
+<li>Faire quelques test de performance.</li>
+</ol>
+</div>
+<div class="section" id="vers-une-application-de-chat-centralisee">
+<h2>3.5. Vers une application de chat centralisée<a class="headerlink" href="#vers-une-application-de-chat-centralisee" title="Lien permanent vers ce titre">¶</a></h2>
+<p><strong>Exercice 6</strong>:</p>
+<ol class="arabic simple">
+<li>Écrire un client de chat utilisant 2 threads ou le premier thread (receveur) lit les données envoyées par un serveur et les affiche surl&#8217;entrée standard  tandis que le second (receveur) écrit et transmet les données saisies au serveur. Pourquoi est il plus simple d&#8217;utiliser deux sockets (une montante, une descendante) ?</li>
+<li>Coté serveur un client est aussi géré par un seul thread qui écoute le client et écrit tout ce qu&#8217;il dit sur les flux sortant de tous les clients.  On vérifiera que les problèmes d&#8217;accès concurrent aux flux sortant sont bien gérés.</li>
+<li>Ajouter un peu de controle afin qu&#8217;un client puisse se deconnecter et que les messages soient signés par le client ou que le serveur mantienne la liste des clients connectés.</li>
+<li>Réfléchir à comment réaliser un client de chat pair à pair sans arbitre (serveur central). Afin de participer à la discussion un client se connectera à un pair et ce sont les pairs qui diffuseront les messages.</li>
+</ol>
+<p><em>Optionnel</em></p>
+<p>Ajouter d&#8217;autre fonctionnalités : chat privé, envoi de fichier, banissement, salon privé.</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../td4/sujet4.html" class="btn btn-neutral float-right" title="4. TD numéro 4 : Interbloquage, Graphe de tache, acyclicité" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../td2/sujet2.html" class="btn btn-neutral" title="2. TD numéro 2 : Threads en Java, Concurrence" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Stéphane Perennes.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

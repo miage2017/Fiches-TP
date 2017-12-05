@@ -1,0 +1,12 @@
+**TD numéro 1 : Communication via des sockets**
+**********************************************************
+
+La section 1 positionne les questions étudiées tandis que la section 2 présente brièvement les classes qui seront utilisées. Leur lecture est optionnelle car ce sont potentiellement des rappels. 
+
+Les questions commencent en 1.4.
+
+.. include:: objectif.rst
+.. include:: classes.rst	     
+.. include:: serveur.rst
+.. include:: client.rst
+

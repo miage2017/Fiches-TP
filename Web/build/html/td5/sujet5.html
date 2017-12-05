@@ -1,0 +1,397 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>5. TD numéro 5: Un Exemple de programme distribué sans arbitre : La table de Hachage distribuée. &mdash; documentation MiniWeb 0</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Recherche" href="../search.html"/>
+    <link rel="top" title="documentation MiniWeb 0" href="../index.html"/>
+        <link rel="next" title="Corrigé du TD numéro 1 : Communication via des sockets" href="../td1/corrige1.html"/>
+        <link rel="prev" title="4. TD numéro 4 : Interbloquage, Graphe de tache, acyclicité" href="../td4/sujet4.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> MiniWeb
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../td1/sujet1.html">1. <strong>TD numéro 1 : Communication via des sockets</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td2/sujet2.html">2. <strong>TD numéro 2 : Threads en Java, Concurrence</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td3/sujet3.html">3. <strong>TD numéro 3 : Quelques  exemples de programation concurrente</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td4/sujet4.html">4. <strong>TD numéro 4 : Interbloquage, Graphe de tache, acyclicité</strong></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">5. <strong>TD numéro 5: Un Exemple de programme distribué sans arbitre : La table de Hachage distribuée.</strong></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#le-principe-d-une-table-de-hachage-distribuee">5.1. Le principe d&#8217;une table de hachage distribuée</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#la-table-chord-simplifee-principe-general">5.2. La Table Chord Simplifée(Principe Général)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#exercice-1-recherche-de-clef-sur-l-anneau-chord">5.2.1. Exercice 1 :Recherche de clef sur l´anneau chord</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#la-classe-chordpeer-la-methode-findkey">5.2.1.1. La classe ChordPeer, la méthode findkey()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#observer-et-tester-la-classe-chord">5.2.1.2. Observer et tester : la classe Chord</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#publier-et-consulter">5.2.2. Publier et Consulter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#exercice-2-insertion-de-nouveau-pair-dans-l-anneau-chord">5.2.3. Exercice 2 Insertion de nouveau pair dans l&#8217;anneau chord</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#exercice-3-depart-d-un-pair">5.2.4. Exercice 3: Depart d&#8217;un pair</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#la-table-chord-amelioree">5.3. La Table Chord Améliorée</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#exercice-4-recherche-amelioree">5.3.1. Exercice 4  Recherche améliorée</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#exercice-5-maintient-des-informations-de">5.3.2. Exercice 5  Maintient des informations de <span class="math">\(fingertable\)</span></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../td1/corrige1.html"><strong>Corrigé du TD numéro 1 : Communication via des sockets</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td2/corrige2.html">1. <strong>Corrigé du TD numéro 2 :  Java et les Threads</strong></a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MiniWeb</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>5. <strong>TD numéro 5: Un Exemple de programme distribué sans arbitre : La table de Hachage distribuée.</strong></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/td5/sujet5.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="td-numero-5-un-exemple-de-programme-distribue-sans-arbitre-la-table-de-hachage-distribuee">
+<h1>5. <strong>TD numéro 5: Un Exemple de programme distribué sans arbitre : La table de Hachage distribuée.</strong><a class="headerlink" href="#td-numero-5-un-exemple-de-programme-distribue-sans-arbitre-la-table-de-hachage-distribuee" title="Lien permanent vers ce titre">¶</a></h1>
+<p><strong>Objectif</strong>:</p>
+<p>Le but est de</p>
+<ol class="arabic simple">
+<li>Jouer avec un système vraiment pair à pair, c&#8217;est à dire sans arbitre.</li>
+<li>comprendre comment fonctionne une table de hachage distribuée fonctionnant par passage de message via le protocol TCP.</li>
+<li>de savoir en  programmer une version simplifiée  (on simulera le réseau de pairs en utilisant des threads).</li>
+<li>De comprendre pourquoi  le paradigme de la table de hachage est important de part les fonctionnalités qu&#8217;il apporte.</li>
+</ol>
+<hr class="docutils" />
+<div class="section" id="le-principe-d-une-table-de-hachage-distribuee">
+<h2>5.1. Le principe d&#8217;une table de hachage distribuée<a class="headerlink" href="#le-principe-d-une-table-de-hachage-distribuee" title="Lien permanent vers ce titre">¶</a></h2>
+<p>La table se comporte comme une Haskey ou un dictionnaire python. Elle  implémente les deux méthodes suivantes :</p>
+<ul>
+<li><p class="first">Publier (Donnée D,Clef C) : cette méthode <em>publie</em> la donnée D (par exemple un fichier) et  la place dans le réseau de pairs en l&#8217;associant à la clef C.</p>
+</li>
+<li><p class="first">Récupérer (Clef C) :  retourne la donnée associée à la clef (si elle existe) ou null sinon.</p>
+<p>Les membres du réseau vont donc  publier des couples (Donnée,Clef) et les Données seront accessibles  par quiconque connaitra la clef associée. On souhaite que la table :</p>
+<ol class="arabic simple">
+<li>soit Entièrement distribuée (aucun arbitre central ne sait où sont les données, qui sont les pairs ...)</li>
+<li>Supporte le départ et l&#8217;arrivée de pairs.</li>
+<li>Garantisse la persistance des données.</li>
+<li>Distribue la charge de travail relativement uniformément sur les pairs.</li>
+<li>soit performante.</li>
+</ol>
+</li>
+</ul>
+<p>Le protocol Chord fut originalement décrit dans le papier ci-joint <a class="reference download internal" href="../_downloads/chord.pdf" download=""><code class="xref download docutils literal"><span class="pre">Article</span> <span class="pre">sur</span> <span class="pre">Chord</span></code></a>. Il s été très étudié et on trouve donc de nombreuses présentations de celui-ci sur internet (rechercher &#8220;Chord, Distributed Hash table&#8221; etc...).</p>
+</div>
+<div class="section" id="la-table-chord-simplifee-principe-general">
+<h2>5.2. La Table Chord Simplifée(Principe Général)<a class="headerlink" href="#la-table-chord-simplifee-principe-general" title="Lien permanent vers ce titre">¶</a></h2>
+<p>L&#8217;idée des inventeurs de la table <em>Chord</em> est assez simple : On suppose que les clefs sont déjà déterminées et codées sur <span class="math">\(n\)</span> bits, elle correspondent donc aux nombres entiers de l&#8217;intervale <span class="math">\(Ids=[0,2^n-1]\)</span>. En pratique si on souhaite publier un fichier on utilisera le md5 de ce fichier ou alors une description du fichier (une chaine de caractères) sur laquelle on applique une fonction de type md5.</p>
+<p><em>Remarque</em>:
+On suppose implicitement qu&#8217;un pair recherchant une donnée connait sa clef, souvent la liste des clefs des données existantes et de leur clef se trouve sur un annuaire extérieur au système (tracker).  Mais cet annaire n&#8217;indique pas du tout ou se trouve la donnée ni comment y accéder, il se contente d&#8217;indiquer de lister des couples  (Données,Clef) qui sont peut être dans la table. La clef peut aussi être facile à deteminer : par exemple le descriptif peut être &#8220;D=Emission 52 Canal 18 15/11/2026&#8221; et la clef sera <span class="math">\(Md5sum(D)\)</span>.</p>
+<p>On associe alors aussi à chaque pair une identité <em>unique</em> dans <span class="math">\([0,2^n-1]\)</span>, en pratique on va simplement utiliser une fonction de hachage standard utilisant l&#8217;IP ou le couples (IP,port) du pair.</p>
+<p>Les pairs sont alors organisés en anneau virtuel, si les identités des pairs sont <span class="math">\(p_1,p_2,\ldots,p_k\)</span> l&#8217;anneau sera <span class="math">\(p_1 \leftrightarrow p_2 \leftrightarrow  p_3 \leftrightarrow  \cdots p_k \leftrightarrow  p_1\)</span>.</p>
+<p>Chaque pair est alors responsable d&#8217;un intervale de clefs :</p>
+<ol class="arabic simple">
+<li><span class="math">\(p_2\)</span> s&#8217;occupe de <span class="math">\(]p_1,p_2]\)</span></li>
+<li><span class="math">\(p_3\)</span> s&#8217;occupe de <span class="math">\(]p_2,p_3]\)</span></li>
+<li><span class="math">\(p_4\)</span> s&#8217;occupe de <span class="math">\(]p_3,p_4]\)</span></li>
+<li>etc</li>
+<li>et enfin <span class="math">\(p_1\)</span> s&#8217;occupe des clefs de <span class="math">\(]p_k,p_1]\)</span></li>
+</ol>
+<p><strong>Attention</strong>  on travaille modulo <span class="math">\(2^n\)</span> donc ici <span class="math">\(]p_k,p_1]=]p_k,2^n-1] \cup [0,p_1]\)</span>.</p>
+<p><strong>Exemple</strong>:</p>
+<p>Si on utilise 64 clefs et que les pairs présents sont <span class="math">\(5,22,33,45,55\)</span> alors <span class="math">\(22\)</span> s&#8217;occupe des clefs <span class="math">\([6,22]\)</span> et <span class="math">\(5\)</span> s&#8217;occupe de  <span class="math">\([56,63] \cup [0,5]\)</span>.</p>
+<p>Si un pair <span class="math">\(p_{3bis} \in ]p_3,p_4[\)</span> rejoint le réseau on doit :</p>
+<ul class="simple">
+<li>Inserer le pair <span class="math">\(p_{3bis}\)</span> entre les pairs <span class="math">\(p_3\)</span> et <span class="math">\(p_4\)</span>.</li>
+<li>Déplacer les données dont la clef est dans <span class="math">\(]p_3,p_{3bis}]\)</span> (donc situées sur <span class="math">\(p_4\)</span>)  depuis <span class="math">\(p_4\)</span> vers <span class="math">\(p_{3bis}\)</span>.</li>
+</ul>
+<p>Nous allons procéder par étapes, dans un premier temps nous allons juste assurer le maintient de la consistence de l&#8217;anneau puis nous nous occuperons du déplacement de clefs.</p>
+<p>Afin de nous simplifier la tâche nous allons écrire une version utilisant des objets classiques (ie passifs), pour obtenir une version fonctionnant sur le réseau il faudra remplacer les invocations de méthodes locales par des invocations de méthodes distantes sur des objets actifs. On peut le faire soit manuellement soit en utilisant des RMI (invocation de méthode distante) java.</p>
+<p>On utilise donc une table de noeuds mais chaque noeud ne connait que son successeur.</p>
+<div class="section" id="exercice-1-recherche-de-clef-sur-l-anneau-chord">
+<h3>5.2.1. Exercice 1 :Recherche de clef sur l´anneau chord<a class="headerlink" href="#exercice-1-recherche-de-clef-sur-l-anneau-chord" title="Lien permanent vers ce titre">¶</a></h3>
+<div class="section" id="la-classe-chordpeer-la-methode-findkey">
+<h4>5.2.1.1. La classe ChordPeer, la méthode findkey()<a class="headerlink" href="#la-classe-chordpeer-la-methode-findkey" title="Lien permanent vers ce titre">¶</a></h4>
+<p>On va écrire une classe ChordPeer qui va simuler un noeud du réseau Chord.</p>
+<p>Chaque pair de la classe ChordPeer  connaitra ici :</p>
+<ul class="simple">
+<li>son identifiant <span class="math">\(myId\)</span></li>
+<li>la référence de son successeur <span class="math">\(succ\)</span>.</li>
+<li>la référence de son prédécesseur <span class="math">\(pred\)</span>.</li>
+</ul>
+<p>De plus la classe ChordPeer fournira la méthode <span class="math">\(getID()\)</span> qui retourne <span class="math">\(myiD\)</span> et une méthode <span class="math">\(toString()\)</span> qui décrit le pair.</p>
+<p>La première méthode que nous devons fournir permet de localiser le pair responsable d&#8217;une clef (i.e une identité).
+C&#8217;est la méthode <span class="math">\(findkey(int key)\)</span> qui renvoie la référence à un ChordPeer.</p>
+<p>Écrire le code de la méthode <span class="math">\(findkey(int key)\)</span> qui renvoie  la référence du noeud responsable de la clef <span class="math">\(key\)</span>.
+Le principe est le suivant :</p>
+<ol class="arabic">
+<li><p class="first">si <span class="math">\(key \in ]pred.getID(),me]\)</span> alors je suis responsable de la clef et je retourne <span class="math">\(this\)</span>.</p>
+</li>
+<li><p class="first">si <span class="math">\(key \not \in ]pred.getID(),me]\)</span> alors je demande à mon successeur où se trouve la clef; j&#8217;invoque donc sa méthode et je renvoie le résultat.</p>
+<p>On fera attention au fait que les intervales sont circulaires et au cas particulier d&#8217;un pair unique (cas où:math:<cite>succ=pred=this</cite>).</p>
+</li>
+</ol>
+</div>
+<div class="section" id="observer-et-tester-la-classe-chord">
+<h4>5.2.1.2. Observer et tester : la classe Chord<a class="headerlink" href="#observer-et-tester-la-classe-chord" title="Lien permanent vers ce titre">¶</a></h4>
+<p>Afin de comprendre ce qui ce passe et de tester valider on veut pouvoir créer un anneau chord en cours de fonctionement.</p>
+<ul class="simple">
+<li>Ajouter  une classe Chord() qui à partir d&#8217;une liste d&#8217;identifiants crée le réseau dont les pairs ont les identités specifiées dans la liste. i.e si la liste est <span class="math">\(8,13,25,96\)</span> on veut obtenir l&#8217;anneau <span class="math">\(8 \leftrightarrow 13  \leftrightarrow 25 \leftrightarrow 96\)</span> où le succeseur de  <span class="math">\(8\)</span> sera <span class="math">\(13\)</span> où le successeur de <span class="math">\(96\)</span> sera <span class="math">\(8\)</span>.</li>
+<li>Ajouter à la classe Chord une méthode qui affiche sur la sortie standard l&#8217;état des pairs.</li>
+<li>Ajouter à la classe Chord une méthode qui permet de demander à un des pairs <span class="math">\(P\)</span> de trouver la  clef  <span class="math">\(key\)</span>  (ie elle invoque simplement <span class="math">\(P.findkey(key)\)</span>.</li>
+<li>vérifier les classes ChordPeer et Chord, en particulier s&#8217;assurer que <span class="math">\(findkey()\)</span> fonctionne correctement.</li>
+</ul>
+<p>NB. L&#8217;objet chord n&#8217;existera pas dans le réseau pair à pair, il est centralisé nous l&#8217;utilisons pour observer le réseau.</p>
+</div>
+</div>
+<div class="section" id="publier-et-consulter">
+<h3>5.2.2. Publier et Consulter<a class="headerlink" href="#publier-et-consulter" title="Lien permanent vers ce titre">¶</a></h3>
+<p>On va se limiter à la publication de chaines de caractère, une table réelle stokerai des objets sérialisé (i.e applatis) sous forme de séquences de bit.</p>
+<ul class="simple">
+<li>Ajouter à la classe ChordPeer un champs qui est un dictionnaire qui va contenir les chaines stockées par le pair.</li>
+<li>Ajouter une méthode <span class="math">\(getItem(int key)\)</span> qui renvoie la chaine dont la clef est key, on utilisera la fonction <span class="math">\(findkey\)</span> afin de déterminer le pair responsable de key.</li>
+<li>Ajouter une méthode <span class="math">\(setItem(int key)\)</span> qui publie  la chaine dont la clef est key et la stocke dans le dictionnaire du pair responsable de <span class="math">\(key\)</span>.</li>
+</ul>
+</div>
+<div class="section" id="exercice-2-insertion-de-nouveau-pair-dans-l-anneau-chord">
+<h3>5.2.3. Exercice 2 Insertion de nouveau pair dans l&#8217;anneau chord<a class="headerlink" href="#exercice-2-insertion-de-nouveau-pair-dans-l-anneau-chord" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Ajouter à la class ChordPeer une méthode <span class="math">\(JoinChord(ChordPeer handle)\)</span> qui permet à un nouveau pair <span class="math">\(N\)</span> (non attaché au réseau) connaissant un pair quelconque du réseau(ici handle) de rejoindre le réseau. Le pair devra s&#8217;insérer à sa place dans le réseau. Ainsi, si  son identifiant est <span class="math">\(myID\)</span> il devra s&#8217;insérer juste avant  le pair <span class="math">\(S=handle.findkey(myID)\)</span>, on devra alors mettre à jour les objets <span class="math">\(S, S.pred\)</span> ainsi que les informations du nouveau pair <span class="math">\(N\)</span>.</p>
+<p>N.B: la procédure est presque identique à celle utilisée pour l&#8217;insertion dans  une liste.</p>
+<p>Tester en utilisant la classe Chord, pour s&#8217;assurer que tout va bien on commencera par un réseau ne contenant qu&#8217;un seul pair.</p>
+</div>
+<div class="section" id="exercice-3-depart-d-un-pair">
+<h3>5.2.4. Exercice 3: Depart d&#8217;un pair<a class="headerlink" href="#exercice-3-depart-d-un-pair" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Ajouter à la classe ChordPeer une méthode <span class="math">\(LeaveChord()\)</span>  qui détache le pair du réseau, comme dans le cas de l&#8217;insertion de pair on mettra la structure de l&#8217;anneau chord à jour.</p>
+</div>
+</div>
+<div class="section" id="la-table-chord-amelioree">
+<h2>5.3. La Table Chord Améliorée<a class="headerlink" href="#la-table-chord-amelioree" title="Lien permanent vers ce titre">¶</a></h2>
+<p>La recherche d&#8217;une clef dans la table simplifiée  n&#8217;est pas efficace car la procédure de recherche peut être amenée à parcourir  l&#8217;intégralité de l&#8217;anneau virtuel. Afin d&#8217;accélérer la recherche on va ajouter des <strong>cordes</strong> à l&#8217;anneau. Le nom Chord provient de ces cordes (&#8220;Chords&#8221;).</p>
+<p>Au lieu de connaitre simplement son successeur sur l&#8217;anneau, un pair va connaitre <span class="math">\(\log N\)</span> successeurs, où <span class="math">\(N\)</span> est le nombre de clefs possibles  (ie la taille de l&#8217;espace d&#8217;adressage). Cet ensemble d&#8217;informations est appelé (en anglais) la <em>fingertable</em>, elle  contient les informations suivantes :</p>
+<p>Pour tout <span class="math">\(i \in 0,1,\ldots \log N\)</span></p>
+<ul>
+<li><p class="first"><span class="math">\(finger[i]\)</span> l&#8217;adresse du pair responsable de la clef <span class="math">\(myid+2^i modulo N\)</span></p>
+<p>La table permet d&#8217;accélérer la recherche car si un pair  n&#8217;est pas responsable d&#8217;une clef on peut (au lieu de simplement demander la clef au successeur du pair) la demander au pair de la :math&#8221;<cite>fingertable</cite> le plus proche de la clef (mais sité avant celle-ci.</p>
+</li>
+</ul>
+<div class="section" id="exercice-4-recherche-amelioree">
+<h3>5.3.1. Exercice 4  Recherche améliorée<a class="headerlink" href="#exercice-4-recherche-amelioree" title="Lien permanent vers ce titre">¶</a></h3>
+<ul class="simple">
+<li>Modifier la méthode math:<cite>findkey</cite> afin qu&#8217;elle utilise la table finger.</li>
+<li>Combien d&#8217;appels a des pairs sont nécessaire afin de trouver une clef, si vous ne savez pas essayer de tester en comptant ce nombre d&#8217;appel dans la méthode <span class="math">\(findkey\)</span>.</li>
+</ul>
+</div>
+<div class="section" id="exercice-5-maintient-des-informations-de">
+<h3>5.3.2. Exercice 5  Maintient des informations de <span class="math">\(fingertable\)</span><a class="headerlink" href="#exercice-5-maintient-des-informations-de" title="Lien permanent vers ce titre">¶</a></h3>
+<ul class="simple">
+<li>Modifier la méthode <span class="math">\(JoinChord\)</span> afin que les information de <span class="math">\(fingertable\)</span> soient mise à jour en cas d&#8217;insertion d&#8217;un pair et de départ d&#8217;un part. On pourra aussi ajouter une méthode qui génère la table  <span class="math">\(findertable\)</span> quand celle-ci n&#8217;est plus valide.</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../td1/corrige1.html" class="btn btn-neutral float-right" title="Corrigé du TD numéro 1 : Communication via des sockets" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../td4/sujet4.html" class="btn btn-neutral" title="4. TD numéro 4 : Interbloquage, Graphe de tache, acyclicité" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Stéphane Perennes.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

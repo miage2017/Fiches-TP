@@ -1,0 +1,376 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>4. TD numéro 4 : Interbloquage, Graphe de tache, acyclicité &mdash; documentation MiniWeb 0</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Recherche" href="../search.html"/>
+    <link rel="top" title="documentation MiniWeb 0" href="../index.html"/>
+        <link rel="next" title="5. TD numéro 5: Un Exemple de programme distribué sans arbitre : La table de Hachage distribuée." href="../td5/sujet5.html"/>
+        <link rel="prev" title="3. TD numéro 3 : Quelques exemples de programation concurrente" href="../td3/sujet3.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> MiniWeb
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../td1/sujet1.html">1. <strong>TD numéro 1 : Communication via des sockets</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td2/sujet2.html">2. <strong>TD numéro 2 : Threads en Java, Concurrence</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td3/sujet3.html">3. <strong>TD numéro 3 : Quelques  exemples de programation concurrente</strong></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">4. <strong>TD numéro 4 : Interbloquage, Graphe de tache, acyclicité</strong></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#le-diner-des-philosophes">4.1. <strong>Le diner des philosophes</strong></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#exercice-1">4.1.1. <strong>Exercice 1</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#exercice-2">4.1.2. <strong>Exercice 2</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#exercice-3">4.1.3. <strong>Exercice 3</strong></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#execution-d-un-graphe-de-tache">4.2. <strong>Exécution d&#8217;un Graphe de Tâche</strong></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#exercice-4">4.2.1. <strong>Exercice 4</strong></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#detection-de-l-interbloquage">4.3. <strong>Detection de l&#8217;interbloquage</strong></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#exercice-5">4.3.1. <strong>Exercice 5</strong></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../td5/sujet5.html">5. <strong>TD numéro 5: Un Exemple de programme distribué sans arbitre : La table de Hachage distribuée.</strong></a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../td1/corrige1.html"><strong>Corrigé du TD numéro 1 : Communication via des sockets</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td2/corrige2.html">1. <strong>Corrigé du TD numéro 2 :  Java et les Threads</strong></a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MiniWeb</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>4. <strong>TD numéro 4 : Interbloquage, Graphe de tache, acyclicité</strong></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/td4/sujet4.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="td-numero-4-interbloquage-graphe-de-tache-acyclicite">
+<h1>4. <strong>TD numéro 4 : Interbloquage, Graphe de tache, acyclicité</strong><a class="headerlink" href="#td-numero-4-interbloquage-graphe-de-tache-acyclicite" title="Lien permanent vers ce titre">¶</a></h1>
+<p><strong>Objectif</strong></p>
+<p>Le but est de comprendre les phenomênes d&#8217;interbloquage basique, et d&#8217;avoir quelques idées sur comment éviter de telles situations (malheureusement il n&#8217;existe pas de méthode générale).  Cette problèmatique sera illustrée  par le <em>Diner des Philosophes</em> qui est un grand classique.</p>
+<p>Par ailleurs nous allons aussi revenir sur le TD2 et exécuter un graphe de tâches en utilisant une librairie de graphe ou une implémentation ad-hoc et minimaliste d&#8217;une telle classe.</p>
+<p>On terminera en utilsant à nouveau la notion de graphe afin d&#8217;essayer de détecter une situation d&#8217;interbloquage, du moins dans le cas du diner philosophique.</p>
+<div class="section" id="le-diner-des-philosophes">
+<h2>4.1. <strong>Le diner des philosophes</strong><a class="headerlink" href="#le-diner-des-philosophes" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Dans ce paradigme classique  <span class="math">\(N\)</span>  philosophes dînent autour d&#8217;une table et <span class="math">\(N\)</span> baguettes sont disposées autour de la table, entre les philosophes.
+Pour manger un philosophe à besoin de deux baguettes. Les deux philosophes encadrant une  baguette sont donc en concurrence pour obtenir celle ci.
+Le comportement d&#8217;un philosophe peut être décrit comme suit :</p>
+<p><strong>Répeter à l&#8217;infini</strong>:</p>
+<ol class="arabic simple">
+<li>Tenter de prendre les deux baguettes  droite et gauche.</li>
+<li>Si  j&#8217;ai deux baguette, manger et reposer les baguettes.</li>
+</ol>
+<div class="section" id="exercice-1">
+<h3>4.1.1. <strong>Exercice 1</strong><a class="headerlink" href="#exercice-1" title="Lien permanent vers ce titre">¶</a></h3>
+<ul class="simple">
+<li>Écrire une classe exécutable Philosophe  qui simule le comportement d&#8217;un philosophe. Afin de simuler un fort asynchronisme, chaque action du philosophe entrainera un délai de quelques microsecondes. La classe permettra aussi d&#8217;accéder à l&#8217;état du philosophe : nombre de fois ou il a mangé, baguettes détenues.</li>
+<li>Écrire une la classe Baguette (l&#8217;objet de cette classe est d assurer qu&#8217;une baguette est attribuée à un seul philosophe) implémentant des méthodes synchrones <em>prendre</em> et <em>poser</em></li>
+<li>Écrire un programme qui crée 100 philosophes et baguettes et crée un Thread par philosophe et l&#8217;éxécute.</li>
+<li>Que se passe t-il avec 500 philosphes  ? avec 5?</li>
+</ul>
+<p><em>Optionnel</em></p>
+<p>Afin d&#8217;éviter qu&#8217;un philosophe passe son temps à tenter de prendre une baguette utilisée, remplacer la méthode synchrone d&#8217;aquisition des baguettes par des  verrous et une mise en attente (avec timeout) des philosophes (mécanisme wait(), notifyall()).</p>
+<p><strong>Remarque</strong> : On pourra assurer la cohérence du système avec des méthodes <em>synchronized</em> ou alors des verrous. Les verrous sont des objets plus complexes de la couche distribuée standard de Java. Un des objets de type verrou est décrit ici <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/locks/ReentrantLock.html">Verrou Réentrant</a>  Il existe des variantes de verrou, par exemple <a class="reference external" href="http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/locks/ReadWriteLock.html">ReadWriteLock</a> qui autorise des lectures concurrentes.</p>
+<p>Un verrou est simplement posé de facon explicite, la tentative de  verrouillage est bloquante - sauf si on précise un timeout - si le verrou n&#8217;est pas disponible le thread va dormir jusqu&#8217;à ce que le verrou soit relaché.</p>
+<p>L&#8217;interface des verrous est assez complète, par exemple elle permet de savoir quels sont les threads qui cherche à acquérir le verrou.</p>
+<div class="highlight-java"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">A</span> <span class="o">{</span>
+<span class="kd">private</span> <span class="kd">final</span> <span class="n">ReentrantLock</span> <span class="n">myLock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReentrantLock</span><span class="o">();</span>
+<span class="c1">// ...</span>
+<span class="o">{</span>
+  <span class="n">myLock</span><span class="o">.</span><span class="na">lock</span><span class="o">();</span>  <span class="c1">// Bloque tant que le verrou n&#39;est pas disponible</span>
+  <span class="k">try</span> <span class="o">{</span>
+    <span class="c1">// ...</span>
+  <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+    <span class="n">myLock</span><span class="o">.</span><span class="na">unlock</span><span class="o">()</span> <span class="c1">// Abandon du verrou, dans un finally pour être certain de le faire.</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<p>On veut observer l&#8217;état du système à un moment donné, pour cela on veut savoir qui possède les baguettes. Pour cela on va créer un thread d&#8217;observation Observateur qui va afficher la liste des baguettes toutes le 5 secondes,
+le thread devra bien entendu verrouiller les baguettes.</p>
+</div>
+<div class="section" id="exercice-2">
+<h3>4.1.2. <strong>Exercice 2</strong><a class="headerlink" href="#exercice-2" title="Lien permanent vers ce titre">¶</a></h3>
+<ul class="simple">
+<li>Écrire la classe implémentant l&#8217;objet Observateur, et l&#8217;éxécuter dans un  thread.</li>
+<li>Tester à nouveau avec 5,50,500 philosophes (on pourra diminuer les délais aléatoires) et expliquer la situation de famine qui apparait.</li>
+</ul>
+<hr class="docutils" />
+<p>On veut maintenant éviter que la famine (i.e l&#8217;interbloquage) apparaisse. Pour cela on va changer le comportement des philosophes.
+Par exemple un philosophe qui détient une baguette pourra la reposer si il n&#8217;arrive pas à obtenir la seconde baguette, on pourra moduler la décision du philosophe selon qu&#8217;il a mangé recemment ou non, on peut aussi imaginer que le philosophe soit sympa avec son voisin si le voisin a été sympa recemment, ou que le philosophe bloqué agisse au hasard,  enfin on peut aussi  imaginer que le philosope dispose d&#8217;argent et paie son voisin pour qu&#8217;il relache sa baguette.</p>
+</div>
+<div class="section" id="exercice-3">
+<h3>4.1.3. <strong>Exercice 3</strong><a class="headerlink" href="#exercice-3" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Écrire une classe PhilosopheMalin qui implémente un comportement évitant la famine.</p>
+</div>
+</div>
+<div class="section" id="execution-d-un-graphe-de-tache">
+<h2>4.2. <strong>Exécution d&#8217;un Graphe de Tâche</strong><a class="headerlink" href="#execution-d-un-graphe-de-tache" title="Lien permanent vers ce titre">¶</a></h2>
+<p>On veut revenir sur l&#8217;exercice 9 tu TD2 mais utiliser une librairie externe qui gère les graphes.</p>
+<p>Un <em>graphe orienté</em> est un ensemble de sommets <span class="math">\(V\)</span> et un ensemble d&#8217;arcs de la forme <span class="math">\((u,v), u \in V, v \in V\)</span>. Un graphe peut répresenter un réseau de télécommunication, des dépendances, des relations (par exemple parler du graphe de tweeter ou de facebook est à la mode). Quand l&#8217;arc <span class="math">\((u,v)\)</span> existe on dit que <span class="math">\(u\)</span> est un <em>voisin entrant</em> de <span class="math">\(v\)</span> et <span class="math">\((u,v)\)</span> est un <em>arc entrant</em> de <span class="math">\(v\)</span>.</p>
+<p>Le but de cette exercice est le suivant :</p>
+<blockquote>
+<div>Étant donné un ensemble de tâches dépendantes fourni sous la forme d&#8217;un graphe orienté, créér les taches et les éxecuter en s&#8217;assurant que les dépendances sont respectées.</div></blockquote>
+<div class="section" id="exercice-4">
+<h3>4.2.1. <strong>Exercice 4</strong><a class="headerlink" href="#exercice-4" title="Lien permanent vers ce titre">¶</a></h3>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>Ecrire ou récupérer une classe graphe qui dispose au moins des méthodes suivantes :</dt>
+<dd><ul class="first last">
+<li>une méthode parcourant les sommets</li>
+<li>une méthode parcourant les arcs entrants d&#8217;un sommet ou les voisins <em>entrants</em>.</li>
+<li>une méthode retournant les extrémités d&#8217;un arc.</li>
+<li>une méthode chargeant un graphe décrit dans un ficher comme une liste d&#8217;arcs (1 par ligne).</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Écrire une classe GraphExecute qui :</dt>
+<dd><ul class="first last">
+<li>charge un graphe</li>
+<li>parcoure ses sommets et crée une tache par sommet.</li>
+<li>Assure que la tâche <span class="math">\(v\)</span> attend la completion de la tâche <span class="math">\(u\)</span> si <span class="math">\((u,v)\)</span> est un arc du graphe.</li>
+<li>Lance les taches.</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Utiliser cette classe pour répondre directement aux exercices 5,6,7,8,9 du TD1.</p>
+</div>
+</div>
+<div class="section" id="detection-de-l-interbloquage">
+<h2>4.3. <strong>Detection de l&#8217;interbloquage</strong><a class="headerlink" href="#detection-de-l-interbloquage" title="Lien permanent vers ce titre">¶</a></h2>
+<p>On voudrait détecter des cas simples d&#8217;interbloquage, le principe est de créer un graphe de dépendance des tâches en cours d&#8217;exécution
+et de detecter un éventuel circuit dans ce graphe. Nous nous limitons au cas des philosophes ou à des cas simples analogues.  La situation est alors la suivante :</p>
+<blockquote>
+<div><ul class="simple">
+<li>Pour progresser une tâche à besoin que certaines ressources soient libérées.</li>
+<li>Une tache qui se termine libère certaines ressources.</li>
+</ul>
+</div></blockquote>
+<p>Dans le cas des philosophes il s&#8217;agit de la tâche <em>le philosophe i mange</em> et les ressources sont les baguettes. Pour nous simplifier le travail nous allons oublier les baguettes et simplement dire que la progression du philosophe <span class="math">\(i\)</span>  dépend de celle du philosophe <span class="math">\(j\)</span> si dans l&#8217;état courant du système  <span class="math">\(j\)</span> possède une baguette nécessaire à <span class="math">\(i\)</span>.</p>
+<p>Notez bien qu&#8217;ici le graphe dépendance est dynamique, par exemple lorsque que le système commence à évoluer il n&#8217;y a aucune dépendance car aucune baguette n&#8217;est alors affectée.</p>
+<div class="section" id="exercice-5">
+<h3>4.3.1. <strong>Exercice 5</strong><a class="headerlink" href="#exercice-5" title="Lien permanent vers ce titre">¶</a></h3>
+<ul class="simple">
+<li>Écrire une classe Observateur qui photographie le système toutes les secondes et génére les graphe de dependance représentant les repas des philosophes.</li>
+<li>Détecter une situation d&#8217;interbloquage en recherchant un circuit dans le graphe de dépendance.</li>
+</ul>
+<p>On fera attention afin d&#8217;avoir une vraie photo du système.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../td5/sujet5.html" class="btn btn-neutral float-right" title="5. TD numéro 5: Un Exemple de programme distribué sans arbitre : La table de Hachage distribuée." accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../td3/sujet3.html" class="btn btn-neutral" title="3. TD numéro 3 : Quelques exemples de programation concurrente" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Stéphane Perennes.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

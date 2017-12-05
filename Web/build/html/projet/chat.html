@@ -1,0 +1,351 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Client de chat distribué &mdash; documentation MiniWeb 0</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Recherche" href="../search.html"/>
+    <link rel="top" title="documentation MiniWeb 0" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> MiniWeb
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../td1/sujet1.html">1. <strong>TD numéro 1 : Communication via des sockets</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td2/sujet2.html">2. <strong>TD numéro 2 : Threads en Java, Concurrence</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td3/sujet3.html">3. <strong>TD numéro 3 : Quelques  exemples de programation concurrente</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td4/sujet4.html">4. <strong>TD numéro 4 : Interbloquage, Graphe de tache, acyclicité</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td5/sujet5.html">5. <strong>TD numéro 5: Un Exemple de programme distribué sans arbitre : La table de Hachage distribuée.</strong></a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../td1/corrige1.html"><strong>Corrigé du TD numéro 1 : Communication via des sockets</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td2/corrige2.html">1. <strong>Corrigé du TD numéro 2 :  Java et les Threads</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td3/corrige3.html">2. <strong>Corrigé du TD numéro 3 :  Examples de prog concurrente</strong></a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MiniWeb</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Client de chat distribué</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/projet/chat.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="client-de-chat-distribue">
+<h1>Client de chat distribué<a class="headerlink" href="#client-de-chat-distribue" title="Lien permanent vers ce titre">¶</a></h1>
+<p>L&#8217;objectif est de mettre au point un service de chat distribué pair à pair, et donc sans controleur central. Aucun noeud ne devra avoir de rôle particulier, ou ne connaitra l&#8217;ensemble des pairs. Le but est en effet que le système puisse en théorie supporter des milliers (ou des millions) de pairs.</p>
+<p>Cet ensemble de pairs sera organisé sous la forme d&#8217;un anneau Chord virtuel et dynamique. Le protocole exécuté par les pairs assurera le maintient de cet anneau lors de l&#8217;arrivée ou du départ de pairs.</p>
+<p>L&#8217;accès au système s&#8217;effectuera  via une ou plusieurs attaches (handles, poignées) qui seront des pairs actifs connus par un serveur fixe et déterminé (l&#8217;annuaire). Par exemple, l&#8217;annuaire pourrait permettre de connaitre les adresses IPs d&#8217;un certains nombre de pairs potentiellement présents dans le système (par exemple les 10 derniers a être entrés).</p>
+<dl class="docutils">
+<dt><em>Nature des pairs:</em>:</dt>
+<dd><dl class="first last docutils">
+<dt>On va supposer que</dt>
+<dd><ul class="first last simple">
+<li>les pairs sont honnêtes et appliquent le protocole (pas de hacker, d&#8217;attaquants, de leechers, de tricheurs).</li>
+<li>les &#8220;pannes&#8221; (connection réseau trop lente ou interompue, batterie à plat, deconnection brutale ... ) sont supposées assez rares mais probables. À titre d&#8217;exemple si on est connecté un à un seul pair il est très probable qu&#8217;il disparaisse un jour, mais si on est connecté à 10 pairs (aléatoires) on suppose que leur disparition simultannée (dans les mêmes 10 secondes) est un évènement exceptionnel (en ce cas on se deconnecte aussi et tant pis)</li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+<p><em>La structure  d&#8217;un pair</em></p>
+<blockquote>
+<div><p>Un pair sera constitué de deux parties distinctes et indépendantes :</p>
+<ul class="simple">
+<li>Un client du système de chat</li>
+<li>son interface (texte, graphique).</li>
+</ul>
+</div></blockquote>
+<p>L&#8217;interaction entre ces  deux  parties s&#8217;effectuera soit via des appels de méthodes soit en modifiant des objets partagés.
+<em>Vous proposerez au moins une interface de type console</em> mais vous prendrez soin de rendre l&#8217;ajout de nouvelles interfaces (Web, Téléphone) facile.</p>
+</div>
+<div class="section" id="specification-et-implementation-d-un-systeme-simplifie-14-20-4">
+<h1>Spécification et implémentation d&#8217;un système simplifié (14/20) +4<a class="headerlink" href="#specification-et-implementation-d-un-systeme-simplifie-14-20-4" title="Lien permanent vers ce titre">¶</a></h1>
+<p>Dans ce système simplifié vous pouvez :</p>
+<ul class="simple">
+<li>Utiliser Un anneau standard (sans cordes) en pratique c&#8217;est inutilisable car la recherche d&#8217;un pair induit <span class="math">\(N\)</span> communications, de plus la tolérance aux &#8220;pannes&#8221; est quasi nulle.</li>
+<li>Supposer que les pairs ne tombent jamais en panne et que toute deconnection est négociée (ie un pair qui s&#8217;en va exécute <em>Leave</em>).</li>
+</ul>
+<p><a href="#id1"><span class="problematic" id="id2">*</span></a>Je vous conseille cependant dès le départ d&#8217;utiliser un anneau Chord et de prendre en compte la volatilité des pairs (timeout)</p>
+<div class="section" id="l-annuaire-0-20-2">
+<h2>L&#8217;Annuaire (0/20) +2<a class="headerlink" href="#l-annuaire-0-20-2" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Vous pouvez utiliser un annuaire ultra-simplfié qui réfère à l&#8217;adresse IP/port d&#8217;un pair toujours connecté.</p>
+<p><em>Annuaire amélioré</em> : Un tel annuaire est un service qui renvoie un ensemble d&#8217;adresses de pairs recemments actifs dans le système.
+Les pairs souhaitant rejoindre le système le consule et l&#8217;annuaire est mis à jour régulierement.</p>
+<p>L&#8217;ajout d&#8217;un tel annuaire donnera un bonus de 1-2 points.</p>
+</div>
+<div class="section" id="specification-du-protocole-distribue-3-20">
+<h2>Spécification du  protocole distribué (3/20)<a class="headerlink" href="#specification-du-protocole-distribue-3-20" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Les communications entre pairs s&#8217;effectueront via des communications TCP, vous utiliserez un protocole client serveur spécifique (de la même nature que le protocole HTTP ou l&#8217;on envoie des messages de type GET ou POST associé à un ensemble de paramètres). Le pair distant détermine alors les méthodes qu&#8217;il doit exécuter ainsi que et leurs arguments  en effectuant une analyse lexicale rudimentaire (pattern matching etc... ).</p>
+<blockquote>
+<div><p><em>L&#8217;adressage des pair</em>:</p>
+<blockquote>
+<div><p>Dans le système on pourra communiquer avec (i.e référencer) un pair soit  en utilisant une socket déjà connectée à ce pair, soit en utilisant <em>le couple (adresse-IP, port)</em> sur lequel l&#8217;interface de ce pair est active (ie en pratique un SocketServer)  est actif sur cette IP et ce port. Le port utilisé par le protocole n&#8217;est donc  pas fixé &#8211; même si bien entendu un port par défaut peut être convenu&#8211;.</p>
+<p>Ceci vous permettra d&#8217;éxecuter plusieur pairs sur la même machine en leur affectant des ports différents.</p>
+<p>Si vous le  souhaitez vous pouvez  sérialiser les appels de fonction distants, ceci évite en effet  une analyse lexicale (même minime) des messages transmis. Mais en ce cas vous le ferez en utilisant une sérialisation compatibles avec d&#8217;autre langages (jyson, xml ou autre).</p>
+</div></blockquote>
+</div></blockquote>
+<p>Quelque soit votre choix d&#8217;implémentation :</p>
+<p><em>Spécification et protocole (3points)</em>:</p>
+<blockquote>
+<div><ul class="simple">
+<li><em>Il vous est demandé de définir un protocole distribué(tel http, ssh, mail,bitorrent) parfaitement indépendant de Java et permettant donc à priori d&#8217;utiliser des pairs utilisant des implémentation hétérogènes</em>.</li>
+<li>Les aspects sémantiques du protocole (en langage naturel et informel) seront décrits.</li>
+<li>Votre implémentation en Java devra correspondre au protocole que vous aurez défini.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="le-protocole-d-anneau-virtuel-3-20">
+<h2>Le protocole d&#8217;anneau virtuel (3/20)<a class="headerlink" href="#le-protocole-d-anneau-virtuel-3-20" title="Lien permanent vers ce titre">¶</a></h2>
+<p>N.B : la pluspart des méthodes retourneront à Timeout</p>
+<p>Les pairs seront organisés sous la forme d&#8217;un anneau  principal <em>Chord</em> (voir le TP6).
+Chaque pair aura donc un identifiant codé sur 64 bits (sa clef <em>key</em>) qui déterminera sa place sur l&#8217;anneau,  celui ci pourra être obtenu  en applicant une fonction de hachage à l&#8217;IP du pair ou à l&#8217;identifiant de l&#8217;utilisateur, ou encore être simplement aléatoire.</p>
+<ul class="simple">
+<li>Chaque pair maintiendra des références distantes (ou des sockets ouvertes) vers ses prédécesseurs et succeseurs sur l&#8217;anneau chord.</li>
+<li>Chaque pair restera accessible afin d&#8217;accueillir d&#8217;eventuels nouveau pairs dans l&#8217;anneau (via un ServerSocket)</li>
+</ul>
+<p>Tout  pair proposera la méthode (distance) <em>FindMainChord(long key)</em> qui sera appelée par un pair ayant pour clef <em>key</em> souhaitant rejoindre l&#8217;anneau. Celle ci retournera l&#8217;emplacement de <em>key</em> dans l&#8217;anneau (ie d&#8217;adresse IP su successeur de <em>key</em> dans l&#8217;anneau).</p>
+<p>Tout pair <span class="math">\(p\)</span> proposera la méthode <em>JoinMainChord</em> qui inserera le pair  <span class="math">\(p\)</span>  dans l&#8217;anneau chord à l&#8217;emplacement <span class="math">\(p.key()\)</span> et initialisera ses connections (ou réfeŕences distantes) vers son prédecesseur et son successeur. De facon symétrique on définira la méthode <em>LeaveMainCHord</em>  celle ci devra mettre à jour les liens de l&#8217;anneau virtuel (i,e le  prédecesseur de <span class="math">\(p\)</span> devra dès lors pointer sur le successeur de <span class="math">\(p\)</span>).</p>
+<p>Tout pair proposera la méthode <em>ForwardMessage(some data)</em> qui fera circuler un message vers son/ses sucesseurs, on veillera a ne pas transmettre le même message deux fois.</p>
+</div>
+<div class="section" id="les-salons-de-conversation-6-20">
+<h2>Les salons de conversation (6/20)<a class="headerlink" href="#les-salons-de-conversation-6-20" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Un salon de conversation sera un sous ensemble des pairs du système.  Ainsi chaque pair appartiendra à un ensemble éventuellement vide de <em>salons</em>.</p>
+<p>Les fonctionnalités principales utilisateur sont :</p>
+<ul class="simple">
+<li><em>GetChatRoomsList()</em> : renvoie la liste des identifiants des salles de chat.</li>
+<li><em>JoinChatRoom(long chatkey)</em> : rejoint la salle si elle existe, la crée sinon.</li>
+<li><em>SendToChatRoom(String s, long chatkey)</em>  envoie un message dans le salon <em>chatkey</em>.</li>
+<li><em>ReadChatRoom(longchatkey)</em>  référence à un tampon stockant les messages venant du salon.</li>
+</ul>
+<p>Les fonctionnalités protocole seront de</p>
+<ul class="simple">
+<li>transmettre ou retransmettre les messages du salon.</li>
+<li>d accueillir les nouveaux venus dans le salon.</li>
+<li>maintenir la structure du salon</li>
+</ul>
+<p>On pourra organiser chaque salon trivialement (soit par un graphe complet  -chacun connait tous les membres , ou  arbre chacun connait un membre) ou un organisation ad-hoc. Cependant  je vous conseille une organisation en anneau virtuel <em>Chord</em>  comme l&#8217;anneau principal.  On pourra  par exemple utiliser une tache de service (elle même potentiellement multi-thread) par salon, mais ceci n&#8217;est pas impératif.</p>
+</div>
+<div class="section" id="la-gestion-des-salons-2-20-2">
+<h2>La gestion des salons (2/20)+2<a class="headerlink" href="#la-gestion-des-salons-2-20-2" title="Lien permanent vers ce titre">¶</a></h2>
+<p>On pourra opter pour diverses solutions concernant la gestion des salons de discussion:</p>
+<ul class="simple">
+<li>La gestion naive (qui ne passe pas à l&#8217;echelle) : <em>GetChatRoomsList()</em> innonde le réseau en demandant aux pairs la liste de leur salons, la liste des salles trouvées apparait dynamiquement et à chaque salon découvert est associé un ensemble de pairs a contacter.</li>
+<li>Gestion naive (alternative) : tous les pairs connaissent la liste des salons (pas nécessairement à jour) et pour chaque salon une liste de membres et on essaie de garder ces informations à jour.</li>
+<li><em>La gestion par annuaire</em> (bonus +2) : on associe a chaque salon <span class="math">\(S\)</span> une clef <span class="math">\(S.key\)</span>,  et on utilise un dictionnaire distribué  <span class="math">\(Dic\)</span>  porté par l&#8217;anneau Chord principal afin de stocker les informations afférentes au salon dans la &#8220;case&#8221; <span class="math">\(Dic[S.key]\)</span>.  (N.B seule cette méthode passe à l&#8217;échelle).</li>
+</ul>
+</div>
+</div>
+<div class="section" id="client-renforce-vrai-reseau-chord-6-20">
+<h1>Client renforcé (Vrai réseau Chord) 6/20<a class="headerlink" href="#client-renforce-vrai-reseau-chord-6-20" title="Lien permanent vers ce titre">¶</a></h1>
+<ul class="simple">
+<li>Le pair de clef <span class="math">\(key\)</span> établira, comme dans un vrai réseau chord,  des connections directes vers le pair responsable s:math:<cite>key+4^i</cite> pour <span class="math">\(i \in \log_4(KEYMAX)\)</span>.</li>
+<li>On modifiera le protocole de recherche de clef afin qu&#8217;il utilise les chordes et nécéssite au plus <span class="math">\(O(log KEYMAX)\)</span> envois de message au lien de <span class="math">\(O(KEYMAX).\)</span></li>
+<li>On s&#8217;assurera que ces connections restent active et si le pair associé à <span class="math">\(key+4^i\)</span>  ne repond plus on le remplacera en recherchant à nouveau la clef <span class="math">\(key+4^i\)</span></li>
+</ul>
+</div>
+<div class="section" id="fonctionnalites-additionnelles-0-20-4">
+<h1>Fonctionnalités additionnelles (0/20)+4<a class="headerlink" href="#fonctionnalites-additionnelles-0-20-4" title="Lien permanent vers ce titre">¶</a></h1>
+<ul class="simple">
+<li>Envoi de données structurées (Texte enrichi, musique, images, vidéo) (bonus +2)</li>
+<li>Recherche d&#8217;un ami et invitation de celui-ci (les participants déposeront leur surnom dans la table de hachage, bien entendu il faudra connaitre le surnom de l&#8217;utilisateur a inviter (bonus +2)</li>
+</ul>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Stéphane Perennes.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

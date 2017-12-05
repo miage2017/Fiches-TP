@@ -1,0 +1,116 @@
+
+
+Un exemple de Serveur Jouet  Monoclient
+=============================================================
+
+
+Une petite classe 
+-----------------------------------
+
+On peut utiliser le code Java suivant, on commence par quelques déclarations standard, les champs
+de *Serveur_jouet* sont statiques.
+
+.. code-block:: java
+  :linenos:
+   
+    import java.net.*;
+    import java.io.*;
+    import java.util.*;
+
+    public class Serveur_Jouet {
+    // FINISH string 
+    private static final  	String Finish=""+(char) 4;; // caractère de fin ctrl-d
+    private static ServerSocket  gestionnaire_de_connexion;  // Objet gerant les sockets
+    private  final static int port = 12000;         /* Port d'écoute */
+    private static Socket ma_connection;      /* file instanciée */  
+
+
+La creation du ServerSocket 
+-----------------------------------------------------------------
+Le main de la classe commence par créer  le gestionnaire de sockets. Ici dès sa création l'objet gestionnaire_de_connexion qui est un *ServerSocket* va attendre et accepter les connexions internet sur le port 12000, les clients arrivants sont tous mis en attente en attendant que nous les traitions. Le ServerSocket rst donc un obket assez complexe géré par la JVM, il s'exécute en quelque sort en  tâche de fond sans que nous ayons à nous en préoccuper.
+
+Dans le bloc qui suit on crée juste le serveur de socket (que la jvm gère) . 
+
+.. code-block:: java   
+   
+   public static void main(String[] args) {
+	/* Creation du gestionnaire de socket   */ 
+	try{
+	    gestionnaire_de_connexion  = new ServerSocket(port);
+	    System.out.println("Serveur Jouet lancé sur " + (port)  );}
+	catch (IOException e) {
+	    System.out.format(" Cannot create to the server, port %d may be busy\n", port);
+             System.exit(-1);	  }
+
+
+L'accueil d'un Client
+----------------------------------------------------------
+Maintenant on attend un client et on le sert. 
+
+#. La ligne 4 est importante car elle est bloquante, elle signifie que l'on attend que le *ServerSocket* nous délivre un client via une *Socket*. Si aucun client n'est en attente dans le *ServerSocket* notre fil de calcul va attendre.  
+#. Les lignes 12 et 13 permettent de lire ce qui arrive sur la socket, il s'agit de notre input. La ligne 12 convertit le flux d'octets retourné par *getInputStream*  en flux de caractères tandis que la ligne 13 permet d'utiliser un tampon de lecture ce qui améliore les performances. 
+#. La ligne 17 permet de récupérer un flux sortant:  *getOutputStream* retourne un flux de sortie et on l'entoure d'une *PrintWriter*, on va ainsi pouvoir écrire sur la socket comme sur une sortie classique.
+#. La ligne 21 envoie un message au client, on utilise le flux de sortie exactement comme la sortie standard. L'opération est asynchrone.
+
+.. code-block:: java
+   :linenos:
+   :emphasize-lines: 4,12-13,17,21
+
+	try{
+	    //  Attente d'une bloquante connexion  
+	    System.out.println("waiting for connexion") ;
+	    ma_connection = gestionnaire_de_connexion.accept();
+	    
+	    // Connection recupérée, on determine l'ip et le port
+	    String c_ip = ma_connection.getInetAddress().toString() ;
+	    int c_port= ma_connection.getPort();
+	    System.out.format("client admis IP %s  sur le port %d\n", c_ip, c_port);  
+
+            // Recuperation du flux entrant  la socket (lecture) 
+	    InputStreamReader isr = new InputStreamReader(ma_connection.getInputStream(), "UTF-8");
+	    BufferedReader flux_entrant = new BufferedReader(isr) ; 
+	    System.out.println("Mon Tampon de lecture est attache ");
+	    
+	    // Récupération de notre flux de sortie (écriture) 
+	    PrintWriter ma_sortie = new PrintWriter(ma_connection.getOutputStream() , true);
+	    System.out.println("Mon Tampon pour ecrire  attache ");
+	    System.out.format("Pret à servir  IP %s  sur le port %d\n", c_ip, c_port);
+	    
+	    ma_sortie.format("Hello %s  sur le port %d,  Ready!\n" ,  c_ip, c_port );  
+	    
+
+La lecture des données envoyées par le client
+------------------------------------------------------------------------
+Il ne reste plus qu'à lire en boucle les données transmises par le client, on effectue ici une lecture *Bloquante*. 
+
+#. La ligne 1 signifie que l'on attend et bloque jusqu'à ce que le flux d'entrée contienne une ligne, **Attention** cette ligne lit aussi les données et les place dans *message_lu*, enfin on quitte la boucle si la connexion est defectueuse.  
+#. En ligne 3 on vérifie si le message est une requête de de fin de connexion
+#. En ligne 9  on affiche juste les données recues avec le numéro de ligne sur la sortie standard
+
+.. code-block:: java
+   :linenos:
+   :emphasize-lines: 1,3,9
+
+	    while (   (message_lu = flux_entrant.readLine())    != null      ){
+		// Si le client demande de terminer 
+		    if (message_lu.contains(Finish) ){
+			// on termine proprement 
+			System.out.format ("[%s] recu, Transmission finie\n",message_lu);
+			ma_sortie.println("Vous etes VIRE");
+			terminer();
+		    }
+		    System.out.format( "[%d]--> [%s]]\n", line_num, message_lu);
+		    line_num++;
+	    }
+
+
+Un exemple de Code pour le serveur Monoclient.
+------------------------------------------------------------------------
+
+		   
+.. literalinclude:: Serveur_Jouet.java
+   :language: java
+   :emphasize-lines: 12,15-18
+   :linenos:
+
+

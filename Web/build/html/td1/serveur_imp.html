@@ -1,0 +1,558 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>2. Un Serveur Séquentiel &mdash; documentation MiniWeb 0</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Recherche" href="../search.html"/>
+    <link rel="top" title="documentation MiniWeb 0" href="../index.html"/>
+        <link rel="up" title="Corrigé du TD numéro 1 : Communication via des sockets" href="corrige1.html"/>
+        <link rel="next" title="3. Un client Minimaliste" href="client_co.html"/>
+        <link rel="prev" title="1. Un exemple de Serveur Jouet Monoclient" href="serveur_co.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> MiniWeb
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="sujet1.html">1. <strong>TD numéro 1 : Communication via des sockets</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td2/sujet2.html">2. <strong>TD numéro 2 : Threads en Java, Concurrence</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td3/sujet3.html">3. <strong>TD numéro 3 : Quelques  exemples de programation concurrente</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td4/sujet4.html">4. <strong>TD numéro 4 : Interbloquage, Graphe de tache, acyclicité</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td5/sujet5.html">5. <strong>TD numéro 5: Un Exemple de programme distribué sans arbitre : La table de Hachage distribuée.</strong></a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="corrige1.html"><strong>Corrigé du TD numéro 1 : Communication via des sockets</strong></a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="serveur_co.html">1. Un exemple de Serveur Jouet  Monoclient</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">2. Un Serveur Séquentiel</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#principe">2.1. Principe</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#methode-main">2.2. Méthode Main</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#la-methode-run">2.3. La Méthode run()</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#la-methode-service-client">2.4. La Méthode Service_Client()</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#exemple-de-code-pour-le-serveur-ameliore">2.5. Exemple de  Code  pour le Serveur Amélioré</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="client_co.html">3. Un client Minimaliste</a></li>
+<li class="toctree-l2"><a class="reference internal" href="client2_co.html">4. Un Client plus élaboré</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../td2/corrige2.html">1. <strong>Corrigé du TD numéro 2 :  Java et les Threads</strong></a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MiniWeb</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="corrige1.html"><strong>Corrigé du TD numéro 1 : Communication via des sockets</strong></a> &raquo;</li>
+        
+      <li>2. Un Serveur Séquentiel</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/td1/serveur_imp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="un-serveur-sequentiel">
+<h1>2. Un Serveur Séquentiel<a class="headerlink" href="#un-serveur-sequentiel" title="Lien permanent vers ce titre">¶</a></h1>
+<div class="section" id="principe">
+<h2>2.1. Principe<a class="headerlink" href="#principe" title="Lien permanent vers ce titre">¶</a></h2>
+<p>On va simplement ajouter une boule infinie autour du code précedent, que l&#8217;on organise un peu.  La méthode main() se réduit à la création du serveur et à son exécution (les try catch la rende un brin verbeuse).</p>
+</div>
+<div class="section" id="methode-main">
+<h2>2.2. Méthode Main<a class="headerlink" href="#methode-main" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Seules les lignes 10 et 19 font vraiment quelque chose, respectivement : la ligne 10 crée le serveur et la ligne 19 l&#8217;exécute.</p>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20</pre></div></td><td class="code"><div class="highlight"><pre><span></span>      <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+              <span class="cm">/* On crée puis lance le serveur */</span>
+              <span class="n">Serveur_Ameliore</span> <span class="n">Mon_serveur</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+              <span class="k">if</span> <span class="o">(</span><span class="n">args</span><span class="o">.</span><span class="na">length</span> <span class="o">!=</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+                      <span class="n">System</span><span class="o">.</span><span class="na">err</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;usage: java &quot;</span><span class="o">+</span> <span class="n">Serveur_Ameliore</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">getCanonicalName</span><span class="o">()</span>
+                                                      <span class="o">+</span> <span class="s">&quot; serverPort&quot;</span><span class="o">);</span>
+                      <span class="n">System</span><span class="o">.</span><span class="na">exit</span><span class="o">(-</span><span class="mi">1</span><span class="o">);</span>
+              <span class="o">}</span>
+              <span class="k">try</span> <span class="o">{</span>
+<span class="hll">                      <span class="n">Mon_serveur</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Serveur_Ameliore</span><span class="o">(</span><span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">args</span><span class="o">[</span><span class="mi">0</span><span class="o">]));</span>
+</span>              <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">NumberFormatException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                      <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Format du port incorrect \n:  format exception for &quot;</span>
+                                                      <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
+                      <span class="n">System</span><span class="o">.</span><span class="na">exit</span><span class="o">(-</span><span class="mi">1</span><span class="o">);</span>
+              <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                      <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Impossible de créer le  socket server : &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">);</span>
+                      <span class="n">System</span><span class="o">.</span><span class="na">exit</span><span class="o">(-</span><span class="mi">1</span><span class="o">);</span>
+              <span class="o">}</span>
+<span class="hll">              <span class="n">Mon_serveur</span><span class="o">.</span><span class="na">run</span><span class="o">();</span>
+</span>      <span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="la-methode-run">
+<h2>2.3. La Méthode run()<a class="headerlink" href="#la-methode-run" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Dans  cette méthode le serveur se contente de :</p>
+<ol class="arabic simple">
+<li>D&#8217;attendre et d&#8217;accepter un client  ligne 6).</li>
+<li>Puis de  servir le client  (ligne 16).</li>
+<li>De recommencer à  l&#8217;infini (ligne 3)</li>
+</ol>
+<p>Ce sont les vérifications et les message pour l&#8217;utilisateur qui rende le code long car au fond il se limite à 3 instructions.</p>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre></div></td><td class="code"><div class="highlight"><pre><span></span>      <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+              <span class="n">Socket</span> <span class="n">ma_connection</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+<span class="hll">              <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+</span>
+                      <span class="k">try</span> <span class="o">{</span>                   <span class="c1">//  Attente bloquante connexion</span>
+<span class="hll">                              <span class="n">ma_connection</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">mon_connecteur</span><span class="o">.</span><span class="na">accept</span><span class="o">();</span>
+</span>                      <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                              <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Impossible de détacher une socket  : &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">);</span>
+                              <span class="n">System</span><span class="o">.</span><span class="na">exit</span><span class="o">(-</span><span class="mi">1</span><span class="o">);</span>
+                      <span class="o">}</span>
+                      <span class="kt">int</span> <span class="n">c_port</span> <span class="o">=</span> <span class="n">ma_connection</span><span class="o">.</span><span class="na">getPort</span><span class="o">();</span>
+                      <span class="n">String</span> <span class="n">c_ip</span> <span class="o">=</span> <span class="n">ma_connection</span><span class="o">.</span><span class="na">getInetAddress</span><span class="o">().</span><span class="na">toString</span><span class="o">();</span>
+                      <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Un client est arrivé avec IP : %s sur le port %d\n&quot;</span><span class="o">,</span> <span class="n">c_ip</span><span class="o">,</span><span class="n">c_port</span><span class="o">);</span>
+                      <span class="cm">/* On traite le client que l&#39;on a associé */</span>
+                      <span class="k">try</span> <span class="o">{</span>
+<span class="hll">                              <span class="n">Service_Client</span><span class="o">(</span><span class="n">ma_connection</span><span class="o">);</span>
+</span>                      <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                              <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Erreur de Service Client  : &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">);</span>
+                              <span class="n">System</span><span class="o">.</span><span class="na">exit</span><span class="o">(-</span><span class="mi">1</span><span class="o">);</span>        <span class="o">}</span>
+              <span class="o">}</span>
+      <span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="la-methode-service-client">
+<h2>2.4. La Méthode Service_Client()<a class="headerlink" href="#la-methode-service-client" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Dans cette méthode le serveur reçoit les données envoyées par le client en les lisant
+ligne à ligne de façon bloquante.</p>
+<p>Le code se résume à quelques opérations :</p>
+<ol class="arabic simple">
+<li>En lignes 3-5 on récupère de flux entrant de données.</li>
+<li>En ligne 7 on récupère le flux de sortie.</li>
+<li>En lignes 12-13 on déclare un compteur de ligne et une chaine où stocker le message du client.</li>
+<li>En ligne 20 on envoie un message au client, l&#8217;opération n&#8217;est pas bloquante et on ne sait pas si le client la reçoit.</li>
+<li>Le while de la ligne 21 contient une instruction bloquante &#8211; cf le serveur jouet &#8211;</li>
+<li>Le If de la ligne 25 permet de tester si le client à demandé de terminer la transmission, si oui on clot la socket (ligne 30) et on termine en quittant la méthode de service (ligne 31).</li>
+</ol>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34</pre></div></td><td class="code"><div class="highlight"><pre><span></span>  <span class="kd">private</span> <span class="n">Boolean</span> <span class="nf">Service_Client</span><span class="o">(</span><span class="n">Socket</span> <span class="n">la_connection</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+              <span class="cm">/* On Associe une file d&#39;entrée a la connection */</span>
+<span class="hll">              <span class="n">InputStreamReader</span> <span class="n">isr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">la_connection</span><span class="o">.</span><span class="na">getInputStream</span><span class="o">());</span>
+</span><span class="hll">              <span class="cm">/* On transforme cette file en file avec tampon */</span>
+</span><span class="hll">              <span class="n">BufferedReader</span> <span class="n">flux_entrant</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="n">isr</span><span class="o">);</span>
+</span>              <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Tampon entree attache &quot;</span><span class="o">);</span>
+<span class="hll">              <span class="n">PrintWriter</span> <span class="n">ma_sortie</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintWriter</span><span class="o">(</span><span class="n">la_connection</span><span class="o">.</span><span class="na">getOutputStream</span><span class="o">(),</span> <span class="kc">true</span><span class="o">);</span>
+</span>              <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Sortie attachée&quot;</span><span class="o">);</span>
+              <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Prêt à servir le Client : &quot;</span><span class="o">+</span> <span class="n">la_connection</span><span class="o">.</span><span class="na">getRemoteSocketAddress</span><span class="o">());</span>
+
+              <span class="n">String</span> <span class="n">clientName</span> <span class="o">=</span> <span class="n">la_connection</span><span class="o">.</span><span class="na">getRemoteSocketAddress</span><span class="o">().</span><span class="na">toString</span><span class="o">();</span>
+<span class="hll">              <span class="n">String</span> <span class="n">message_lu</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">();</span>
+</span><span class="hll">              <span class="kt">int</span> <span class="n">line_num</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span>
+              <span class="cm">/*</span>
+<span class="cm">               * On lit le flux_entrant ligne à ligne ATTENTION : La fonction readline</span>
+<span class="cm">               * est Bloquante readline retourne null si il y a souci avec la</span>
+<span class="cm">               * connexion On s arrete aussisi connexion_non_terminee est vraie</span>
+<span class="cm">               */</span>
+<span class="hll">              <span class="n">ma_sortie</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Bonjour %s j attends tes données  \n&quot;</span><span class="o">,</span><span class="n">clientName</span><span class="o">);</span>
+</span><span class="hll">              <span class="k">while</span>  <span class="o">(</span>  <span class="o">(</span><span class="n">message_lu</span> <span class="o">=</span> <span class="n">flux_entrant</span><span class="o">.</span><span class="na">readLine</span><span class="o">())</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">))</span>   <span class="o">{</span>
+</span>                      <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;%d: -&gt;  [%s]\n&quot;</span><span class="o">,</span> <span class="n">line_num</span><span class="o">,</span> <span class="n">message_lu</span><span class="o">);</span>
+                      <span class="n">line_num</span><span class="o">++;</span>
+                      <span class="cm">/* si on recoit Finish on clot et annonce cette terminaison */</span>
+<span class="hll">                      <span class="k">if</span> <span class="o">(</span><span class="n">message_lu</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="n">Finish</span><span class="o">))</span> <span class="o">{</span>
+</span>                              <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Reception de  &quot;</span> <span class="o">+</span> <span class="n">Finish</span>
+                                              <span class="o">+</span> <span class="s">&quot; -&gt; Transmission finie&quot;</span><span class="o">);</span>
+                              <span class="c1">// On ferme la connection</span>
+                              <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Je clos la connection  %s :\n&quot;</span><span class="o">,</span><span class="n">clientName</span><span class="o">);</span>
+<span class="hll">                              <span class="n">terminer</span><span class="o">(</span><span class="n">la_connection</span><span class="o">);</span>
+</span><span class="hll">                              <span class="k">return</span> <span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+</span>                      <span class="o">}</span>
+              <span class="o">}</span>
+              <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="exemple-de-code-pour-le-serveur-ameliore">
+<h2>2.5. Exemple de  Code  pour le Serveur Amélioré<a class="headerlink" href="#exemple-de-code-pour-le-serveur-ameliore" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Ici c&#8217;est juste le récapitulatif.</p>
+<div class="highlight-Java"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nn">td1</span><span class="o">;</span>
+<span class="cm">/* On  importe les  classes  Reseau, Entrees Sorties, Utilitaires */</span>
+<span class="kn">import</span> <span class="nn">java.net.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.*</span><span class="o">;</span>
+
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Serveur_Ameliore</span> <span class="o">{</span>
+	<span class="n">ServerSocket</span> <span class="n">mon_connecteur</span><span class="o">;</span>  <span class="c1">// serveur de socket du serveur amélioré</span>
+	<span class="cm">/* Port d&#39;écoute */</span>
+	<span class="kd">private</span> <span class="kt">int</span> <span class="n">port</span><span class="o">;</span>
+	<span class="kd">final</span> <span class="n">String</span> <span class="n">Finish</span> <span class="o">=</span> <span class="s">&quot;&quot;</span> <span class="o">+</span> <span class="o">(</span><span class="kt">char</span><span class="o">)</span> <span class="mi">4</span><span class="o">;</span>  <span class="c1">//Signal de fin de connection aussi nommé EOT  ctrl-d</span>
+
+	<span class="kd">public</span> <span class="nf">Serveur_Ameliore</span><span class="o">(</span><span class="kt">int</span> <span class="n">cport</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+		<span class="n">port</span> <span class="o">=</span> <span class="n">cport</span><span class="o">;</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">mon_connecteur</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ServerSocket</span><span class="o">(</span><span class="n">port</span><span class="o">);</span> 		<span class="c1">//Creation du gestionnaire de socket </span>
+		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Serveur Amélioré  lancé sur le  port %d\n&quot;</span><span class="o">,</span> <span class="n">port</span><span class="o">);</span>
+	<span class="o">}</span>
+	<span class="kd">private</span>  <span class="kt">void</span> <span class="nf">terminer</span><span class="o">(</span><span class="n">Socket</span> <span class="n">ma_connection</span><span class="o">){</span>
+	    <span class="k">if</span> <span class="o">(</span><span class="n">ma_connection</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span>       	
+	    <span class="o">{</span>
+		    <span class="k">try</span> 	<span class="o">{</span>
+			<span class="n">ma_connection</span><span class="o">.</span><span class="na">close</span><span class="o">();</span> 
+			<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Socket fermee \n&quot;</span><span class="o">);</span> 
+		    <span class="o">}</span>
+		    <span class="k">catch</span> <span class="o">(</span> <span class="n">IOException</span> <span class="n">e</span> <span class="o">)</span>   <span class="o">{</span> <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;weird, nawak .... \n &quot;</span><span class="o">);}</span>     <span class="c1">// do nothiing } </span>
+		<span class="o">}}</span>
+		
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+		<span class="n">Socket</span> <span class="n">ma_connection</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>  		<span class="c1">// file instanciée pour commmuniquer avec le client</span>
+		<span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+			<span class="c1">// // /* Attente bloquante connexion */</span>
+			<span class="k">try</span> <span class="o">{</span>
+				<span class="n">ma_connection</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">mon_connecteur</span><span class="o">.</span><span class="na">accept</span><span class="o">();</span>
+			<span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+				<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Impossible de détacher une socket  : &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">);</span>
+				<span class="n">System</span><span class="o">.</span><span class="na">exit</span><span class="o">(-</span><span class="mi">1</span><span class="o">);</span>
+			<span class="o">}</span>
+			<span class="kt">int</span> <span class="n">c_port</span> <span class="o">=</span> <span class="n">ma_connection</span><span class="o">.</span><span class="na">getPort</span><span class="o">();</span>
+			<span class="n">String</span> <span class="n">c_ip</span> <span class="o">=</span> <span class="n">ma_connection</span><span class="o">.</span><span class="na">getInetAddress</span><span class="o">().</span><span class="na">toString</span><span class="o">();</span>
+			<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Un client est arrivé avec IP : %s sur le port %d\n&quot;</span><span class="o">,</span> <span class="n">c_ip</span><span class="o">,</span> <span class="n">c_port</span><span class="o">);</span>
+						<span class="cm">/* On traite le client que l&#39;on a associé */</span>
+			<span class="k">try</span> <span class="o">{</span>
+				<span class="n">Service_Client</span><span class="o">(</span><span class="n">ma_connection</span><span class="o">);</span>
+			<span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+				<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Erreur de Service Client  : &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">);</span>
+				<span class="n">System</span><span class="o">.</span><span class="na">exit</span><span class="o">(-</span><span class="mi">1</span><span class="o">);</span>	<span class="o">}</span>
+		<span class="o">}</span>
+	<span class="o">}</span>
+	<span class="kd">private</span> <span class="n">Boolean</span> <span class="nf">Service_Client</span><span class="o">(</span><span class="n">Socket</span> <span class="n">la_connection</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+		<span class="cm">/* On Associe une file d&#39;entrée a la connection */</span>
+		<span class="n">InputStreamReader</span> <span class="n">isr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">la_connection</span><span class="o">.</span><span class="na">getInputStream</span><span class="o">());</span>
+		<span class="cm">/* On transforme cette file en file avec tampon */</span>
+		<span class="n">BufferedReader</span> <span class="n">flux_entrant</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="n">isr</span><span class="o">);</span>
+		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Tampon entree attache &quot;</span><span class="o">);</span>
+		<span class="c1">// On récupère la file de sortie</span>
+		<span class="n">PrintWriter</span> <span class="n">ma_sortie</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintWriter</span><span class="o">(</span><span class="n">la_connection</span><span class="o">.</span><span class="na">getOutputStream</span><span class="o">(),</span> <span class="kc">true</span><span class="o">);</span>
+		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Sortie attachée&quot;</span><span class="o">);</span>
+		
+		<span class="n">String</span> <span class="n">clientName</span> <span class="o">=</span> <span class="n">la_connection</span><span class="o">.</span><span class="na">getRemoteSocketAddress</span><span class="o">().</span><span class="na">toString</span><span class="o">();</span>
+		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Prêt à servir le Client %s\n&quot;</span><span class="o">,</span> <span class="n">clientName</span><span class="o">);</span>
+
+		<span class="n">String</span> <span class="n">message_lu</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">();</span>
+		<span class="kt">int</span> <span class="n">line_num</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+		<span class="cm">/*</span>
+<span class="cm">		 * On lit le flux_entrant ligne à ligne ATTENTION : La fonction readline</span>
+<span class="cm">		 * est Bloquante readline retourne null si il y a souci avec la</span>
+<span class="cm">		 * connexion On s arrete aussisi connexion_non_terminee est vraie</span>
+<span class="cm">		 */</span>
+		<span class="n">ma_sortie</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Bonjour %s j attends tes données  \n&quot;</span><span class="o">,</span><span class="n">clientName</span><span class="o">);</span>
+		<span class="k">while</span>  <span class="o">((</span><span class="n">message_lu</span> <span class="o">=</span> <span class="n">flux_entrant</span><span class="o">.</span><span class="na">readLine</span><span class="o">())</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+			<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;%d: -&gt;  [%s]\n&quot;</span><span class="o">,</span> <span class="n">line_num</span><span class="o">,</span> <span class="n">message_lu</span><span class="o">);</span>
+			<span class="n">line_num</span><span class="o">++;</span>
+			<span class="cm">/* si on recoit Finish on clot et annonce cette terminaison */</span>
+			<span class="k">if</span> <span class="o">(</span><span class="n">message_lu</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="n">Finish</span><span class="o">))</span> <span class="o">{</span>
+				<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Reception de  &quot;</span> <span class="o">+</span> <span class="n">Finish</span>
+						<span class="o">+</span> <span class="s">&quot; -&gt; Transmission finie&quot;</span><span class="o">);</span>
+				<span class="c1">// On ferme la connection</span>
+				<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Je clos la connection  %s :\n&quot;</span><span class="o">,</span><span class="n">clientName</span><span class="o">);</span>
+				<span class="n">terminer</span><span class="o">(</span><span class="n">la_connection</span><span class="o">);</span>
+				<span class="k">return</span> <span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+			<span class="o">}</span>
+		<span class="o">}</span>
+		<span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+
+	<span class="o">}</span>
+	<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+		<span class="cm">/* On crée puis lance le serveur */</span>
+		<span class="n">Serveur_Ameliore</span> <span class="n">Mon_serveur</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+		<span class="k">if</span> <span class="o">(</span><span class="n">args</span><span class="o">.</span><span class="na">length</span> <span class="o">!=</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+			<span class="n">System</span><span class="o">.</span><span class="na">err</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;usage: java &quot;</span><span class="o">+</span> <span class="n">Serveur_Ameliore</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">getCanonicalName</span><span class="o">()</span>
+							<span class="o">+</span> <span class="s">&quot; serverPort&quot;</span><span class="o">);</span>
+			<span class="n">System</span><span class="o">.</span><span class="na">exit</span><span class="o">(-</span><span class="mi">1</span><span class="o">);</span>
+		<span class="o">}</span>
+		<span class="k">try</span> <span class="o">{</span>
+			<span class="n">Mon_serveur</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Serveur_Ameliore</span><span class="o">(</span><span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">args</span><span class="o">[</span><span class="mi">0</span><span class="o">]));</span>
+		<span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">NumberFormatException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+			<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Format du port incorrect \n:  format exception for &quot;</span>
+							<span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
+			<span class="n">System</span><span class="o">.</span><span class="na">exit</span><span class="o">(-</span><span class="mi">1</span><span class="o">);</span>
+		<span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+			<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Impossible de créer le  socket server : &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">);</span>
+			<span class="n">System</span><span class="o">.</span><span class="na">exit</span><span class="o">(-</span><span class="mi">1</span><span class="o">);</span>
+		<span class="o">}</span>
+		<span class="n">Mon_serveur</span><span class="o">.</span><span class="na">run</span><span class="o">();</span>
+	<span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="client_co.html" class="btn btn-neutral float-right" title="3. Un client Minimaliste" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="serveur_co.html" class="btn btn-neutral" title="1. Un exemple de Serveur Jouet Monoclient" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Stéphane Perennes.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

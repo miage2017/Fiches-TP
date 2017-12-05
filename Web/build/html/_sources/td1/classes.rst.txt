@@ -1,0 +1,82 @@
+Librairies et Classes Utilisées
+======================================
+Les classes sont documentées sur le site d'Oracle :`Javadoc <https://docs.oracle.com/javase/7/docs/api/java/net/Socket.html>`_
+
+On va utilser les librairies standard réseau, entrées sortie et utilitaires.
+
+.. code-block:: java
+  :linenos:
+   
+    import java.net.*;
+    import java.io.*;
+    import java.util.*;
+
+
+**Classes Réseau**
+------------------------------------------------
+
+Principalement vous utiliserez les classes suivantes : 
+
+-  `ServerSocket <https://docs.oracle.com/javase/7/docs/api/java/net/ServerSocket.html>`_ qui fournit une classe *Serveur*, cette classe implémente un objet qui va écouter sur un port donné et attendre une demande de connection. La classe Serveur fournit donc une *salle d'attente* où faire attendre d'éventuels clients.  Quand un tel objet est créé sur un port $p$ tout client qui se connecte sur ce port est accueilli et placé en attente, les paquets qu'il envoie sont aussi acceptés et conservés par le SocketServer. 
+
+  - En dehors de la méthode création  la méthode principale de cette classe est **accept** qui  place le demandeur en attente et lui retourne un client  dès qu'il y en a un. Le client est *fourni*  via un objet  *Socket* retourné par la méthode accept, ceci permet de communiquer avec avec le client. Notons enfin que la socket va alors contenir les paquets que le client a envoyé quand il était en attente.
+
+  - Une autre méthode importante est **close** car qui  termine (coté serveur) les connections des clients de la salle d'attente.  Cela devrait donc  aussi deconnecter les clients. 
+
+  - La classe dispose de bien d'autres méthodes, on peut en effet limiter la taille de la salle d'attente, spécifier un timeout. Pour plus  voir les spécifications `ServerSocker <https://docs.oracle.com/javase/7/docs/api/java/net/ServerSocket.html>`_   
+
+
+- `Socket <https://docs.oracle.com/javase/7/docs/api/java/net/Socket.html>`_  cette classe permet d'établir des connections, le système d'exploitation et la JVM tentent  d'ouvrir la connection lors de la création de l'objet. Une socket est une connection bidirectionnelle, aussi la socket est associée à deux "flux de bits", un flux entrant et un flux sortant.  
+
+  - On va écrire sur la *sortie* qui est un *OutputStream* (flux de bit sortant)  on accède à ce flux via la méthode *getOutputStream()*.
+     
+  - On va lire le données recues  sur l'*entrée* qui est un *InputStream* (flux de bits entrant) on accède à ce flux via la  méthode *getInputStream()*.
+
+  - Pour spécifier un timeout pour la lecture de données on utilise la méthode `SetSosetSoTimeout <https://docs.oracle.com/javase/7/docs/api/java/net/Socket.html#setSoTimeout(int)>`_  
+
+
+
+**Classes Entrée Sortie**
+------------------------------------------------
+
+**Les Flux (Streams)**
+- En Java la notion de  "flux" entrant (file, flot, stream) d'objets correspond
+à  une séquence potentiellement infinie (dans une direction) d'objets.  Un flux est un peu comme l'ensemble des entiers. Une chaine de caractère est un flux de caractères, un fichier est un flux de bits, et une connection réseau entrante est un flux.
+
+- De facon analogue,  Java propose la notion un "flux" sortant (file, flot, stream) d'objets.
+
+- Étant donnée une socket, le flux de sortie retourné par *getOutputStream()* (respectivement  le flux entrant retourné par  *InputStream*) est un  **flux de bits**. Le flux de sortie (resp. flux entrant) se manipule comme un fichier ouvert en écriture (resp lecture).
+
+- En général on encapsule ces flux dans des flux de caractères de plus haut niveau.
+
+**Bit, caractère, mise en tampon**
+------------------------------------------------
+
+- Si on échange des informations en utilisant des sockets (via donc des streams), on a besoin de traduire les  bits en caractères.  Ceci pose le problème du codage des caractère en  binaire (bits). Longtemps ce fut un sujet de maux de têtes car les caractères étaient codés sur 1 octet et il existait un codage par langue, même deux langues voisines avaient des codage différents (p.ex les lettre accentuées du Portugais diffèrent de celle du Francais). De plus chaque famille de système d'exploitation utilisait un codage qui lui était propre (ie Windows, Linux, Apple).
+
+- Comme en général le concepteur souhaite écrire/lire des chaines de caractères et non pas des bits sur un stream, Java procure un mécanisme d'encapsulation qui permet de manipuler des caractères, ce mecanisme converti les flux de bits en flux de caractère. L´ecapsulation permet aussi d'utiliser des opération d'entrée sortie de haut niveau *(print(), format(), println(), readline())* alors que les flux de bas niveau ne proposent que les opération atomiques *write* et *read*. 
+
+Les 2 lignes de code ci dessous encapsulent les 2 flux de bit dans des flux de caractères.
+
+.. code-block:: java
+
+   ma_connection=Socket() 
+   InputStreamReader isr = new InputStreamReader(ma_connection.getInputStream(), "UTF-8");
+   PrintWriter ma_sortie = new PrintWriter(ma_connection.getOutputStream() , true);
+
+
+.. topic:: Javadoc about **InputStreamReader**
+
+   An **InputStreamReader** is a bridge from byte streams to character streams: It reads bytes and decodes them into characters using a specified charset. The charset that it uses may be specified by name or may be given explicitly, or the platform's default charset may be accepted. 
+
+
+
+.. code-block:: java
+
+   ma_connection = new Socket("127.0.0.1", 2017);
+   ma_connection.SetSotimeout(5000)
+
+   InputStreamReader isr = new InputStreamReader(ma_connection.getInputStream(), "UTF-8");
+   BufferedReader flux_entrant = new BufferedReader(isr) ;
+
+   nouveau_message=flux.entrant.readline()

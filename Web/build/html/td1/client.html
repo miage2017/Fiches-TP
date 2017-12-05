@@ -1,0 +1,287 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Un Client Basique &mdash; documentation MiniWeb 0</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Recherche" href="../search.html"/>
+    <link rel="top" title="documentation MiniWeb 0" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> MiniWeb
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="sujet1.html">1. <strong>TD numéro 1 : Communication via des sockets</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td2/sujet2.html">2. <strong>TD numéro 2 : Threads en Java, Concurrence</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td3/sujet3.html">3. <strong>TD numéro 3 : Quelques  exemples de programation concurrente</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td4/sujet4.html">4. <strong>TD numéro 4 : Interbloquage, Graphe de tache, acyclicité</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td5/sujet5.html">5. <strong>TD numéro 5: Un Exemple de programme distribué sans arbitre : La table de Hachage distribuée.</strong></a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="corrige1.html"><strong>Corrigé du TD numéro 1 : Communication via des sockets</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td2/corrige2.html">1. <strong>Corrigé du TD numéro 2 :  Java et les Threads</strong></a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MiniWeb</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Un Client Basique</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/td1/client.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="un-client-basique">
+<h1>Un Client Basique<a class="headerlink" href="#un-client-basique" title="Lien permanent vers ce titre">¶</a></h1>
+<div class="section" id="un-client-put">
+<h2>Un client Put<a class="headerlink" href="#un-client-put" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Ce client jouet sera implémenté via une classe Mini_Client, qui
+s’utilisera comme suit : java Mini_Client hote port NOM. On modifiera
+très légerement Serveur_Multi afin qu’il detecte le nom du client et
+accuse réception de la connection.</p>
+<ul class="simple">
+<li>Le client cherchera à se connecter au serveur, ensuite une fois la
+connexion établie&nbsp;:</li>
+<li>il annoncera son NOM , pour cela il utilisera une <em>annonce</em> formatée
+selon des règles de votre choix (par exemple “Hello je suis: NOM”).</li>
+<li>Le serveur détectera cette annonce en utilisant un <em>analyseur
+d’expressions régulières</em> (classes Pattern, Matcher du paquet
+java.util.regex. Pour tester l’expression régulière on pourra
+utiliser <a class="reference external" href="http://www.regexplanet.com/advanced/java/index.html">http://www.regexplanet.com/advanced/java/index.html</a> et
+determinera ainsi le NOM du client.</li>
+<li>Le serveur retournera alors un accusé de réception (pex “Bonjour
+NOM”).</li>
+<li>Le client transmettra alors des données (on pourra au choix
+transmettre une chaîne aléatoire (i.e n importe quoi) ou structurée
+(pex. l’alphabet répété 100 fois) de caractère, ou le contenu d’un
+fichier).</li>
+<li>le client cloturera alors la session.</li>
+</ul>
+<p><em>Option :</em> Bien que la correction des erreurs soit assurée par la couche
+réseau tcp/ip , pour s’assurer de la bonne transmission on pourra :</p>
+<ul class="simple">
+<li>Demander que le serveur retourne comme accusé de réception le hash
+des données reçues.</li>
+<li>Le client controlera alors que ce hash correspond bien à ses données,
+si oui il cloture la session.</li>
+<li>Sinon le client renverra les données, jusqu’à ce que la transmission
+soit correcte.</li>
+</ul>
+</div>
+<div class="section" id="pour-aller-plus-loin-put-et-get">
+<h2>Pour aller plus loin : Put et Get<a class="headerlink" href="#pour-aller-plus-loin-put-et-get" title="Lien permanent vers ce titre">¶</a></h2>
+<p><em>Section optionnelle à faire à la maison pour les motivés.</em> Étoffer le
+client et le serveur afin qu’un client puisse effectuer les trois
+opérations suivantes :</p>
+<ol class="arabic simple">
+<li>Consulter la liste des données stockées par le serveur.</li>
+<li>Poser un ensemble de données sur le serveur , cet ensemble sera
+identifié par les couple (nom du client, nom de la donnée).</li>
+<li>Récupérer un ensemble de données.</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Afin d’éviter des problèmes liés au passage de messages de contrôle et de données sur le même canal on pourra décider que toute ligne envoyée commençant par ctrl-D est une ligne de contrôle et supposer que les données ne contiennent pas telles lignes ou échapper de telles lignes.</p>
+</div>
+<div class="line-block">
+<div class="line">Le serveur et le client étant assez symétrique on pourra essayer de structurer le programme afin de leur faire partager du code ou des objets.</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Stéphane Perennes.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

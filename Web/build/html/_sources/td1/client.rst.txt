@@ -1,0 +1,64 @@
+
+Un Client Basique
+=================
+
+Un client Put 
+--------------
+
+Ce client jouet sera implémenté via une classe Mini\_Client, qui
+s’utilisera comme suit : java Mini\_Client hote port NOM. On modifiera
+très légerement Serveur\_Multi afin qu’il detecte le nom du client et
+accuse réception de la connection.
+
+-  Le client cherchera à se connecter au serveur, ensuite une fois la
+   connexion établie :
+
+-  il annoncera son NOM , pour cela il utilisera une *annonce* formatée
+   selon des règles de votre choix (par exemple “Hello je suis: NOM”).
+
+-  Le serveur détectera cette annonce en utilisant un *analyseur
+   d’expressions régulières* (classes Pattern, Matcher du paquet
+   java.util.regex. Pour tester l’expression régulière on pourra
+   utiliser http://www.regexplanet.com/advanced/java/index.html et
+   determinera ainsi le NOM du client.
+
+-  Le serveur retournera alors un accusé de réception (pex “Bonjour
+   NOM”).
+
+-  Le client transmettra alors des données (on pourra au choix
+   transmettre une chaîne aléatoire (i.e n importe quoi) ou structurée
+   (pex. l’alphabet répété 100 fois) de caractère, ou le contenu d’un
+   fichier).
+
+-  le client cloturera alors la session.
+
+*Option :* Bien que la correction des erreurs soit assurée par la couche
+réseau tcp/ip , pour s’assurer de la bonne transmission on pourra :
+
+-  Demander que le serveur retourne comme accusé de réception le hash
+   des données reçues.
+
+-  Le client controlera alors que ce hash correspond bien à ses données,
+   si oui il cloture la session.
+
+-  Sinon le client renverra les données, jusqu’à ce que la transmission
+   soit correcte.
+
+Pour aller plus loin : Put et Get
+---------------------------------
+
+*Section optionnelle à faire à la maison pour les motivés.* Étoffer le
+client et le serveur afin qu’un client puisse effectuer les trois
+opérations suivantes :
+
+#. Consulter la liste des données stockées par le serveur.
+
+#. Poser un ensemble de données sur le serveur , cet ensemble sera
+   identifié par les couple (nom du client, nom de la donnée).
+
+#. Récupérer un ensemble de données.
+
+.. note::  Afin d’éviter des problèmes liés au passage de messages de contrôle et de données sur le même canal on pourra décider que toute ligne envoyée commençant par ctrl-D est une ligne de contrôle et supposer que les données ne contiennent pas telles lignes ou échapper de telles lignes.
+	   
+
+| Le serveur et le client étant assez symétrique on pourra essayer de structurer le programme afin de leur faire partager du code ou des objets.

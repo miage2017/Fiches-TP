@@ -1,0 +1,272 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Corrigé du TD numéro 1 : Communication via des sockets &mdash; documentation MiniWeb 0</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Recherche" href="../search.html"/>
+    <link rel="top" title="documentation MiniWeb 0" href="../index.html"/>
+        <link rel="next" title="1. Un exemple de Serveur Jouet Monoclient" href="serveur_co.html"/>
+        <link rel="prev" title="5. TD numéro 5: Un Exemple de programme distribué sans arbitre : La table de Hachage distribuée." href="../td5/sujet5.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> MiniWeb
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="sujet1.html">1. <strong>TD numéro 1 : Communication via des sockets</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td2/sujet2.html">2. <strong>TD numéro 2 : Threads en Java, Concurrence</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td3/sujet3.html">3. <strong>TD numéro 3 : Quelques  exemples de programation concurrente</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td4/sujet4.html">4. <strong>TD numéro 4 : Interbloquage, Graphe de tache, acyclicité</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../td5/sujet5.html">5. <strong>TD numéro 5: Un Exemple de programme distribué sans arbitre : La table de Hachage distribuée.</strong></a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#"><strong>Corrigé du TD numéro 1 : Communication via des sockets</strong></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="serveur_co.html">1. Un exemple de Serveur Jouet  Monoclient</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serveur_imp.html">2. Un Serveur Séquentiel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="client_co.html">3. Un client Minimaliste</a></li>
+<li class="toctree-l2"><a class="reference internal" href="client2_co.html">4. Un Client plus élaboré</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../td2/corrige2.html">1. <strong>Corrigé du TD numéro 2 :  Java et les Threads</strong></a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MiniWeb</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li><strong>Corrigé du TD numéro 1 : Communication via des sockets</strong></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/td1/corrige1.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="corrige-du-td-numero-1-communication-via-des-sockets">
+<h1><strong>Corrigé du TD numéro 1 : Communication via des sockets</strong><a class="headerlink" href="#corrige-du-td-numero-1-communication-via-des-sockets" title="Lien permanent vers ce titre">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="serveur_co.html">1. Un exemple de Serveur Jouet  Monoclient</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="serveur_co.html#une-petite-classe">1.1. Une petite classe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serveur_co.html#la-creation-du-serversocket">1.2. La creation du ServerSocket</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serveur_co.html#l-accueil-d-un-client">1.3. L&#8217;accueil d&#8217;un Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serveur_co.html#la-lecture-des-donnees-envoyees-par-le-client">1.4. La lecture des données envoyées par le client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serveur_co.html#un-exemple-de-code-pour-le-serveur-monoclient">1.5. Un exemple de Code pour le serveur Monoclient.</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="serveur_imp.html">2. Un Serveur Séquentiel</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="serveur_imp.html#principe">2.1. Principe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serveur_imp.html#methode-main">2.2. Méthode Main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serveur_imp.html#la-methode-run">2.3. La Méthode run()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serveur_imp.html#la-methode-service-client">2.4. La Méthode Service_Client()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serveur_imp.html#exemple-de-code-pour-le-serveur-ameliore">2.5. Exemple de  Code  pour le Serveur Amélioré</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="client_co.html">3. Un client Minimaliste</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client2_co.html">4. Un Client plus élaboré</a></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="serveur_co.html" class="btn btn-neutral float-right" title="1. Un exemple de Serveur Jouet Monoclient" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../td5/sujet5.html" class="btn btn-neutral" title="5. TD numéro 5: Un Exemple de programme distribué sans arbitre : La table de Hachage distribuée." accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Stéphane Perennes.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

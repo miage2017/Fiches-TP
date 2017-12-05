@@ -1,0 +1,92 @@
+========================================================================
+**Sujet de Projet : Gestionnaire  d'enchère**
+========================================================================
+
+
+**Notation**:
+
+La soutenance constitura :math:`1/3`: de la note et le projet les :math:`2/3` . Le barème octroie 24 points sur 20.
+
+
+**Objectif :**
+
+L'objectif est de mettre au point un logiciel permettant de fournir service centralisé de  mise en vente ou aux enchères d'objets, À titre d'exemple un des  fournisseur dominant de ce type de service est *ebay*.  Par ailleurs on utilisera une *chaine de blocs* afin de tenir à jour un *comptoir* des transactions. 
+
+
+**************************************************************************
+**Serveur Centralisé Simplifé(6/20)**
+**************************************************************************
+
+- Le serveur sera connecté  à  (interfacé avec) une base de donnée de votre choix, on seront stockées les ventes et,ou   enchères courantes. 
+
+- On fournira un protocole client/serveur de base utilisant des échanges de messages (potentiellement sérialisés). Ce protocole sera documenté. La sérialisation utilisera soit *json* ou tout format sériel courant. L'utilisation de *rmi* propres à Java est acceptable mais un protocole plus inversel sera préféré. 
+
+- Le protocole pourra aussi s'executer au dessus du protocole http ou https, comme donc un Service Web. 
+
+- Les fonctionnalités de Bases seront :
+  - Mise (et retrait) aux enchères d'un objet.
+  - Placer une enchère, effectuer un achat immédiat.
+  - Rechercher un objet.
+  - La gestion automatique des enchères.
+
+- Les objets en vente pourront être de simples identifiants associés à une brève description (i.e. chaine de caractères); Mais il serait utile de concevoir le système afin que d'autres champs puissent être ajoutés facilement (photo(s), vidéo(s), mots clef, liens etc ..) 
+  
+- Le serveur devra être capable de gérer en parallèle un grand nombre de clients et la consistence des transactions et des données sera assurée.
+
+**************************************************************************
+**Sécurisation (3/20)**
+**************************************************************************  
+
+- On utilisera les principes de cryptographie standard (mecasnisme de la paire de clefs  publique/privée; fonction de hachage "irréversible" afin d'authentifier les utilisateurs mais aussi de signer electroniquement les communications. Le but est ici d'assurer :math:`B` que si :math:`A` lui dit  :math:`XX`  c'est bel est bien :math:`A` et il a bel et bien dit :math:`XX`.
+
+- Vous utiliserez les méthodes de cryptographie comme des "boites noires".
+
+- On pourra de plus crypter les communications (optionnel).
+
+
+
+
+************************************************************************************
+**Mini enviroment de Test et devellopement (4+2/20)**
+************************************************************************************
+
+On fournira un procédé (des classes, un environement)  permettant facilement de simuler des tests impliquant de  nombreuses opérations et de nombreux clients. Ainsi on permettra la simulation  du scénario suivant :
+
+-  :math:`N` pairs  effectuent concurrement une d'actions qui sont décrites dans un fichier (spécifique au pair). Un scénario est donc décrit par :math:`N` fichiers + un *État initial*.
+
+- Les actions seront : attendre (approximativement) :math:`T` millisecondes, placer une enchère, placer un objet en vente.
+
+- Chaque pair sera simulé en *local* par un Thread.
+
+
+**Optionnel (+2)**
+
+Vous pourrez eventuellement ajouter au mini simulateur un *superviseur* permettant de geler le système et d'observer son état précisément.
+
+
+************************************************************************************
+**Comptoir Public des Transactions (7+2/20)**
+************************************************************************************
+
+Le but est d'implémenter un système  block chain jouet.
+
+- Lorsque une enchère est décidée et l'objet vendu les deux parties (le vendeur et l´acheteur) signeront sous un certains delai le contrat de vente définitif. En pratique ce delai peut être important -- si on suppose que l'acheteur signe lors de la livraison (Cash on Delivery). Une non signature dans le délai prescrit signifie alors simplement que la transaction est annulée.
+
+- Les documents signés seront "empilés" dans une chaine de blocks certifiées (une block chain). Quand un bloc :math:`X` contiendra au moins :math:`B` contrat ( :math:`B` est un paramètre du système) les clients/pairs  connectés chercheront à déterminer un prefixe du bloc :math:`P`  tel que :math:`SHA256(PX)` commence par 20 zéros (ce qui demande de calculer de l'ordre de :math:`2^20` fonction de hachage, :math:`20` est ici un exemple, vous pouvez tester avec 10 ou 5).
+
+- Le pair qui trouve un prefixe :math:`P` correct (il en existe de multiples) est recompensé à terme par de l'argent numérique, mais seulement si  le bloc :math:`X` est *valide*. Les pairs sont donc interessés à vérifier que le bloc est valide.
+
+- On pourra donc ajouter un procédé permettant à un pair de vérfier qu'un bloc est valide, c est à dire que l'argent depensé par un pair est bien en possesion de celui-ci et que la syntaxe du bloc est corrected.
+
+- Les nouveau entrants pourront (tele) charger la chaine de blocks, on supposera que cette étape ne pose pas de problème (.i.e personne ne triche).
+
+- Afin de simuler des flux d'argent entrant on pourra rajouter un contrat spécial signé par une banque (externe au système) attribuant à un pair une certaine quantité d'argent. 
+
+
+**Optionnel (+3)**
+
+On expliquera en quelques pages le protocole block chain et les raisons qui incitent les pairs à ne pas tricher et à valider le progression de la chaine. Autrement dit on expliquera
+
+- ce que sont les pointeurs sécurisés et comment il permettent d'établir des chaines de blocks non modifiables.
+  
+- le concept de *preuve par le travail* et comment cette preuve est implémentée par l
